@@ -60,6 +60,8 @@ export default function ContactFloatingBar() {
 
   const buttonText = isContacto ? 'Ver todos' : 'Agendar consulta';
   const buttonLink = isContacto ? '/procedimientos' : '/contacto';
+  
+  // ESTILOS BASE PARA LOS BOTONES CIRCULARES (ORBES) - Efecto Glass Elevado
   const iconOrbStyles = {
     position: 'relative',
     flex: '0 0 44px',
@@ -74,37 +76,24 @@ export default function ContactFloatingBar() {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '50%',
-    background: 'rgba(120,120,120,0.15)',
-    backdropFilter: 'blur(10px)',
-    WebkitBackdropFilter: 'blur(10px)',
-    border: '1px solid rgba(255,255,255,0.2)',
+    background: 'rgba(255, 255, 255, 0.08)', 
+    border: '1px solid rgba(255, 255, 255, 0.05)',
     boxShadow: `
-      inset 1px 1px 2px rgba(255,255,255,0.15),
-      inset -2px -2px 4px rgba(0,0,0,0.25)
+      0 4px 12px rgba(0, 0, 0, 0.15),
+      inset 0 1px 1px rgba(255, 255, 255, 0.15),
+      inset 0 -1px 2px rgba(0, 0, 0, 0.1)
     `,
     overflow: 'hidden',
-    transition: 'transform 0.16s cubic-bezier(0.23, 1, 0.32, 1), background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease',
-    '&:active': { transform: 'scale(0.96)' },
-    '&::before': {
-      content: '""',
-      position: 'absolute',
-      inset: 0,
-      borderRadius: '50%',
-      background: 'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.25), transparent 60%)',
-      pointerEvents: 'none',
-    },
-    '&::after': {
-      content: '""',
-      position: 'absolute',
-      inset: 0,
-      borderRadius: '50%',
-      background: 'radial-gradient(circle at 70% 75%, rgba(0,0,0,0.2), transparent 70%)',
-      pointerEvents: 'none',
-    },
+    transition: 'all 0.25s cubic-bezier(0.23, 1, 0.32, 1)',
+    '&:active': { transform: 'scale(0.92)' },
+    '&:hover': {
+      background: 'rgba(255, 255, 255, 0.12)',
+    }
   };
 
   return (
     <>
+      {/* PANEL DESPLEGABLE SUPERIOR - Actualizado para matchear el Glass Effect */}
       <Box
         sx={{
           position: 'fixed',
@@ -117,27 +106,19 @@ export default function ContactFloatingBar() {
           width: 'calc(100% - 40px)',
           maxWidth: '400px',
           borderRadius: '20px',
-          background: 'linear-gradient(160deg, rgba(28, 30, 36, 0.88), rgba(18, 20, 24, 0.92))',
+          background: 'rgba(30, 30, 30, 0.45)', // Transparente y neutro
           backdropFilter: 'blur(40px) saturate(200%)',
           WebkitBackdropFilter: 'blur(40px) saturate(200%)',
-          borderTop: '1px solid rgba(255, 255, 255, 0.12)',
-          borderLeft: '1px solid rgba(255, 255, 255, 0.06)',
-          borderRight: '1px solid rgba(255, 255, 255, 0.04)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.02)',
-          boxShadow: '0 -8px 40px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: `
+            0 -8px 40px rgba(0, 0, 0, 0.4), 
+            inset 0 1.5px 1px rgba(255, 255, 255, 0.15)
+          `,
           transition: 'bottom 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
           overflow: 'hidden',
         }}
       >
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            px: '20px',
-            pt: '18px',
-            pb: '12px',
-          }}
-        >
+        <Box sx={{ display: 'flex', alignItems: 'center', px: '20px', pt: '18px', pb: '12px' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Sparkles size={16} color="rgba(255,255,255,0.6)" />
             <Typography
@@ -154,13 +135,7 @@ export default function ContactFloatingBar() {
           </Box>
         </Box>
 
-        <Box
-          sx={{
-            height: '1px',
-            mx: '20px',
-            background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)',
-          }}
-        />
+        <Box sx={{ height: '1px', mx: '20px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)' }} />
 
         <Box sx={{ px: '24px', py: '18px', textAlign: 'left' }}>
           <Typography
@@ -173,11 +148,12 @@ export default function ContactFloatingBar() {
               letterSpacing: '0.01em',
             }}
           >
-            Evaluamos cada caso de forma individual para disenar un plan quirurgico a medida, adaptado a tu anatomia y expectativas reales. Nuestro compromiso es brindarte un seguimiento profesional continuo en cada etapa, asegurando resultados naturales y una recuperacion optima.
+            Evaluamos cada caso de forma individual para diseñar un plan quirúrgico a medida, adaptado a tu anatomía y expectativas reales. Nuestro compromiso es brindarte un seguimiento profesional continuo en cada etapa, asegurando resultados naturales y una recuperación óptima.
           </Typography>
         </Box>
       </Box>
 
+      {/* CONTENEDOR PRINCIPAL DE LA BARRA (GLASS EFFECT PURO) */}
       <Box
         sx={{
           position: 'fixed',
@@ -193,15 +169,15 @@ export default function ContactFloatingBar() {
           px: isPanelOpen ? 0 : '6px',
           py: '6px',
           borderRadius: '999px',
-          background: `
-            radial-gradient(ellipse at 50% -28%, rgba(255, 255, 255, 0.24) 0%, transparent 72%),
-            radial-gradient(ellipse at 50% 130%, rgba(255, 255, 255, 0.07) 0%, transparent 70%),
-            linear-gradient(180deg, rgba(103, 105, 112, 0.74) 0%, rgba(78, 80, 88, 0.82) 100%)
+          background: 'rgba(30, 30, 30, 0.35)', 
+          backdropFilter: 'blur(40px) saturate(200%)',
+          WebkitBackdropFilter: 'blur(40px) saturate(200%)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: `
+            0 24px 48px rgba(0, 0, 0, 0.4), 
+            inset 0 1.5px 1px rgba(255, 255, 255, 0.15), 
+            inset 0 -1px 1px rgba(0, 0, 0, 0.3)
           `,
-          backdropFilter: 'blur(30px) saturate(155%)',
-          WebkitBackdropFilter: 'blur(30px) saturate(155%)',
-          border: '1px solid rgba(255, 255, 255, 0.16)',
-          boxShadow: '0 16px 34px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18), inset 0 -1px 0 rgba(30, 32, 38, 0.18)',
           gap: '7px',
           alignItems: 'center',
           justifyContent: 'center',
@@ -221,27 +197,25 @@ export default function ContactFloatingBar() {
               fontWeight: 600,
               whiteSpace: 'nowrap',
               borderRadius: '999px',
-              background: 'linear-gradient(180deg, rgba(46, 63, 92, 0.72) 0%, rgba(29, 42, 66, 0.82) 100%)',
-              border: '1px solid rgba(183, 208, 255, 0.12)',
-              boxShadow: '0 8px 18px rgba(6, 10, 20, 0.18), inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(66,104,173,0.18)',
+              background: 'rgba(255, 255, 255, 0.08)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.1)',
+              color: 'rgba(255,255,255,0.92)',
               '&:hover': {
                 transform: 'translateY(-1px)',
-                boxShadow: '0 12px 22px rgba(6, 10, 20, 0.24), inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -1px 0 rgba(66,104,173,0.2)',
-                background: 'linear-gradient(180deg, rgba(52, 71, 104, 0.76) 0%, rgba(33, 47, 74, 0.86) 100%)',
+                background: 'rgba(255, 255, 255, 0.13)',
+                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 2px rgba(0,0,0,0.12)',
               },
             }}
-            beamProps={{
-              strength: 0.1,
-              brightness: 0.88,
-              saturation: 0.84,
-              hueRange: 4,
-              duration: 3.4,
-            }}
+            beamProps={{ strength: 0.06, brightness: 0.9, saturation: 0.3, hueRange: 0, duration: 4 }}
           >
             {buttonText}
           </BeamCTAButton>
         )}
 
+        {/* BOTÓN WHATSAPP - Adaptado para combinar sutilmente */}
         {!isPanelOpen && (
           <Box
             component="a"
@@ -249,20 +223,16 @@ export default function ContactFloatingBar() {
             target="_blank"
             sx={{
               ...iconOrbStyles,
-              background: 'rgba(74, 92, 152, 0.24)',
-              border: '1px solid rgba(177, 195, 245, 0.22)',
+              background: 'rgba(90, 110, 200, 0.15)', 
+              border: '1px solid rgba(150, 170, 255, 0.1)',
               boxShadow: `
-                inset 1px 1px 2px rgba(255,255,255,0.16),
-                inset -2px -2px 4px rgba(18,26,52,0.32)
+                0 4px 12px rgba(0, 0, 0, 0.15),
+                inset 0 1px 1px rgba(200, 220, 255, 0.2), 
+                inset 0 -1px 2px rgba(0, 0, 0, 0.2)
               `,
               color: '#F5F8FF',
               '&:hover': {
-                background: 'rgba(82, 100, 162, 0.28)',
-                borderColor: 'rgba(188, 205, 248, 0.24)',
-                boxShadow: `
-                  inset 1px 1px 2px rgba(255,255,255,0.18),
-                  inset -2px -2px 4px rgba(18,26,52,0.34)
-                `,
+                background: 'rgba(90, 110, 200, 0.25)',
               },
             }}
           >
@@ -270,19 +240,15 @@ export default function ContactFloatingBar() {
           </Box>
         )}
 
+        {/* BOTÓN TOGGLE (CHISPAS/X) */}
         <Box
           onClick={() => setIsPanelOpen((prev) => !prev)}
           sx={{
             ...iconOrbStyles,
             cursor: 'pointer',
             background: isPanelOpen
-              ? 'rgba(126,126,126,0.2)'
-              : 'rgba(120,120,120,0.15)',
-            border: '1px solid rgba(255,255,255,0.2)',
-            boxShadow: `
-              inset 1px 1px 2px rgba(255,255,255,0.15),
-              inset -2px -2px 4px rgba(0,0,0,0.25)
-            `,
+              ? 'rgba(255, 255, 255, 0.15)'
+              : 'rgba(255, 255, 255, 0.08)',
           }}
         >
           {isPanelOpen ? (
