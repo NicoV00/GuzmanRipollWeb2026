@@ -1,4 +1,5 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { Component, lazy, Suspense, useEffect, useRef, useState, type ReactNode } from "react";
+import { AnimatedGradientCanvas } from "./AnimatedGradientCanvas";
 
 const loadShaderMakerScene = () =>
   import("./ShaderMakerScene");
@@ -12,6 +13,25 @@ type ShaderMakerEmbedProps = {
   priority?: "normal" | "high";
 };
 
+// Error boundary — catches WebGPU crashes so they don't blank the page
+class ShaderErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) return <AnimatedGradientCanvas />;
+    return this.props.children;
+  }
+}
+
+// Keep exported — used by ShaderMakerScene as brief loading state
 export function StaticFallback() {
   return (
     <div
@@ -84,9 +104,7 @@ export function ShaderMakerEmbed({ priority = "normal" }: ShaderMakerEmbedProps)
   useEffect(() => {
     if (shouldLoad) return;
 
-    const preload = () => {
-      void loadShaderMakerScene();
-    };
+    const preload = () => { void loadShaderMakerScene(); };
 
     if (priority === "high") {
       preload();
@@ -99,13 +117,8 @@ export function ShaderMakerEmbed({ priority = "normal" }: ShaderMakerEmbedProps)
         : null;
 
     if (requestIdle) {
-      const idleId = requestIdle(() => {
-        preload();
-      }, { timeout: 1200 });
-
-      return () => {
-        window.cancelIdleCallback?.(idleId);
-      };
+      const idleId = requestIdle(() => { preload(); }, { timeout: 1200 });
+      return () => { window.cancelIdleCallback?.(idleId); };
     }
 
     const timeoutId = window.setTimeout(preload, 500);
@@ -134,14 +147,10 @@ export function ShaderMakerEmbed({ priority = "normal" }: ShaderMakerEmbedProps)
           observer.disconnect();
         }
       },
-      {
-        rootMargin: "1200px 0px",
-        threshold: 0.01,
-      }
+      { rootMargin: "1200px 0px", threshold: 0.01 }
     );
 
     observer.observe(node);
-
     return () => observer.disconnect();
   }, [priority, shouldLoad]);
 
@@ -157,7 +166,9 @@ export function ShaderMakerEmbed({ priority = "normal" }: ShaderMakerEmbedProps)
       }}
     >
       <Suspense fallback={<StaticFallback />}>
-        {shouldLoad ? <ShaderMakerScene priority={priority} /> : <StaticFallback />}
+        <ShaderErrorBoundary>
+          {shouldLoad ? <ShaderMakerScene priority={priority} /> : <StaticFallback />}
+        </ShaderErrorBoundary>
       </Suspense>
     </div>
   );

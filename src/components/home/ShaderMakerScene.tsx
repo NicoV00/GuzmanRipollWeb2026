@@ -4,6 +4,7 @@ import {
 } from "@basementstudio/shader-lab";
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { StaticFallback } from "./ShaderMakerEmbed";
+import { AnimatedGradientCanvas } from "./AnimatedGradientCanvas";
 
 const initialConfig: ShaderLabConfig = {
   composition: { height: 917, width: 1905 },
@@ -331,7 +332,7 @@ export function ShaderMakerScene({ priority = "normal" }: ShaderMakerSceneProps)
   };
 
   if (canUseWebGPU === false) {
-    return <StaticFallback />;
+    return <AnimatedGradientCanvas />;
   }
 
   return (

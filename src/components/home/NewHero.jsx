@@ -166,63 +166,137 @@ export default function NewHero() {
           gap: "16px",
           width: "100%" 
         }}>
-          {/* Conoce Más (White Glass) */}
+          {/* Conoce Más (Apple Multi-Layer Glass) */}
           <Box
             component={RouterLink}
             to="/clinica"
             sx={{
+              position: "relative",
+              isolation: "isolate",
+              overflow: "hidden",
               flex: 1,
               fontFamily: "'Poppins', sans-serif",
               fontSize: "14px",
               fontWeight: 600,
-              color: "#fff",
-              backgroundColor: "rgba(255, 255, 255, 0.15)",
-              backdropFilter: "blur(12px)",
-              border: "1px solid rgba(255, 255, 255, 0.2)",
+              color: "rgba(255,255,255,0.95)",
+              background: "rgba(255, 255, 255, 0.13)",
+              backdropFilter: "blur(40px) saturate(180%)",
+              WebkitBackdropFilter: "blur(40px) saturate(180%)",
+              border: "1px solid rgba(255, 255, 255, 0.14)",
               borderRadius: "100px",
               padding: "16px 32px",
               cursor: "pointer",
               textAlign: "center",
               textDecoration: "none",
               transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-              boxShadow: "inset 0 1.5px 0 rgba(255, 255, 255, 0.3)",
-              "&:hover": {
-                transform: "translateY(-4px) scale(1.02)",
-                backgroundColor: "rgba(255, 255, 255, 0.2)",
-                boxShadow: "0 12px 40px rgba(0, 0, 0, 0.1), inset 0 1.5px 0 rgba(255, 255, 255, 0.4)",
+              boxShadow: `
+                0 8px 32px rgba(0, 0, 0, 0.18),
+                inset 0 1.5px 0 rgba(255, 255, 255, 0.42),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+                inset 1px 0 0 rgba(255, 255, 255, 0.1),
+                inset -1px 0 0 rgba(255, 255, 255, 0.06)
+              `,
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                inset: 0,
+                borderRadius: "inherit",
+                background: "linear-gradient(135deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.06) 38%, transparent 58%)",
+                pointerEvents: "none",
+                zIndex: 0,
               },
-              "&:active": { transform: "translateY(0) scale(1)" }
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "45%",
+                borderRadius: "100px 100px 60% 60% / 100px 100px 40px 40px",
+                background: "linear-gradient(180deg, rgba(255,255,255,0.14) 0%, transparent 100%)",
+                pointerEvents: "none",
+                zIndex: 0,
+              },
+              "& > *": { position: "relative", zIndex: 1 },
+              "&:hover": {
+                transform: "translateY(-3px)",
+                background: "rgba(255, 255, 255, 0.18)",
+                boxShadow: `
+                  0 16px 40px rgba(0, 0, 0, 0.22),
+                  inset 0 1.5px 0 rgba(255, 255, 255, 0.5),
+                  inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+                  inset 1px 0 0 rgba(255, 255, 255, 0.14),
+                  inset -1px 0 0 rgba(255, 255, 255, 0.08)
+                `,
+              },
+              "&:active": { transform: "translateY(0) scale(0.98)" }
             }}
           >
             Conoce mas
           </Box>
 
-          {/* Ver Procedimientos (Transparent Glass) */}
+          {/* Ver Procedimientos (Apple Multi-Layer Glass — más sutil) */}
           <Box
             component={RouterLink}
             to="/procedimientos"
             sx={{
+              position: "relative",
+              isolation: "isolate",
+              overflow: "hidden",
               flex: 1,
               fontFamily: "'Poppins', sans-serif",
               fontSize: "14px",
               fontWeight: 600,
-              color: "#fff",
-              backgroundColor: "rgba(255, 255, 255, 0.1)",
-              backdropFilter: "blur(10px)",
-              border: "1px solid rgba(255, 255, 255, 0.15)",
+              color: "rgba(255,255,255,0.85)",
+              background: "rgba(255, 255, 255, 0.07)",
+              backdropFilter: "blur(40px) saturate(180%)",
+              WebkitBackdropFilter: "blur(40px) saturate(180%)",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
               borderRadius: "100px",
               padding: "16px 32px",
               cursor: "pointer",
               textAlign: "center",
               textDecoration: "none",
               transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-              boxShadow: "inset 0 1.5px 0 rgba(255, 255, 255, 0.3)",
-              "&:hover": {
-                transform: "translateY(-4px) scale(1.02)",
-                backgroundColor: "rgba(255, 255, 255, 0.15)",
-                boxShadow: "0 12px 40px rgba(0, 0, 0, 0.15), inset 0 1.5px 0 rgba(255, 255, 255, 0.4)",
+              boxShadow: `
+                0 4px 24px rgba(0, 0, 0, 0.14),
+                inset 0 1.5px 0 rgba(255, 255, 255, 0.28),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+                inset 1px 0 0 rgba(255, 255, 255, 0.07)
+              `,
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                inset: 0,
+                borderRadius: "inherit",
+                background: "linear-gradient(135deg, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.04) 40%, transparent 60%)",
+                pointerEvents: "none",
+                zIndex: 0,
               },
-              "&:active": { transform: "translateY(0) scale(1)" }
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "45%",
+                borderRadius: "100px 100px 60% 60% / 100px 100px 40px 40px",
+                background: "linear-gradient(180deg, rgba(255,255,255,0.09) 0%, transparent 100%)",
+                pointerEvents: "none",
+                zIndex: 0,
+              },
+              "& > *": { position: "relative", zIndex: 1 },
+              "&:hover": {
+                transform: "translateY(-3px)",
+                background: "rgba(255, 255, 255, 0.11)",
+                boxShadow: `
+                  0 12px 32px rgba(0, 0, 0, 0.18),
+                  inset 0 1.5px 0 rgba(255, 255, 255, 0.36),
+                  inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+                  inset 1px 0 0 rgba(255, 255, 255, 0.1)
+                `,
+              },
+              "&:active": { transform: "translateY(0) scale(0.98)" }
             }}
           >
             Ver procedimientos

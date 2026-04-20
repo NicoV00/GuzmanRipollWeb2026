@@ -197,19 +197,52 @@ export default function ContactFloatingBar() {
               fontWeight: 600,
               whiteSpace: 'nowrap',
               borderRadius: '999px',
-              background: 'rgba(255, 255, 255, 0.08)',
-              backdropFilter: 'blur(20px)',
-              WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255,255,255,0.15), inset 0 -1px 2px rgba(0,0,0,0.1)',
+              background: 'rgba(255, 255, 255, 0.09)',
+              backdropFilter: 'blur(40px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(40px) saturate(180%)',
+              border: '1px solid rgba(255, 255, 255, 0.11)',
+              boxShadow: `
+                0 4px 20px rgba(0, 0, 0, 0.18),
+                inset 0 1.5px 0 rgba(255, 255, 255, 0.38),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.12),
+                inset 1px 0 0 rgba(255, 255, 255, 0.09),
+                inset -1px 0 0 rgba(255, 255, 255, 0.05)
+              `,
               color: 'rgba(255,255,255,0.92)',
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                inset: 0,
+                borderRadius: 'inherit',
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 38%, transparent 58%)',
+                pointerEvents: 'none',
+                zIndex: 0,
+              },
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: '45%',
+                borderRadius: '999px 999px 60% 60% / 999px 999px 40px 40px',
+                background: 'linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 100%)',
+                pointerEvents: 'none',
+                zIndex: 0,
+              },
               '&:hover': {
                 transform: 'translateY(-1px)',
                 background: 'rgba(255, 255, 255, 0.13)',
-                boxShadow: '0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -1px 2px rgba(0,0,0,0.12)',
+                boxShadow: `
+                  0 8px 28px rgba(0, 0, 0, 0.22),
+                  inset 0 1.5px 0 rgba(255, 255, 255, 0.48),
+                  inset 0 -1px 0 rgba(0, 0, 0, 0.14),
+                  inset 1px 0 0 rgba(255, 255, 255, 0.12),
+                  inset -1px 0 0 rgba(255, 255, 255, 0.07)
+                `,
               },
             }}
-            beamProps={{ strength: 0.06, brightness: 0.9, saturation: 0.3, hueRange: 0, duration: 4 }}
+            beamProps={{ strength: 0.05, brightness: 0.92, saturation: 0.2, hueRange: 0, duration: 5 }}
           >
             {buttonText}
           </BeamCTAButton>
