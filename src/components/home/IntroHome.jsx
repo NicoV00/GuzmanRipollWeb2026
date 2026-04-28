@@ -335,19 +335,19 @@ export default function IntroHome() {
               to="/contacto"
               tone="light"
               sx={{
-                minHeight: '50px',
-                px: { xs: 2.75, md: 3.2 },
-                py: { xs: 1.2, md: 1.4 },
-                fontSize: { xs: '14px', md: '15px' },
+                minHeight: { xs: '42px', md: '44px' },
+                px: { xs: 2.2, md: 2.5 },
+                py: { xs: 1, md: 1.1 },
+                fontSize: { xs: '13px', md: '14px' },
                 fontWeight: 500,
                 ml: 0,
               }}
               beamProps={{
-                size: 'md',
-                strength: 0.76,
-                brightness: 1.26,
-                saturation: 1.22,
-                hueRange: 18,
+                size: 'sm',
+                strength: 0.5,
+                brightness: 1.1,
+                saturation: 1.1,
+                hueRange: 12,
                 duration: 3.15,
               }}
             >
@@ -358,27 +358,27 @@ export default function IntroHome() {
             to="/procedimientos"
             tone="dark"
             sx={{
-              minHeight: '50px',
-              px: { xs: 2.75, md: 3.2 },
-              py: { xs: 1.2, md: 1.4 },
-              fontSize: { xs: '14px', md: '15px' },
+              minHeight: { xs: '42px', md: '44px' },
+              px: { xs: 2.2, md: 2.5 },
+              py: { xs: 1, md: 1.1 },
+              fontSize: { xs: '13px', md: '14px' },
               fontWeight: 500,
               color: '#F4FAFF',
-              background: 'linear-gradient(180deg, rgba(24, 38, 89, 0.38) 0%, rgba(17, 29, 72, 0.52) 100%)',
-              border: '1px solid rgba(167, 207, 255, 0.18)',
-              boxShadow: '0 10px 24px rgba(0, 10, 30, 0.12), inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(101,163,255,0.1)',
+              background: 'linear-gradient(180deg, rgba(24, 38, 89, 0.32) 0%, rgba(17, 29, 72, 0.46) 100%)',
+              border: '1px solid rgba(167, 207, 255, 0.15)',
+              boxShadow: '0 8px 20px rgba(0, 10, 30, 0.1), inset 0 1px 0 rgba(255,255,255,0.06), inset 0 -1px 0 rgba(101,163,255,0.08)',
               '&:hover': {
                 transform: 'translateY(-1px)',
-                boxShadow: '0 14px 30px rgba(0, 12, 34, 0.18), inset 0 1px 0 rgba(255,255,255,0.12), inset 0 -1px 0 rgba(101,163,255,0.14)',
-                background: 'linear-gradient(180deg, rgba(26, 42, 98, 0.44) 0%, rgba(19, 33, 82, 0.58) 100%)',
+                boxShadow: '0 12px 26px rgba(0, 12, 34, 0.14), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(101,163,255,0.12)',
+                background: 'linear-gradient(180deg, rgba(26, 42, 98, 0.38) 0%, rgba(19, 33, 82, 0.52) 100%)',
               },
             }}
             beamProps={{
-              size: 'md',
-              strength: 0.34,
-              brightness: 1.08,
-              saturation: 1.08,
-              hueRange: 12,
+              size: 'sm',
+              strength: 0.28,
+              brightness: 1.05,
+              saturation: 1.05,
+              hueRange: 10,
               duration: 3.15,
             }}
           >

@@ -98,20 +98,34 @@ export default function ScrollStage() {
   useEffect(() => {
     if (!canvasRef.current) return;
 
+    // Check for mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      window.innerWidth <= 768;
+
+    // Check WebGL capabilities
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const isWebGLSupported = !!gl;
+
+    if (!isWebGLSupported) {
+      console.warn('WebGL not supported on this device');
+      return;
+    }
+
     // Viewport
     const viewport = {
       width: window.innerWidth,
       height: window.innerHeight
     };
 
-    // Settings
+    // Settings - optimize for mobile
     const settings = {
-      uFrequency: 2,
-      uAmplitude: 0.3,
-      uDensity: 1.5,
-      uStrength: 0.8,
-      uDeepPurple: 0.7,
-      uOpacity: 0.4
+      uFrequency: isMobile ? 1.5 : 2,
+      uAmplitude: isMobile ? 0.2 : 0.3,
+      uDensity: isMobile ? 1.0 : 1.5,
+      uStrength: isMobile ? 0.5 : 0.8,
+      uDeepPurple: isMobile ? 0.5 : 0.7,
+      uOpacity: isMobile ? 0.3 : 0.4
     };
 
     // Scene setup
@@ -132,8 +146,8 @@ export default function ScrollStage() {
     camera.position.set(-0.55, -0.04, 2.5);
     scene.add(camera);
 
-    // Mesh
-    const geometry = new THREE.IcosahedronGeometry(1, 64);
+    // Mesh - reduce complexity for mobile
+    const geometry = new THREE.IcosahedronGeometry(1, isMobile ? 32 : 64);
     const material = new THREE.ShaderMaterial({
       wireframe: true,
       blending: THREE.AdditiveBlending,
@@ -148,7 +162,9 @@ export default function ScrollStage() {
         uStrength: { value: settings.uStrength },
         uDeepPurple: { value: settings.uDeepPurple },
         uOpacity: { value: settings.uOpacity }
-      }
+      },
+      // Add mobile optimizations
+      precision: isMobile ? 'mediump' : 'highp'
     });
     
     const mesh = new THREE.Mesh(geometry, material);
@@ -175,21 +191,29 @@ export default function ScrollStage() {
       camera.updateProjectionMatrix();
 
       renderer.setSize(viewport.width, viewport.height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      // Lower pixel ratio for better performance
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 1.25)); // Reduced desktop from 1.5 to 1.25
     };
 
-    // Animation loop
+    // Animation loop with performance optimization
+    let frameCount = 0;
     const animate = () => {
-      const elapsedTime = clock.getElapsedTime();
-      
-      // Update time uniform for morphing
-      material.uniforms.uTime.value = elapsedTime;
-      
-      // Gentle rotation
-      mesh.rotation.y = elapsedTime * 0.05;
-      mesh.rotation.x = Math.sin(elapsedTime * 0.3) * 0.1;
+      frameCount++;
 
-      renderer.render(scene, camera);
+      // Skip frames for better performance (render every 2 frames)
+      if (frameCount % 2 === 0) {
+        const elapsedTime = clock.getElapsedTime();
+
+        // Update time uniform for morphing
+        material.uniforms.uTime.value = elapsedTime;
+
+        // Gentle rotation - slightly slower for better performance
+        mesh.rotation.y = elapsedTime * 0.03; // Reduced from 0.05
+        mesh.rotation.x = Math.sin(elapsedTime * 0.2) * 0.08; // Reduced from 0.3 and 0.1
+
+        renderer.render(scene, camera);
+      }
+
       requestAnimationFrame(animate);
     };
 

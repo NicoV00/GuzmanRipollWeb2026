@@ -236,18 +236,18 @@ export default function CTAhome() {
               to="/contacto"
               tone="light"
               sx={{
-                minHeight: "50px",
-                px: { xs: 2.75, md: 3.2 },
-                py: { xs: 1.2, md: 1.4 },
-                fontSize: { xs: "14px", md: "15px" },
+                minHeight: { xs: "42px", md: "44px" },
+                px: { xs: 2.2, md: 2.5 },
+                py: { xs: 1, md: 1.1 },
+                fontSize: { xs: "13px", md: "14px" },
                 fontWeight: 500,
               }}
               beamProps={{
-                size: "md",
-                strength: 0.78,
-                brightness: 1.28,
-                saturation: 1.22,
-                hueRange: 18,
+                size: "sm",
+                strength: 0.5,
+                brightness: 1.1,
+                saturation: 1.1,
+                hueRange: 12,
                 duration: 3.1,
               }}
             >

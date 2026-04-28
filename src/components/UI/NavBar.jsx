@@ -410,7 +410,7 @@ export default function NavBar() {
               left: 0,
               width: '100%',
               height: '100dvh',
-              backgroundColor: '#B0B0B0', // Light grey background like reference
+              backgroundColor: 'rgb(203, 206, 203)', // Updated to requested color
               zIndex: 9998,
               display: 'flex',
               flexDirection: 'column',

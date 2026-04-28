@@ -99,7 +99,15 @@ export function ShaderMakerScene({ priority = "normal" }: ShaderMakerSceneProps)
   useEffect(() => {
     const hasNavigator = typeof navigator !== "undefined";
     const hasWindow = typeof window !== "undefined";
-    const hasWebGPU = hasNavigator && "gpu" in navigator;
+
+    // Check for mobile devices
+    const isMobile = hasWindow && (
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      window.innerWidth <= 768
+    );
+
+    // WebGPU is not well supported on mobile, use fallback
+    const hasWebGPU = hasNavigator && "gpu" in navigator && !isMobile;
     setCanUseWebGPU(hasWebGPU);
 
     if (!hasWebGPU || !hasNavigator || !hasWindow) {
@@ -120,10 +128,10 @@ export function ShaderMakerScene({ priority = "normal" }: ShaderMakerSceneProps)
       typeof connection.deviceMemory === "number" && connection.deviceMemory < 4;
 
     const isLowEndDevice =
-      prefersReducedMotion || prefersCoarsePointer || saveData || lowCores || lowMemory;
+      prefersReducedMotion || prefersCoarsePointer || saveData || lowCores || lowMemory || isMobile;
 
     lowEndDeviceRef.current = isLowEndDevice;
-    isInteractivePointerRef.current = !(prefersCoarsePointer || prefersReducedMotion);
+    isInteractivePointerRef.current = !(prefersCoarsePointer || prefersReducedMotion || isMobile);
 
     const gradientLayer = configRef.current.layers.find((layer) => layer.type === "gradient");
     if (gradientLayer) {
@@ -190,7 +198,8 @@ export function ShaderMakerScene({ priority = "normal" }: ShaderMakerSceneProps)
 
     const getPixelRatio = () => {
       const baseRatio = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-      return Math.min(baseRatio, lowEndDeviceRef.current ? 1 : 1.35);
+      // Further reduce pixel ratio for better performance
+      return Math.min(baseRatio, lowEndDeviceRef.current ? 1 : 1.25); // Reduced from 1.35 to 1.25
     };
 
     const applySize = () => {
@@ -241,8 +250,9 @@ export function ShaderMakerScene({ priority = "normal" }: ShaderMakerSceneProps)
     if (canUseWebGPU !== true || !ready) return;
 
     let rafId = 0;
-    const onscreenFrameBudget = lowEndDeviceRef.current ? 1000 / 30 : 1000 / 45;
-    const offscreenFrameBudget = priority === "high" ? 1000 / 12 : Infinity;
+    // Further optimize frame rates for better performance
+    const onscreenFrameBudget = lowEndDeviceRef.current ? 1000 / 24 : 1000 / 30; // Reduced from 30/45 to 24/30
+    const offscreenFrameBudget = priority === "high" ? 1000 / 8 : Infinity; // Reduced from 12 to 8
 
     const tick = (now: number) => {
       rafId = requestAnimationFrame(tick);
@@ -277,8 +287,9 @@ export function ShaderMakerScene({ priority = "normal" }: ShaderMakerSceneProps)
       elapsedTimeRef.current += deltaSeconds;
       warmupFramesRef.current += 1;
 
-      currentPos.current[0] = lerp(currentPos.current[0], targetPos.current[0], 0.025);
-      currentPos.current[1] = lerp(currentPos.current[1], targetPos.current[1], 0.025);
+      // Slower lerp for smoother performance
+      currentPos.current[0] = lerp(currentPos.current[0], targetPos.current[0], 0.015); // Reduced from 0.025
+      currentPos.current[1] = lerp(currentPos.current[1], targetPos.current[1], 0.015); // Reduced from 0.025
 
       const gradientLayer = configRef.current.layers.find((layer) => layer.type === "gradient");
       if (gradientLayer) {

@@ -259,7 +259,7 @@ export function ContactSection({ id }) {
           margin: 0;
           padding: 0;
           font-family: 'Poppins', sans-serif;
-          font-size: clamp(58px, 4.7vw, 96px);
+          font-size: clamp(58px, 4.7vw, 84px);
           line-height: 0.92;
           letter-spacing: -0.078em;
           font-weight: 500;

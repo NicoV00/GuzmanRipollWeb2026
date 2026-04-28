@@ -201,9 +201,9 @@ export default function ProcedimientoDetalle() {
               sx={{
                 display: "inline-flex",
                 alignItems: "center",
-                px: { xs: "14px", md: "20px" },
-                py: { xs: "8px", md: "10px" },
-                borderRadius: "12px",
+                px: { xs: "12px", md: "16px" },
+                py: { xs: "6px", md: "8px" },
+                borderRadius: "10px",
                 backdropFilter: "blur(24px) saturate(180%)",
                 WebkitBackdropFilter: "blur(24px) saturate(180%)",
                 borderTop: "1px solid",
