@@ -42,10 +42,10 @@ const AnimatedBorderBox = styled(Box)(({ theme }) => ({
 
 export default function ConoceMasHome() {
   // Texto para desktop - párrafo continuo
-  const textDesktop = "El Dr. Guzmán Ripoll es un cirujano plástico especializado en cirugía mamaria estética y reconstructiva, con práctica en Punta del Este.";
+  const textDesktop = "El Dr. Guzmán Ripoll es cirujano plástico, especializado en cirugía mamaria estética y reconstructiva, con sede en Punta del Este.";
 
   // Texto para mobile - párrafo completo
-  const textMobile = "El Dr. Guzmán Ripoll es un cirujano plástico especializado en cirugía mamaria estética y reconstructiva, con práctica en Punta del Este.";
+  const textMobile = "El Dr. Guzmán Ripoll es cirujano plástico especializado en cirugía mamaria estética y reconstructiva, con sede en Punta del Este.";
 
   useEffect(() => {
     // Pin de la imagen hasta el párrafo con sangría

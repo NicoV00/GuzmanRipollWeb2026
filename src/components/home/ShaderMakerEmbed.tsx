@@ -49,7 +49,7 @@ export function StaticFallback() {
           position: "absolute",
           inset: 0,
           background:
-            "radial-gradient(circle at 18% 18%, rgba(13, 9, 59, 0.96) 0%, rgba(13, 9, 59, 0) 42%), radial-gradient(circle at 78% 30%, rgba(21, 41, 109, 0.72) 0%, rgba(21, 41, 109, 0) 36%), radial-gradient(circle at 32% 78%, rgba(38, 57, 224, 0.42) 0%, rgba(38, 57, 224, 0) 34%), linear-gradient(145deg, #060816 0%, #090d22 38%, #0b1230 100%)",
+            "radial-gradient(circle at 18% 18%, rgba(5, 11, 42, 0.96) 0%, rgba(5, 11, 42, 0) 42%), radial-gradient(circle at 78% 30%, rgba(10, 22, 76, 0.72) 0%, rgba(10, 22, 76, 0) 36%), radial-gradient(circle at 32% 78%, rgba(18, 38, 117, 0.42) 0%, rgba(18, 38, 117, 0) 34%), linear-gradient(145deg, #020414 0%, #03061c 38%, #050b2a 100%)",
           filter: "blur(0px)",
           transform: "scale(1.08)",
           animation: "shader-fallback-drift-a 18s ease-in-out infinite alternate",
@@ -61,7 +61,7 @@ export function StaticFallback() {
           position: "absolute",
           inset: "-12%",
           background:
-            "radial-gradient(circle at 72% 18%, rgba(7, 7, 54, 0.92) 0%, rgba(7, 7, 54, 0) 36%), radial-gradient(circle at 68% 72%, rgba(19, 64, 116, 0.28) 0%, rgba(19, 64, 116, 0) 30%), radial-gradient(circle at 42% 48%, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0) 22%)",
+            "radial-gradient(circle at 72% 18%, rgba(2, 4, 20, 0.92) 0%, rgba(2, 4, 20, 0) 36%), radial-gradient(circle at 68% 72%, rgba(10, 22, 76, 0.28) 0%, rgba(10, 22, 76, 0) 30%), radial-gradient(circle at 42% 48%, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 22%)",
           mixBlendMode: "screen",
           filter: "blur(26px)",
           opacity: 0.95,

@@ -4,6 +4,7 @@ import { useLocation, Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import { useLenis } from "lenis/dist/lenis-react"
 import { Box, useMediaQuery } from "@mui/material"
+import { ArrowRight } from "lucide-react"
 
 export default function NavBar() {
   const [timeParts, setTimeParts] = useState({ hour: "00", minute: "00", second: "00", period: "PDE" })
@@ -20,6 +21,7 @@ export default function NavBar() {
     if (location.pathname === "/clinica") return "Clínica"
     if (location.pathname === "/procedimientos" || location.pathname.startsWith("/procedimiento/")) return "Procedimientos"
     if (location.pathname === "/resultados") return "Resultados"
+    // if (location.pathname === "/research") return "Research" // Research oculto temporalmente
     if (location.pathname === "/contacto") return "Contacto"
     return "Inicio"
   }
@@ -32,6 +34,7 @@ export default function NavBar() {
     { name: "Clínica", path: "/clinica" },
     { name: "Procedimientos", path: "/procedimientos" },
     { name: "Resultados", path: "/resultados" },
+    // { name: "Research", path: "/research" }, // Research oculto temporalmente
   ]
 
   const procedureSubLinks = [
@@ -567,7 +570,7 @@ export default function NavBar() {
                                   transition: 'all 0.2s ease',
                                 }}
                               >
-                                Ver todos los procedimientos →
+                                Ver todos los procedimientos <ArrowRight size={14} strokeWidth={2} style={{ marginLeft: "6px" }} />
                               </Link>
                             </motion.div>
                           )}

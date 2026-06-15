@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { useState, useRef, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { gsap } from "gsap";
-import { ShaderMakerEmbed } from "./ShaderMakerEmbed";
+import VideoBackground from "../UI/VideoBackground";
 import BeamCTAButton from "../UI/BeamCTAButton";
 
 export default function IntroHome() {
@@ -137,16 +137,11 @@ export default function IntroHome() {
             position: "absolute",
             inset: 0,
             zIndex: 0,
-            "& canvas": {
-              width: "100%",
-              height: "100%",
-              display: "block"
-            }
           }
         }}
       >
         <Box className="shader-frame">
-          <ShaderMakerEmbed />
+          <VideoBackground src="/videos/Background.mp4" />
         </Box>
       </Box>
 

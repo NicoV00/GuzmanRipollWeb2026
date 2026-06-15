@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { ArrowRight } from "lucide-react";
 
 export default function NotFound() {
   return (
@@ -22,7 +22,7 @@ export default function NotFound() {
       {/* Row 1: Description text — columns 7-8 only (2 cols max) */}
       <Box
         sx={{
-          gridColumn: { xs: "1 / 8", md: "7 / 9" },
+          gridColumn: { xs: "1 / 8", md: "7 / 10" },
           gridRow: "1",
           mb: { xs: 1, md: 2 },
         }}
@@ -44,7 +44,7 @@ export default function NotFound() {
       {/* Row 2: Button — columns 7-8 */}
       <Box
         sx={{
-          gridColumn: { xs: "1 / 8", md: "7 / 9" },
+          gridColumn: { xs: "1 / 8", md: "7 / 10" },
           gridRow: "2",
           mb: { xs: 4, md: 0 },
         }}
@@ -68,7 +68,7 @@ export default function NotFound() {
           }}
         >
           Contáctanos
-          <ArrowForwardIcon sx={{ fontSize: 14 }} />
+          <ArrowRight size={14} strokeWidth={2} />
         </Box>
       </Box>
 

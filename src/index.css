@@ -1,8 +1,6 @@
 @import url('https://fonts.cdnfonts.com/css/neue-haas-grotesk-display-pro?styles=82959');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import 'gradient-border-plugin';
 
 :root {
   /* Strong ease-out for UI interactions */

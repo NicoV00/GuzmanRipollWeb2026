@@ -20,43 +20,43 @@ const initialConfig: ShaderLabConfig = {
       opacity: 1,
       params: {
         preset: "neon-glow",
-        activePoints: 3,
-        point1Color: "#0a0836",
-        point1Position: [0.1100000000000001, -0.09],
-        point1Weight: 0.6,
-        point2Color: "#070730",
-        point2Position: [-0.7, -0.5],
-        point2Weight: 2.3,
-        point3Color: "#10205c",
-        point3Position: [0.8, 0.3],
-        point3Weight: 1.2,
-        point4Color: "#12296e80",
-        point4Position: [0.2, -0.8],
-        point4Weight: 0.9,
-        point5Color: "#1a2f8a60",
+        activePoints: 4,
+        point1Color: "#020414", // Very dark navy
+        point1Position: [0.1, -0.1],
+        point1Weight: 0.8,
+        point2Color: "#050b2a", // Deep sapphire
+        point2Position: [-0.6, -0.4],
+        point2Weight: 2.0,
+        point3Color: "#0a164c", // Medium deep blue
+        point3Position: [0.7, 0.4],
+        point3Weight: 1.5,
+        point4Color: "#122675", // Slightly brighter highlight
+        point4Position: [0.2, -0.7],
+        point4Weight: 1.0,
+        point5Color: "#1a2f8a",
         point5Position: [-0.5, 0.7],
         point5Weight: 1,
-        noiseType: "turbulence",
-        noiseSeed: 93.1,
-        warpAmount: 0.022,
-        warpScale: 0.2,
-        warpIterations: 3,
+        noiseType: "simplex", // Smoother than turbulence
+        noiseSeed: 42.0,
+        warpAmount: 0.015, // Less intense distortion
+        warpScale: 0.12, // Larger, broader waves
+        warpIterations: 2,
         warpDecay: 1,
-        warpBias: 0.43,
-        vortexAmount: 0.45,
+        warpBias: 0.5,
+        vortexAmount: 0.3,
         animate: true,
-        falloff: 4.2,
-        motionAmount: 0.32,
-        motionSpeed: 0.28,
+        falloff: 3.5, // Smoother blending
+        motionAmount: 0.25,
+        motionSpeed: 0.2,
         tonemapMode: "totos",
-        glowStrength: 0.1,
-        glowThreshold: 0.25,
+        glowStrength: 0.05,
+        glowThreshold: 0.4,
         grainAmount: 0,
-        vignetteStrength: 0.5,
-        vignetteRadius: 1.5,
+        vignetteStrength: 0.6,
+        vignetteRadius: 1.4,
         vignetteSoftness: 1,
       },
-      saturation: 1.4,
+      saturation: 1.1,
       type: "gradient",
       visible: true,
     },
@@ -133,13 +133,18 @@ export function ShaderMakerScene({ priority = "normal" }: ShaderMakerSceneProps)
     lowEndDeviceRef.current = isLowEndDevice;
     isInteractivePointerRef.current = !(prefersCoarsePointer || prefersReducedMotion || isMobile);
 
+    // Check for large screen size
+    const isLargeScreen = hasWindow && (window.innerWidth > 1920 || window.innerHeight > 1080);
+
     const gradientLayer = configRef.current.layers.find((layer) => layer.type === "gradient");
     if (gradientLayer) {
-      gradientLayer.params.activePoints = isLowEndDevice ? 2 : 3;
-      gradientLayer.params.point3Weight = isLowEndDevice ? 1.1 : 1.2;
-      gradientLayer.params.warpIterations = isLowEndDevice ? 2 : 3;
-      gradientLayer.params.motionAmount = isLowEndDevice ? 0.22 : 0.32;
-      gradientLayer.params.motionSpeed = isLowEndDevice ? 0.18 : 0.28;
+      // Reduce complexity on both low-end devices AND large screens
+      const reduceComplexity = isLowEndDevice || isLargeScreen;
+      gradientLayer.params.activePoints = reduceComplexity ? 2 : 3;
+      gradientLayer.params.point3Weight = reduceComplexity ? 1.1 : 1.2;
+      gradientLayer.params.warpIterations = reduceComplexity ? 1 : 2;
+      gradientLayer.params.motionAmount = reduceComplexity ? 0.22 : 0.32;
+      gradientLayer.params.motionSpeed = reduceComplexity ? 0.18 : 0.28;
     }
 
     const handleVisibilityChange = () => {
@@ -198,8 +203,8 @@ export function ShaderMakerScene({ priority = "normal" }: ShaderMakerSceneProps)
 
     const getPixelRatio = () => {
       const baseRatio = typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1;
-      // Further reduce pixel ratio for better performance
-      return Math.min(baseRatio, lowEndDeviceRef.current ? 1 : 1.25); // Reduced from 1.35 to 1.25
+      // Reduce pixel ratio for better performance on large screens while keeping it smooth
+      return Math.min(baseRatio, lowEndDeviceRef.current ? 0.75 : 1);
     };
 
     const applySize = () => {
@@ -207,7 +212,21 @@ export function ShaderMakerScene({ priority = "normal" }: ShaderMakerSceneProps)
       const width = Math.max(1, Math.round(rect.width));
       const height = Math.max(1, Math.round(rect.height));
 
-      resize(width, height, getPixelRatio());
+      // Scale down resolution for large windows to prevent performance issues
+      // Cap at 1920x1080 effective resolution, scaling down larger windows
+      const maxWidth = 1920;
+      const maxHeight = 1080;
+      let pixelRatio = getPixelRatio();
+
+      // If the actual size exceeds our max, reduce pixel ratio to compensate
+      if (width > maxWidth || height > maxHeight) {
+        const widthScale = width > maxWidth ? maxWidth / width : 1;
+        const heightScale = height > maxHeight ? maxHeight / height : 1;
+        const minScale = Math.min(widthScale, heightScale);
+        pixelRatio = pixelRatio * minScale * 0.9; // Additional 0.9 safety factor
+      }
+
+      resize(width, height, pixelRatio);
     };
 
     applySize();
@@ -250,9 +269,9 @@ export function ShaderMakerScene({ priority = "normal" }: ShaderMakerSceneProps)
     if (canUseWebGPU !== true || !ready) return;
 
     let rafId = 0;
-    // Further optimize frame rates for better performance
-    const onscreenFrameBudget = lowEndDeviceRef.current ? 1000 / 24 : 1000 / 30; // Reduced from 30/45 to 24/30
-    const offscreenFrameBudget = priority === "high" ? 1000 / 8 : Infinity; // Reduced from 12 to 8
+    // Optimize frame rates for fluid and smooth performance
+    const onscreenFrameBudget = lowEndDeviceRef.current ? 1000 / 30 : 1000 / 60; // Increased to 60 FPS
+    const offscreenFrameBudget = priority === "high" ? 1000 / 12 : Infinity;
 
     const tick = (now: number) => {
       rafId = requestAnimationFrame(tick);
@@ -287,9 +306,9 @@ export function ShaderMakerScene({ priority = "normal" }: ShaderMakerSceneProps)
       elapsedTimeRef.current += deltaSeconds;
       warmupFramesRef.current += 1;
 
-      // Slower lerp for smoother performance
-      currentPos.current[0] = lerp(currentPos.current[0], targetPos.current[0], 0.015); // Reduced from 0.025
-      currentPos.current[1] = lerp(currentPos.current[1], targetPos.current[1], 0.015); // Reduced from 0.025
+      // Faster lerp for a fluid, responsive trail
+      currentPos.current[0] = lerp(currentPos.current[0], targetPos.current[0], 0.05);
+      currentPos.current[1] = lerp(currentPos.current[1], targetPos.current[1], 0.05);
 
       const gradientLayer = configRef.current.layers.find((layer) => layer.type === "gradient");
       if (gradientLayer) {

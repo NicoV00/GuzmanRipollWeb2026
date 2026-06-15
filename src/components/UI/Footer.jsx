@@ -1,9 +1,7 @@
 import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { Box, Typography, Link as MuiLink } from "@mui/material";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Instagram, Linkedin, Facebook } from 'lucide-react';
-import BeamCTAButton from "./BeamCTAButton";
 
 const COLORS = {
   textDark: "#000000",
@@ -18,250 +16,223 @@ const navLinks = [
   { to: "/contacto", text: "Contacto" },
 ];
 
-const realContactInfo = [
-  { text: "Punta del Este, Uruguay", type: "text" },
+const procedimientosLinks = [
+  { to: "/procedimiento/01", text: "Cirugía Mamaria" },
+  { to: "/procedimiento/02", text: "Lipoescultura VASER" },
+  { to: "/procedimiento/03", text: "Abdominoplastia" },
+  { to: "/procedimiento/04", text: "Aumento Mamario" },
+  { to: "/procedimiento/06", text: "Tratamientos Faciales" },
 ];
 
-const phoneInfo = [
-  { text: "+598 99 016 358", type: "phone" },
-];
-
-const emailInfo = [
-  { text: "info@guzmanripoll.com", type: "email" },
-];
-
-const linkStyles = {
+const colHeadingStyles = {
   fontFamily: "Poppins, sans-serif",
-  fontSize: "16px",
-  color: COLORS.textDark,
+  fontSize: "14px",
+  fontWeight: 600,
+  color: "#111",
+  mb: "20px",
+  textAlign: "left",
+};
+
+const colLinkStyles = {
+  fontFamily: "Poppins, sans-serif",
+  fontSize: "14px",
+  color: "rgba(0,0,0,0.5)",
   textDecoration: "none",
   display: "block",
-  lineHeight: "1.5",
+  lineHeight: 1.6,
   fontWeight: 500,
-  textTransform: "none",
-  "&:hover": {
-    opacity: 0.7,
-  },
+  textAlign: "left",
+  transition: "color 0.2s ease",
+  "&:hover": { color: "#111" },
 };
 
-const textStyles = {
-  fontFamily: "Poppins, sans-serif",
-  fontSize: "16px",
-  color: COLORS.textDark,
-  lineHeight: "1.5",
-  fontWeight: 500,
-  textTransform: "none",
-};
+const socials = [
+  { href: "https://www.instagram.com/clinicaripoll/", Icon: Instagram, label: "Instagram" },
+  { href: "https://facebook.com/guzmanripoll", Icon: Facebook, label: "Facebook" },
+  { href: "https://linkedin.com", Icon: Linkedin, label: "LinkedIn" },
+];
 
-const socialLinkStyles = {
-  fontFamily: "Poppins, sans-serif",
-  fontSize: "16px",
-  color: COLORS.textDark,
-  textDecoration: "none",
+const socialCircleStyles = {
+  width: 36,
+  height: 36,
+  borderRadius: "50%",
+  backgroundColor: "#1A1A1A",
+  color: "#fff",
   display: "flex",
   alignItems: "center",
-  gap: "8px",
-  lineHeight: "1.5",
-  fontWeight: 500,
-  textTransform: "none",
-  "&:hover": {
-    opacity: 0.7,
-  },
+  justifyContent: "center",
+  transition: "background-color 0.2s ease",
+  "&:hover": { backgroundColor: "#000" },
 };
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
+    // Contenedor alineado EXACTO al GridDebugger: maxWidth 1920, px 70, 12 cols, gap 20
     <Box sx={{
-      px: { xs: "12px", md: "40px" },
-      pb: { xs: "calc(12px + env(safe-area-inset-bottom))", md: "40px" },
+      maxWidth: "1920px",
+      mx: "auto",
+      px: { xs: "20px", md: "70px" },
       pt: { xs: "20px", md: "60px" },
+      pb: { xs: "calc(12px + env(safe-area-inset-bottom))", md: "40px" },
       width: "100%",
       boxSizing: "border-box",
     }}>
+      {/* ─── CARD (no pasa el margen: ocupa exactamente col 1 → col 12) ─── */}
       <Box component="footer" sx={{
         width: "100%",
-        px: { xs: "30px", md: "70px" },
-        pt: { xs: "60px", md: "100px" },
-        pb: { xs: "40px", md: "60px" },
+        px: { xs: "24px", md: "56px" },
+        pt: { xs: "44px", md: "64px" },
+        pb: { xs: "32px", md: "44px" },
         bgcolor: "white",
         color: COLORS.textDark,
         borderRadius: "20px",
         boxSizing: "border-box",
         border: "1px solid rgba(0,0,0,0.05)",
         boxShadow: "0 4px 20px rgba(0,0,0,0.02)",
+        display: "flex",
+        flexDirection: "column",
+        minHeight: { xs: "auto", md: "520px" },
       }}>
+        {/* Columnas — grid de 12 alineado al sistema global */}
         <Box sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(12, 1fr)",
-          gap: { xs: "40px", md: "20px" },
-          position: "relative"
+          display: "flex",
+          flexWrap: "wrap",
+          gap: { xs: "36px 48px", md: "72px" },
+          alignItems: "flex-start",
         }}>
-
-          {/* LEFT COLUMN: CTA at top, Logo at bottom */}
-          <Box sx={{
-            gridColumn: { xs: "1 / -1", md: "1 / 6" },
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            alignItems: "flex-start"
-          }}>
-            {/* CTA Text and Button at top */}
-            <Box sx={{ mb: { xs: "40px", md: "0" }, textAlign: "left" }}>
-              <Typography sx={{
-                fontFamily: "Poppins, sans-serif",
-                fontSize: { xs: "32px", md: "42px" },
-                color: COLORS.textDark,
-                fontWeight: 500,
-                lineHeight: 1.15,
-                letterSpacing: "-0.03em",
-                mb: { xs: 2, md: 3 },
-                textTransform: "none"
-              }}>
-                Cirugía mamaria
-                <br />
-                <Typography
-                  component="span"
-                  sx={{
-                    color: "#0081C7",
-                    fontWeight: 500,
-                    fontSize: "inherit",
-                    fontFamily: "inherit"
-                  }}
-                >
-                  inteligente.
-                </Typography>
-              </Typography>
-
-              <BeamCTAButton
-                to="/contacto"
-                tone="light"
-                endIcon={<ArrowForwardIcon sx={{ fontSize: { xs: 18, md: 20 } }} />}
-                sx={{
-                  gap: 1.5,
-                  px: { xs: 2.5, md: 3 },
-                  py: { xs: 1.2, md: 1.4 },
-                  fontSize: { xs: "14px", md: "15px" },
-                  fontWeight: 500,
-                }}
-                beamProps={{
-                  strength: 0.3,
-                  brightness: 1.04,
-                }}
-              >
-                Agendar consulta
-              </BeamCTAButton>
+          {/* Navegación */}
+          <Box>
+            <Typography sx={colHeadingStyles}>Navegación</Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {navLinks.map((link) => (
+                <MuiLink key={link.to} component={RouterLink} to={link.to} underline="none" sx={colLinkStyles}>
+                  {link.text}
+                </MuiLink>
+              ))}
             </Box>
-
           </Box>
 
-          {/* CENTER COLUMN: Navigation */}
-          <Box sx={{ gridColumn: { xs: "1 / 7", md: "9 / 10" }, display: "flex", flexDirection: "column", gap: "10px", alignItems: "flex-start", textAlign: "left" }}>
-            {navLinks.map((link) => (
-              <MuiLink
-                key={link.to}
-                component={RouterLink}
-                to={link.to}
-                underline="none"
-                sx={linkStyles}
-              >
-                {link.text}
-              </MuiLink>
-            ))}
+          {/* Procedimientos */}
+          <Box>
+            <Typography sx={colHeadingStyles}>Procedimientos</Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {procedimientosLinks.map((link) => (
+                <MuiLink key={link.to} component={RouterLink} to={link.to} underline="none" sx={colLinkStyles}>
+                  {link.text}
+                </MuiLink>
+              ))}
+            </Box>
           </Box>
 
-          {/* SOCIALS COLUMN */}
-          <Box sx={{ gridColumn: { xs: "7 / 13", md: "10 / 11" }, display: "flex", flexDirection: "column", gap: "10px", mt: { md: "0" }, alignItems: "flex-start", textAlign: "left" }}>
-            <MuiLink href="https://instagram.com/guzmanripoll" target="_blank" rel="noopener noreferrer" underline="none" sx={socialLinkStyles}>
-              <Instagram size={18} strokeWidth={2} /> Instagram
-            </MuiLink>
-            <MuiLink href="https://linkedin.com" target="_blank" rel="noopener noreferrer" underline="none" sx={socialLinkStyles}>
-              <Linkedin size={18} strokeWidth={2} /> LinkedIn
-            </MuiLink>
-            <MuiLink href="https://facebook.com/guzmanripoll" target="_blank" rel="noopener noreferrer" underline="none" sx={socialLinkStyles}>
-              <Facebook size={18} strokeWidth={2} /> Facebook
-            </MuiLink>
+          {/* Contacto */}
+          <Box>
+            <Typography sx={colHeadingStyles}>Contacto</Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <MuiLink href="https://maps.google.com/?q=Punta+del+Este,+Uruguay" target="_blank" rel="noopener noreferrer" underline="none" sx={colLinkStyles}>
+                Punta del Este, Uruguay
+              </MuiLink>
+              <MuiLink href="tel:+59899016358" underline="none" sx={colLinkStyles}>
+                +598 99 016 358
+              </MuiLink>
+              <MuiLink href="mailto:info@guzmanripoll.com" underline="none" sx={colLinkStyles}>
+                info@guzmanripoll.com
+              </MuiLink>
+            </Box>
           </Box>
 
-          {/* CONTACT COLUMN */}
-          <Box sx={{ gridColumn: { xs: "1 / -1", md: "11 / 13" }, display: "flex", flexDirection: "column", gap: "10px", mt: { xs: "20px", md: "0" }, alignItems: "flex-start", textAlign: "left" }}>
-            {realContactInfo.map((item, index) => (
-              <MuiLink key={`loc-${index}`} href="https://maps.google.com/?q=Punta+del+Este,+Uruguay" target="_blank" underline="none" sx={linkStyles}>
-                {item.text}
-              </MuiLink>
-            ))}
-            {phoneInfo.map((item, index) => (
-              <MuiLink key={`phone-${index}`} href={`tel:${item.text.replace(/\s+/g, '')}`} underline="none" sx={linkStyles}>
-                {item.text}
-              </MuiLink>
-            ))}
-            {emailInfo.map((item, index) => (
-              <MuiLink key={`email-${index}`} href={`mailto:${item.text}`} underline="none" sx={linkStyles}>
-                {item.text}
+          {/* Socials — alineados al borde derecho (col 12) */}
+          <Box sx={{
+            width: { xs: "100%", md: "auto" },
+            ml: { md: "auto" },
+            display: "flex",
+            gap: "12px",
+            alignItems: "flex-start",
+            justifyContent: { xs: "flex-start", md: "flex-end" },
+          }}>
+            {socials.map(({ href, Icon, label }) => (
+              <MuiLink key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label} sx={socialCircleStyles}>
+                <Icon size={18} strokeWidth={2} />
               </MuiLink>
             ))}
           </Box>
         </Box>
 
-        {/* Bottom Section */}
+        {/* Fila inferior de la card: tagline izquierda + Política derecha */}
         <Box sx={{
-          mt: { xs: "60px", md: "80px" },
+          mt: { xs: "44px", md: "auto" },
+          pt: { xs: "36px", md: "56px" },
           display: "flex",
           flexDirection: { xs: "column", md: "row" },
           justifyContent: "space-between",
-          alignItems: { xs: "flex-start", md: "flex-end" },
-          gap: "20px",
+          alignItems: { xs: "flex-start", md: "center" },
+          gap: "16px",
         }}>
-          {/* Left: Logo */}
-          <Box sx={{ textAlign: "left" }}>
-            <img
-              src="/images/GR_9_Isologo.png"
-              alt="Guzmán Ripoll"
-              style={{ height: "60px", width: "auto" }}
-            />
-          </Box>
-
-          {/* Right: Volver arriba + Copyright */}
-          <Box sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: { xs: "flex-start", md: "flex-end" },
-            gap: "12px"
+          <Typography sx={{
+            fontFamily: "Poppins, sans-serif",
+            fontSize: "15px",
+            fontWeight: 600,
+            color: "#111",
+            textAlign: "left",
           }}>
-            {/* Volver arriba */}
-            <Box
-              onClick={scrollToTop}
-              sx={{
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                gap: "6px",
-                opacity: 0.7,
-                transition: "opacity 0.3s",
-                "&:hover": { opacity: 1 }
-              }}
-            >
-              <Typography sx={{ ...textStyles, color: COLORS.textGrey, fontSize: "14px" }}>volver arriba</Typography>
-              <Typography sx={{ ...textStyles, color: COLORS.textGrey, fontSize: "16px" }}>↑</Typography>
-            </Box>
+            Cirugía inteligente, conexión humana.
+          </Typography>
 
-            {/* Copyright */}
-            <Typography sx={{
-              ...textStyles,
-              color: COLORS.textGrey,
-              fontSize: "14px",
-              textAlign: { xs: "center", md: "right" },
-              textTransform: "none"
-            }}>
-              Copyright © {currentYear} Guzman Ripoll
-            </Typography>
-          </Box>
+          <MuiLink component={RouterLink} to="/contacto" underline="none" sx={{
+            fontFamily: "Poppins, sans-serif",
+            fontSize: "14px",
+            fontWeight: 500,
+            color: "#111",
+            transition: "opacity 0.2s ease",
+            "&:hover": { opacity: 0.6 },
+          }}>
+            Política y privacidad
+          </MuiLink>
         </Box>
+      </Box>
+
+      {/* ─── FUERA DE LA CARD: copyright (col 1) + nombre grande (col 12) ─── */}
+      <Box sx={{
+        mt: { xs: "28px", md: "40px" },
+        display: "flex",
+        flexDirection: { xs: "column", md: "row" },
+        justifyContent: "space-between",
+        alignItems: { xs: "flex-start", md: "flex-end" },
+        gap: { xs: "16px", md: "20px" },
+        // En mobile el bloque se sale del padding del wrapper (full-bleed) para que GUZMÁN RIPOLL ocupe todo el ancho
+        width: { xs: "100vw", md: "100%" },
+        position: { xs: "relative", md: "static" },
+        left: { xs: "50%", md: "auto" },
+        transform: { xs: "translateX(-50%)", md: "none" },
+        px: { xs: "8px", md: 0 },
+        boxSizing: "border-box",
+      }}>
+        <Typography sx={{
+          fontFamily: "Poppins, sans-serif",
+          fontSize: { xs: "13px", md: "16px" },
+          fontWeight: 500,
+          color: "#000000",
+          textAlign: "left",
+          whiteSpace: { xs: "normal", md: "nowrap" },
+        }}>
+          © {currentYear} Dr. Guzmán Ripoll. Todos los derechos reservados.
+        </Typography>
+
+        <Typography sx={{
+          fontFamily: "'Red Hat Display', sans-serif",
+          fontWeight: 400,
+          color: COLORS.textDark,
+          lineHeight: 0.9,
+          letterSpacing: "-0.04em",
+          textTransform: "uppercase",
+          fontSize: { xs: "11.6vw", md: "clamp(54px, 7vw, 116px)" },
+          textAlign: { xs: "left", md: "right" },
+          whiteSpace: "nowrap",
+          width: { xs: "100%", md: "auto" },
+        }}>
+          Guzmán Ripoll
+        </Typography>
       </Box>
     </Box>
   );

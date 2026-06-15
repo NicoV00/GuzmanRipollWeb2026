@@ -3,7 +3,7 @@ import { useEffect } from "react";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ShaderMakerEmbed } from "./ShaderMakerEmbed";
+import VideoBackground from "../UI/VideoBackground";
 import BeamCTAButton from "../UI/BeamCTAButton";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -54,8 +54,8 @@ export default function CTAhome() {
 
       scrollTriggerInstance = ScrollTrigger.create({
         trigger: leftSection,
-        start: "top 7%",
-        end: isMobile() ? "bottom+=5000% top" : "bottom+=235% top",
+        start: "top 12%",
+        end: isMobile() ? "bottom+=5000% top" : "bottom+=300% top",
         pin: isMobile() ? false : true,
         pinSpacing: false,
         scrub: true,
@@ -107,13 +107,11 @@ export default function CTAhome() {
       <Box
         sx={{
           display: "block",
-          top: { xs: "-80px", md: 0 },  // Extend shader upward on mobile
-          right: 0,
-          bottom: 0,
-          left: 0,
-          overflow: "hidden",
           position: "absolute",
+          inset: 0,
+          overflow: "hidden",
           zIndex: 0,
+          backgroundColor: "#050816",
           "&::before": {
             content: '""',
             position: "absolute",
@@ -123,9 +121,16 @@ export default function CTAhome() {
             zIndex: 1,
             pointerEvents: "none",
           },
+          "& .shader-frame": {
+            position: "absolute",
+            inset: 0,
+            zIndex: 0,
+          }
         }}
       >
-        <ShaderMakerEmbed priority="high" />
+        <Box className="shader-frame">
+          <VideoBackground src="/videos/Background.mp4" />
+        </Box>
       </Box>
 
       <Box

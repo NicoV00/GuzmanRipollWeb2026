@@ -10,6 +10,7 @@ import Clinica from "./pages/Clinica";
 import Resultados from "./pages/Resultados";
 import ProcedimientoDetalle from "./pages/ProcedimientoDetalle";
 import NotFound from "./pages/NotFound";
+// import Research from "./pages/Research"; // Research oculto temporalmente
 
 import NavBar from "./components/UI/NavBar";
 import ContactFloatingBar from "./components/UI/ContactFloatingBar";
@@ -224,6 +225,8 @@ function AppShell({ toggleTheme }) {
           <Route path="/procedimientos" element={<Procedimientos toggleTheme={toggleTheme} />} />
           <Route path="/procedimiento/:id" element={<ProcedimientoDetalle />} />
           <Route path="/resultados" element={<Resultados />} />
+          {/* Research oculto temporalmente
+          <Route path="/research" element={<Research />} /> */}
           <Route path="/contacto" element={<ContactSection />} />
           <Route path="/cir-mamaria" element={<ProcedimientoCero />} />
           <Route path="*" element={<NotFound />} />

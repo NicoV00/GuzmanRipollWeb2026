@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
-import { Sparkles, X, MessageCircle } from 'lucide-react';
+import { Plus, X, MessageCircle, Stethoscope } from 'lucide-react';
 import BeamCTAButton from './BeamCTAButton';
+import GlassSurface from './GlassSurface';
 
 export default function ContactFloatingBar() {
   const location = useLocation();
@@ -60,36 +61,6 @@ export default function ContactFloatingBar() {
 
   const buttonText = isContacto ? 'Ver todos' : 'Agendar consulta';
   const buttonLink = isContacto ? '/procedimientos' : '/contacto';
-  
-  // ESTILOS BASE PARA LOS BOTONES CIRCULARES (ORBES) - Efecto Glass Elevado
-  const iconOrbStyles = {
-    position: 'relative',
-    flex: '0 0 44px',
-    width: '44px',
-    minWidth: '44px',
-    maxWidth: '44px',
-    height: '44px',
-    minHeight: '44px',
-    maxHeight: '44px',
-    aspectRatio: '1 / 1',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '50%',
-    background: 'rgba(255, 255, 255, 0.08)', 
-    border: '1px solid rgba(255, 255, 255, 0.05)',
-    boxShadow: `
-      0 4px 12px rgba(0, 0, 0, 0.15),
-      inset 0 1px 1px rgba(255, 255, 255, 0.15),
-      inset 0 -1px 2px rgba(0, 0, 0, 0.1)
-    `,
-    overflow: 'hidden',
-    transition: 'all 0.25s cubic-bezier(0.23, 1, 0.32, 1)',
-    '&:active': { transform: 'scale(0.92)' },
-    '&:hover': {
-      background: 'rgba(255, 255, 255, 0.12)',
-    }
-  };
 
   return (
     <>
@@ -120,7 +91,7 @@ export default function ContactFloatingBar() {
       >
         <Box sx={{ display: 'flex', alignItems: 'center', px: '20px', pt: '18px', pb: '12px' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Sparkles size={16} color="rgba(255,255,255,0.6)" />
+            <Stethoscope size={16} color="rgba(255,255,255,0.6)" strokeWidth={2} />
             <Typography
               sx={{
                 fontFamily: 'Poppins, sans-serif',
@@ -248,47 +219,80 @@ export default function ContactFloatingBar() {
           </BeamCTAButton>
         )}
 
-        {/* BOTÓN WHATSAPP - Adaptado para combinar sutilmente */}
+        {/* BOTÓN WHATSAPP - Con GlassSurface efecto completo */}
         {!isPanelOpen && (
           <Box
             component="a"
             href="https://wa.me/5491112345678"
             target="_blank"
             sx={{
-              ...iconOrbStyles,
-              background: 'rgba(90, 110, 200, 0.15)', 
-              border: '1px solid rgba(150, 170, 255, 0.1)',
-              boxShadow: `
-                0 4px 12px rgba(0, 0, 0, 0.15),
-                inset 0 1px 1px rgba(200, 220, 255, 0.2), 
-                inset 0 -1px 2px rgba(0, 0, 0, 0.2)
-              `,
-              color: '#F5F8FF',
-              '&:hover': {
-                background: 'rgba(90, 110, 200, 0.25)',
-              },
+              flex: '0 0 44px',
+              width: '44px',
+              height: '44px',
+              display: 'block',
+              textDecoration: 'none',
+              transition: 'transform 0.25s cubic-bezier(0.23, 1, 0.32, 1)',
+              '&:active': { transform: 'scale(0.92)' },
             }}
           >
-            <MessageCircle size={19} strokeWidth={2.1} style={{ position: 'relative', zIndex: 1 }} />
+            <GlassSurface
+              width={44}
+              height={44}
+              borderRadius={22}
+              borderWidth={0.12}
+              brightness={58}
+              opacity={1}
+              blur={10}
+              displace={3}
+              backgroundOpacity={0.2}
+              saturation={1.8}
+              distortionScale={-220}
+              redOffset={8}
+              greenOffset={-15}
+              blueOffset={-35}
+              mixBlendMode="screen"
+            >
+              <MessageCircle size={19} strokeWidth={2.1} color="#F5F8FF" />
+            </GlassSurface>
           </Box>
         )}
 
-        {/* BOTÓN TOGGLE (CHISPAS/X) */}
+        {/* BOTÓN TOGGLE (CHISPAS/X) - Con GlassSurface efecto completo */}
         <Box
           onClick={() => setIsPanelOpen((prev) => !prev)}
           sx={{
-            ...iconOrbStyles,
+            flex: '0 0 44px',
+            width: '44px',
+            height: '44px',
+            display: 'block',
             cursor: 'pointer',
-            background: isPanelOpen
-              ? 'rgba(255, 255, 255, 0.15)'
-              : 'rgba(255, 255, 255, 0.08)',
+            transition: 'transform 0.25s cubic-bezier(0.23, 1, 0.32, 1)',
+            '&:active': { transform: 'scale(0.92)' },
           }}
         >
-          {isPanelOpen ? (
-            <X size={20} color="#fff" strokeWidth={2.5} style={{ position: 'relative', zIndex: 1 }} />
-          ) : (
-            <Sparkles size={20} color="#fff" strokeWidth={1.5} style={{ position: 'relative', zIndex: 1 }} />
-          )}
+          <GlassSurface
+            width={44}
+            height={44}
+            borderRadius={22}
+            borderWidth={0.12}
+            brightness={isPanelOpen ? 65 : 58}
+            opacity={1}
+            blur={10}
+            displace={3}
+            backgroundOpacity={isPanelOpen ? 0.25 : 0.2}
+            saturation={1.8}
+            distortionScale={-220}
+            redOffset={8}
+            greenOffset={-15}
+            blueOffset={-35}
+            mixBlendMode="screen"
+          >
+            {isPanelOpen ? (
+              <X size={20} color="#fff" strokeWidth={2.5} />
+            ) : (
+              <Plus size={20} color="#fff" strokeWidth={2} />
+            )}
+          </GlassSurface>
         </Box>
       </Box>
     </>

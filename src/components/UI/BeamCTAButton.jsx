@@ -124,6 +124,7 @@ export default function BeamCTAButton({
           },
           ...sx,
         }}
+        className="gradient-border gradient-border-to-r gradient-border-from-zinc-200/50 gradient-border-via-zinc-300/50 gradient-border-to-zinc-200/50"
         {...rest}
       >
         <Box component="span" sx={{ position: "relative", zIndex: 1 }}>

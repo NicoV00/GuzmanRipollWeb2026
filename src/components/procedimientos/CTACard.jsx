@@ -1,7 +1,7 @@
 import { Box, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { useEffect, useRef } from "react";
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { ArrowRight } from 'lucide-react';
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ParticleLogo from "../animations/ParticleLogo";
@@ -147,12 +147,11 @@ export default function CTACard({
             }}
           >
             {buttonText}
-            <ArrowForwardIcon
+            <ArrowRight
               className="arrow-icon"
-              sx={{
-                fontSize: { xs: 18, md: 20 },
-                transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-              }}
+              size={20}
+              strokeWidth={2}
+              style={{ transition: "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)" }}
             />
           </Box>
         </Box>

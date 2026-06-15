@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import { Send } from 'lucide-react';
 
 const LABEL = {
   fontFamily: "'Poppins', sans-serif",
@@ -24,6 +25,24 @@ const VALUE = {
 
 export function ContactSection({ id }) {
   const rootRef = useRef(null);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+  };
 
   useEffect(() => {
     const root = rootRef.current;
@@ -85,33 +104,78 @@ export function ContactSection({ id }) {
     return () => ctx.revert();
   }, []);
 
+  const renderFormCard = (suffix = '', extraClass = '') => (
+    <div data-reveal className={`contact-form-wrapper ${extraClass}`}>
+      <h3 className="contact-form-title">
+        Cirugía estética especializada<br />
+        y resultados naturales
+      </h3>
+
+      <form onSubmit={handleSubmit} className="contact-form">
+        <div className="contact-form-field">
+          <label htmlFor={`firstName${suffix}`}>Tu nombre</label>
+          <input
+            type="text"
+            id={`firstName${suffix}`}
+            name="firstName"
+            placeholder="Tu nombre"
+            value={formData.firstName}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        <div className="contact-form-field">
+          <label htmlFor={`phone${suffix}`}>Teléfono</label>
+          <input
+            type="tel"
+            id={`phone${suffix}`}
+            name="phone"
+            placeholder="Teléfono"
+            value={formData.phone}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        <div className="contact-form-field">
+          <label htmlFor={`email${suffix}`}>Correo electrónico</label>
+          <input
+            type="email"
+            id={`email${suffix}`}
+            name="email"
+            placeholder="Correo electrónico"
+            value={formData.email}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+
+        <div className="contact-form-field contact-form-message">
+          <label htmlFor={`message${suffix}`}>Mensaje</label>
+          <textarea
+            id={`message${suffix}`}
+            name="message"
+            placeholder="Contanos cómo podemos ayudarte, con el mayor detalle posible."
+            value={formData.message}
+            onChange={handleInputChange}
+            rows="5"
+            required
+          />
+          <button type="submit" className="contact-form-submit" aria-label="Enviar mensaje">
+            <Send size={19} strokeWidth={1.8} />
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+
   return (
     <section id={id} ref={rootRef} className="contact-section">
       {/* DESKTOP */}
       <div className="contact-desktop">
         <div className="contact-left">
-          <h2
-            className="contact-title"
-            aria-label="Medicina estética especializada en Punta del Este."
-          >
-            <span className="contact-title-mask">
-              <span className="contact-title-line">
-                Medicina estética especializada
-              </span>
-            </span>
-
-            <span className="contact-title-mask">
-              <span className="contact-title-line">
-                en Punta del Este.
-              </span>
-            </span>
-          </h2>
-
-          <div data-reveal className="contact-socials">
-            <a href="#">Instagram</a>
-            <a href="#">Facebook</a>
-            <a href="#">LinkedIn</a>
-          </div>
+          {renderFormCard('')}
         </div>
 
         <div className="contact-right">
@@ -158,20 +222,16 @@ export function ContactSection({ id }) {
       <div className="contact-mobile">
         <h2
           className="contact-title contact-title-mobile"
-          aria-label="Medicina estética especializada en Punta del Este."
+          aria-label="Medicina estética especializada."
         >
           <span className="contact-title-mask">
             <span className="contact-title-line">
-              Medicina estética especializada
-            </span>
-          </span>
-
-          <span className="contact-title-mask">
-            <span className="contact-title-line">
-              en Punta del Este.
+              Medicina estética especializada.
             </span>
           </span>
         </h2>
+
+        {renderFormCard('-m', 'contact-form-wrapper-mobile')}
 
         <div data-reveal className="contact-image-wrap contact-image-wrap-mobile">
           <img
@@ -208,7 +268,7 @@ export function ContactSection({ id }) {
         </div>
 
         <div data-reveal className="contact-socials contact-socials-mobile">
-          <a href="#">Instagram</a>
+          <a href="https://www.instagram.com/clinicaripoll/" target="_blank" rel="noopener noreferrer">Instagram</a>
           <a href="#">Facebook</a>
           <a href="#">LinkedIn</a>
         </div>
@@ -218,7 +278,9 @@ export function ContactSection({ id }) {
         .contact-section {
           width: 100%;
           min-height: 100dvh;
-          background: #c9c9c6;
+          position: relative;
+          isolation: isolate;
+          background: #d4d3d0;
           color: #050505;
           overflow: hidden;
           box-sizing: border-box;
@@ -228,31 +290,38 @@ export function ContactSection({ id }) {
            DESKTOP
         ========================= */
         .contact-desktop {
-          min-height: 100dvh;
+          height: 100dvh;
           display: grid;
           grid-template-columns: repeat(12, 1fr);
           column-gap: 24px;
-          padding: 198px 64px 36px;
+          padding: 132px 64px 64px;
           box-sizing: border-box;
+          overflow: hidden;
+          position: relative;
+          z-index: 1;
+          align-items: center;
         }
 
         .contact-left {
           grid-column: 1 / 7;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          justify-content: flex-start;
           align-items: flex-start;
-          min-height: calc(100dvh - 234px);
+          height: 100%;
+          /* ═══ AJUSTA ESTE VALOR PARA SUBIR/BAJAR TODO EL BLOQUE IZQUIERDO ═══ */
+          padding-top: 8%;  /* Aumenta para bajar, disminuye para subir */
         }
 
         .contact-right {
           grid-column: 8 / 13;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
+          justify-content: flex-start;
           align-items: stretch;
-          min-height: calc(100dvh - 234px);
-          padding-top: 2px;
+          height: 100%;
+          gap: 44px;
+          padding-top: 8%;
         }
 
         .contact-title {
@@ -335,10 +404,11 @@ export function ContactSection({ id }) {
           display: grid;
           grid-template-columns: 2fr 3fr;
           column-gap: 24px;
-          align-items: stretch;
+          align-items: end;  /* Alinea al fondo */
           width: 100%;
-          height: clamp(430px, 44dvh, 520px);
+          height: 400px;
           will-change: transform, opacity, filter;
+          margin-bottom: 40px;  /* Margen inferior - ajusta aquí */
         }
 
         .contact-address {
@@ -368,7 +438,8 @@ export function ContactSection({ id }) {
 
         .contact-image-wrap {
           width: 100%;
-          height: 100%;
+          height: calc(100% - 70px);
+          margin-top: 70px;  /* Baja la imagen */
           overflow: hidden;
           background: #bdbdb9;
           align-self: stretch;
@@ -382,6 +453,134 @@ export function ContactSection({ id }) {
           filter: saturate(0.78) contrast(0.94) brightness(0.97);
           transform: scale(1.025);
           will-change: transform;
+        }
+
+        /* =========================
+           FORMULARIO
+        ========================= */
+        .contact-form-wrapper {
+          width: 100%;
+          max-width: 760px;
+          will-change: transform, opacity, filter;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          height: 100%;
+        }
+
+        .contact-form-title {
+          margin: 0;
+          font-family: 'Poppins', sans-serif;
+          /* ═══ TAMAÑOS DE INTROHOME ═══ */
+          font-size: clamp(40px, 5vw, 52px);  /* Reducido para que entre en 2 líneas */
+          font-weight: 500;  /* Bold */
+          line-height: 1.1;
+          letter-spacing: -2px;
+          color: #050505;
+          text-align: left;
+          /* ═══ ANCHO AUMENTADO PARA 2 LÍNEAS ═══ */
+          max-width: none;  /* Sin límite de ancho */
+          width: 100%;
+          /* ═══ AJUSTA ESTA SEPARACIÓN ENTRE TÍTULO Y CAMPOS ═══ */
+          margin-bottom: 40px;  /* Cambia este valor: menos = más cerca, más = más lejos */
+          text-shadow: none;
+        }
+
+        .contact-form {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 6px;
+          /* ═══ SUBIDOS LOS CAMPOS ═══ */
+          margin-top: 90px;  /* Ajusta: menos = más arriba, más = más abajo */
+        }
+
+        .contact-form-field {
+          display: flex;
+          flex-direction: column;
+          text-align: left;
+        }
+
+        .contact-form-field label {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          white-space: nowrap;
+          border: 0;
+        }
+
+        .contact-form-field input,
+        .contact-form-field textarea {
+          width: 100%;
+          border: 2px solid rgba(122, 122, 122, 0.55);
+          border-radius: 6px;
+          background: rgba(255, 255, 255, 0.9);
+          box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.55), 0 1px 3px rgba(0, 0, 0, 0.16);
+          font-family: 'Poppins', sans-serif;
+          font-size: 16px;
+          font-weight: 500;
+          color: #3e3e3e;
+          outline: none;
+          transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+          box-sizing: border-box;
+        }
+
+        .contact-form-field input {
+          height: 66px;
+          padding: 0 18px;
+        }
+
+        .contact-form-field input::placeholder,
+        .contact-form-field textarea::placeholder {
+          color: #777;
+          opacity: 1;
+        }
+
+        .contact-form-field input:focus,
+        .contact-form-field textarea:focus {
+          background: rgba(255, 255, 255, 0.98);
+          border-color: rgba(53, 53, 53, 0.7);
+          box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.6), 0 0 0 3px rgba(255, 255, 255, 0.18);
+        }
+
+        .contact-form-message {
+          grid-column: 1 / -1;
+          position: relative;
+        }
+
+        .contact-form-field textarea {
+          resize: none;
+          min-height: 134px;
+          padding: 22px 72px 22px 18px;
+          line-height: 1.45;
+        }
+
+        .contact-form-submit {
+          position: absolute;
+          right: 17px;
+          bottom: 17px;
+          width: 38px;
+          height: 32px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+          background: linear-gradient(135deg, #5C9DFF 0%, #4a7ecc 100%);
+          color: #ffffff;
+          border: 1px solid rgba(92, 157, 255, 0.3);
+          border-radius: 8px;
+          cursor: pointer;
+          transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+          box-shadow: 0 2px 6px rgba(92, 157, 255, 0.25);
+        }
+
+        .contact-form-submit:hover {
+          background: linear-gradient(135deg, #6aaeff 0%, #5c9dff 100%);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 10px rgba(92, 157, 255, 0.35);
         }
 
         /* =========================
@@ -442,6 +641,41 @@ export function ContactSection({ id }) {
             box-sizing: border-box;
             gap: 34px;
             text-align: left;
+            position: relative;
+            z-index: 1;
+          }
+
+          /* ── Formulario en mobile ── */
+          .contact-form-wrapper-mobile {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+          }
+
+          .contact-form-wrapper-mobile .contact-form-title {
+            font-size: clamp(28px, 7.2vw, 40px);
+            letter-spacing: -0.045em;
+            margin-bottom: 24px;
+          }
+
+          .contact-form-wrapper-mobile .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 0;
+            width: 100%;
+          }
+
+          .contact-form-wrapper-mobile .contact-form-field input {
+            height: 56px;
+          }
+
+          .contact-form-wrapper-mobile .contact-form-message {
+            grid-column: auto;
+          }
+
+          .contact-form-wrapper-mobile .contact-form-field textarea {
+            min-height: 120px;
           }
 
           .contact-title-mobile {
@@ -456,6 +690,7 @@ export function ContactSection({ id }) {
           .contact-image-wrap-mobile {
             width: 100%;
             height: auto;
+            margin-top: 0;  /* En mobile la imagen no se baja */
             aspect-ratio: 4 / 5;
           }
 

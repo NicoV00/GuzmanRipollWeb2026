@@ -11,14 +11,29 @@ export default function Especialistas() {
       flexDirection: { xs: 'column', md: 'row' } // Responsive layout
     }}>
       {/* Left side - Image gallery grid */}
-      <Box sx={{ 
+      <Box sx={{
         flex: 1,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        /* Capa de grain ultra sutil (estilo fotográfico) */
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          zIndex: 2,
+          opacity: 0.07,
+          mixBlendMode: 'overlay',
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
+          backgroundSize: '160px 160px',
+        }
       }}>
-        
-        <img src={"/images/image.png"} alt="scroll" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+
+        <img src={"/images/bias.png"} alt="Cirugía mamaria" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </Box>
 
       {/* Right side - Content */}
@@ -43,6 +58,8 @@ export default function Especialistas() {
               fontWeight: 500,
               textAlign: 'left',
               display: 'block',
+              maxWidth: '440px',
+              lineHeight: 1.5,
             }}
           >
             HISTORIA CLÍNICA, SIMULACIONES 3D Y TÉCNICAS DE VANGUARDIA PARA ACOMPAÑARTE EN CADA PASO.
@@ -104,7 +121,7 @@ export default function Especialistas() {
             <Box sx={{ width: "70%", textAlign: 'start' }}>
               <Typography variant="h6" sx={{
                 fontFamily: 'Poppins',
-                fontWeight: 600,
+                fontWeight: 500,
                 mb: 0.5,
                 fontSize: '1.1rem'
               }}>
@@ -113,7 +130,7 @@ export default function Especialistas() {
               <Typography variant="body2" sx={{
                 fontFamily: 'Red Hat Display',
                 color: '#9CA3AF',
-                fontSize: '0.95rem'
+                fontSize: '1.05rem'
               }}>
                 Cada plan es único, como vos
               </Typography>
@@ -155,7 +172,7 @@ export default function Especialistas() {
             <Box sx={{ width: "70%", textAlign: 'start' }}>
               <Typography variant="h6" sx={{
                 fontFamily: 'Poppins',
-                fontWeight: 600,
+                fontWeight: 500,
                 mb: 0.5,
                 fontSize: '1.1rem'
               }}>
@@ -164,7 +181,7 @@ export default function Especialistas() {
               <Typography variant="body2" sx={{
                 fontFamily: 'Red Hat Display',
                 color: '#9CA3AF',
-                fontSize: '0.95rem'
+                fontSize: '1.05rem'
               }}>
                 Integramos inteligencia artificial y tecnología 3D.
               </Typography>
@@ -206,7 +223,7 @@ export default function Especialistas() {
             <Box sx={{ width: "70%", textAlign: 'start' }}>
               <Typography variant="h6" sx={{
                 fontFamily: 'Poppins',
-                fontWeight: 600,
+                fontWeight: 500,
                 mb: 0.5,
                 fontSize: '1.1rem'
               }}>
@@ -215,7 +232,7 @@ export default function Especialistas() {
               <Typography variant="body2" sx={{
                 fontFamily: 'Red Hat Display',
                 color: '#9CA3AF',
-                fontSize: '0.95rem'
+                fontSize: '1.05rem'
               }}>
                 Métodos innovadores para optimizar tu recuperación.
               </Typography>
@@ -233,7 +250,7 @@ export default function Especialistas() {
                 justifyContent: 'center',
                 background: 'linear-gradient(135deg, rgba(0, 129, 199, 0.05), rgba(0, 129, 199, 0.1))'
               }}>
-                <Sparkles size={22} color="#0081C7" />
+                <Zap size={22} color="#0081C7" />
               </Box>
             </Box>
           </Box>

@@ -1,14 +1,65 @@
 import { Box, Typography } from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 
+// Dos filas de procedimientos. Nombres y subtítulos variados para no repetir.
+const procedures = [
+  {
+    name: "CIRUGIA MAMARIA",
+    subtitle: "Aumento, mastopexia y reconstrucción",
+    image: "/images/mamaria.png",
+    col: { xs: "auto", md: "1 / 5" },
+    row: 1,
+    height: { xs: "290px", sm: "330px", md: "50%" },
+  },
+  {
+    name: "AUMENTO MAMARIO",
+    subtitle: "Implantes de gel cohesivo",
+    image: "/images/mamaria.jpg",
+    col: { xs: "auto", md: "5 / 9" },
+    row: 1,
+    height: { xs: "340px", sm: "380px", md: "80%" },
+  },
+  {
+    name: "TRATAMIENTOS FACIALES",
+    subtitle: "INDIBA & DEKA DuoGlide",
+    image: "/images/image.png",
+    col: { xs: "auto", md: "9 / 13" },
+    row: 1,
+    height: { xs: "240px", sm: "280px", md: "50%" },
+  },
+  {
+    name: "MOMMY MAKEOVER",
+    subtitle: "Abdomen y mamas en un solo proceso",
+    image: "/images/mommy.png",
+    col: { xs: "auto", md: "1 / 5" },
+    row: 2,
+    height: { xs: "320px", sm: "360px", md: "80%" },
+  },
+  {
+    name: "ABDOMINOPLASTIA",
+    subtitle: "Remodelación del abdomen",
+    image: "/images/abdomen.png",
+    objectPosition: "center bottom",
+    col: { xs: "auto", md: "5 / 9" },
+    row: 2,
+    height: { xs: "290px", sm: "330px", md: "50%" },
+  },
+  {
+    name: "LIPOESCULTURA VASER",
+    subtitle: "Definición corporal de alta precisión",
+    image: "/images/morpheus.png",
+    col: { xs: "auto", md: "9 / 13" },
+    row: 2,
+    height: { xs: "310px", sm: "350px", md: "80%" },
+  },
+];
+
 export default function VerMasProcedimientosHome() {
-  const [isPinned, setIsPinned] = useState(true);
   const imageRefs = useRef([]);
 
   useEffect(() => {
-    // Inicializar GSAP animations
     imageRefs.current.forEach((img) => {
       if (img) {
         gsap.set(img, { transformPerspective: 1000 });
@@ -47,7 +98,7 @@ export default function VerMasProcedimientosHome() {
   };
 
   const addToRefs = (el, index) => {
-    if (el && !imageRefs.current.includes(el)) {
+    if (el) {
       imageRefs.current[index] = el;
     }
   };
@@ -57,7 +108,7 @@ export default function VerMasProcedimientosHome() {
       id="procedimientos-home-section"  // ID único para detectar esta sección
       sx={{
         position: 'relative',
-        height: { xs: 'auto', md: 'calc(300vh + 100px)' },
+        height: { xs: 'auto', md: 'calc(200vh + 100px)' },
         overflowY: { xs: 'visible', md: 'scroll' },
         overflowX: 'hidden',
         '&::-webkit-scrollbar': {
@@ -68,7 +119,7 @@ export default function VerMasProcedimientosHome() {
         display: 'flex',
         flexDirection: 'column',
         paddingInline: { xs: '20px', md: '70px' },
-        paddingBottom: { xs: '72px', md: '180px' },
+        paddingBottom: { xs: '110px', md: '210px' },
       }}
     >
       {/* Header con numeración y enlace */}
@@ -158,501 +209,60 @@ export default function VerMasProcedimientosHome() {
         columnGap: { xs: '16px', md: '20px' },
         flex: 1,
       }}>
-        {/* Primer elemento */}
-        <Box
-          sx={{
-            marginTop: { xs: '25px', md: '71px' },
-            width: { xs: '100%', md: 'auto' },
-            gridColumn: { xs: 'auto', md: '1 / 5' },
-            gridRow: { xs: 'auto', md: '1 / 1' },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            justifyContent: 'start',
-          }}
-        >
+        {procedures.map((card, index) => (
           <Box
+            key={card.name}
             sx={{
-              width: { xs: '100%', md: '100%' },
-              height: {
-                xs: '280px',
-                sm: '320px',
-                md: '50%',
-              },
-              borderRadius: '6px',
-              overflow: 'hidden',
-              cursor: 'pointer',
+              marginTop: { xs: '35px', md: '71px' },
+              width: { xs: '100%', md: 'auto' },
+              gridColumn: card.col,
+              gridRow: { xs: 'auto', md: card.row === 1 ? '1 / 1' : '2 / 3' },
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'start',
+              justifyContent: 'start',
+              mb: { xs: index === procedures.length - 1 ? '40px' : '0px', md: '0px' },
             }}
           >
             <Box
-              component="img"
-              src="/images/bias.png"
-              alt="scroll"
-              ref={(el) => addToRefs(el, 0)}
-              onMouseEnter={() => handleMouseEnter(0)}
-              onMouseLeave={() => handleMouseLeave(0)}
               sx={{
                 width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                height: card.height,
+                borderRadius: '6px',
+                overflow: 'hidden',
+                cursor: 'pointer',
               }}
-            />
+            >
+              <Box
+                component="img"
+                src={card.image}
+                alt={card.name}
+                ref={(el) => addToRefs(el, index)}
+                onMouseEnter={() => handleMouseEnter(index)}
+                onMouseLeave={() => handleMouseLeave(index)}
+                sx={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: card.objectPosition || 'center',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
+                }}
+              />
+            </Box>
+            <Box sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'start',
+              color: '#000000',
+              textAlign: 'start',
+              mt: { xs: '20px', md: '15px' }
+            }}>
+              <Typography variant="p" fontSize={{ xs: '14px', md: '18px' }} fontFamily={'Poppins'} fontWeight={500} sx={{ mb: '4px' }}>{card.name}</Typography>
+              <Typography variant="p" fontSize={{ xs: '14px', md: '16px' }} fontFamily={'Poppins'} color="text.secondary" fontWeight={500}>{card.subtitle}</Typography>
+            </Box>
           </Box>
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            color: '#000000',
-            textAlign: 'start',
-            mt: { xs: '20px', md: '15px' } // Aumenté la separación
-          }}>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '18px' }} fontFamily={'Poppins'} fontWeight={500} sx={{ mb: '4px' }}>MOMMY MAKEOVER</Typography>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '16px' }} fontFamily={'Poppins'} color="text.secondary" fontWeight={500}>Bodytite, Morpheus8</Typography>
-          </Box>
-        </Box>
-
-        {/* Segundo elemento */}
-        <Box
-          sx={{
-            marginTop: { xs: '35px', md: '71px' },
-            width: { xs: '100%', md: 'auto' },
-            gridColumn: { xs: 'auto', md: '5 / 9' },
-            gridRow: { xs: 'auto', md: '1 / 1' },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            justifyContent: 'start',
-          }}
-        >
-          <Box
-            sx={{
-              width: { xs: '100%', md: '100%' },
-              height: {
-                xs: '320px',
-                sm: '360px',
-                md: '90%',
-              },
-              borderRadius: '6px',
-              overflow: 'hidden',
-              cursor: 'pointer',
-            }}
-          >
-            <Box
-              component="img"
-              src="/images/bias.png"
-              alt="scroll"
-              ref={(el) => addToRefs(el, 1)}
-              onMouseEnter={() => handleMouseEnter(1)}
-              onMouseLeave={() => handleMouseLeave(1)}
-              sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-              }}
-            />
-          </Box>
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            color: '#000000',
-            textAlign: 'start',
-            mt: { xs: '20px', md: '15px' } // Aumenté la separación
-          }}>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '18px' }} fontFamily={'Poppins'} fontWeight={500} sx={{ mb: '4px' }}>CIRUGIA MAMARIA</Typography>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '16px' }} fontFamily={'Poppins'} color="text.secondary" fontWeight={500}>Bodytite, Morpheus8</Typography>
-          </Box>
-        </Box>
-
-        {/* Tercer elemento */}
-        <Box
-          sx={{
-            marginTop: { xs: '35px', md: '71px' },
-            width: { xs: '100%', md: 'auto' },
-            gridColumn: { xs: 'auto', md: '9 / 13' },
-            gridRow: { xs: 'auto', md: '1 / 1' },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            justifyContent: 'start',
-          }}
-        >
-          <Box
-            sx={{
-              width: { xs: '100%', md: '100%' },
-              height: {
-                xs: '300px',
-                sm: '340px',
-                md: '90%',
-              },
-              borderRadius: '6px',
-              overflow: 'hidden',
-              cursor: 'pointer',
-            }}
-          >
-            <Box
-              component="img"
-              src="/images/bias.png"
-              alt="scroll"
-              ref={(el) => addToRefs(el, 2)}
-              onMouseEnter={() => handleMouseEnter(2)}
-              onMouseLeave={() => handleMouseLeave(2)}
-              sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-              }}
-            />
-          </Box>
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            color: '#000000',
-            textAlign: 'start',
-            mt: { xs: '20px', md: '15px' } // Aumenté la separación
-          }}>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '18px' }} fontFamily={'Poppins'} fontWeight={500} sx={{ mb: '4px' }}>LIPOASPIRACION LÁSER</Typography>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '16px' }} fontFamily={'Poppins'} color="text.secondary" fontWeight={500}>Bodytite, Morpheus8</Typography>
-          </Box>
-        </Box>
-
-        {/* Cuarto elemento */}
-        <Box
-          sx={{
-            marginTop: { xs: '35px', md: '71px' },
-            width: { xs: '100%', md: 'auto' },
-            gridColumn: { xs: 'auto', md: '1 / 5' },
-            gridRow: { xs: 'auto', md: '2 / 3' },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            justifyContent: 'start',
-          }}
-        >
-          <Box
-            sx={{
-              width: { xs: '100%', md: '100%' },
-              height: {
-                xs: '290px',
-                sm: '330px',
-                md: '50%',
-              },
-              borderRadius: '6px',
-              overflow: 'hidden',
-              cursor: 'pointer',
-            }}
-          >
-            <Box
-              component="img"
-              src="/images/bias.png"
-              alt="scroll"
-              ref={(el) => addToRefs(el, 3)}
-              onMouseEnter={() => handleMouseEnter(3)}
-              onMouseLeave={() => handleMouseLeave(3)}
-              sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-              }}
-            />
-          </Box>
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            color: '#000000',
-            textAlign: 'start',
-            mt: { xs: '20px', md: '15px' } // Aumenté la separación
-          }}>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '18px' }} fontFamily={'Poppins'} fontWeight={500} sx={{ mb: '4px' }}>MOMMY MAKEOVER</Typography>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '16px' }} fontFamily={'Poppins'} color="text.secondary" fontWeight={500}>Bodytite, Morpheus8</Typography>
-          </Box>
-        </Box>
-
-        {/* Quinto elemento */}
-        <Box
-          sx={{
-            marginTop: { xs: '35px', md: '71px' },
-            width: { xs: '100%', md: 'auto' },
-            gridColumn: { xs: 'auto', md: '5 / 9' },
-            gridRow: { xs: 'auto', md: '2 / 3' },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            justifyContent: 'start',
-          }}
-        >
-          <Box
-            sx={{
-              width: '100%',
-              height: {
-                xs: '340px',
-                sm: '380px',
-                md: '90%',
-              },
-              borderRadius: '6px',
-              overflow: 'hidden',
-              cursor: 'pointer',
-            }}
-          >
-            <Box
-              component="img"
-              src="/images/bias.png"
-              alt="scroll"
-              ref={(el) => addToRefs(el, 4)}
-              onMouseEnter={() => handleMouseEnter(4)}
-              onMouseLeave={() => handleMouseLeave(4)}
-              sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-              }}
-            />
-          </Box>
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            color: '#000000',
-            textAlign: 'start',
-            mt: { xs: '20px', md: '15px' } // Aumenté la separación
-          }}>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '18px' }} fontFamily={'Poppins'} fontWeight={500} sx={{ mb: '4px' }}>CIRUGIA MAMARIA</Typography>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '16px' }} fontFamily={'Poppins'} color="text.secondary" fontWeight={500}>Bodytite, Morpheus8</Typography>
-          </Box>
-        </Box>
-
-        {/* Sexto elemento */}
-        <Box
-          sx={{
-            marginTop: { xs: '35px', md: '71px' },
-            width: { xs: '100%', md: 'auto' },
-            gridColumn: { xs: 'auto', md: '9 / 13' },
-            gridRow: { xs: 'auto', md: '2 / 3' },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            justifyContent: 'start',
-          }}
-        >
-          <Box
-            sx={{
-              width: '100%',
-              height: {
-                xs: '310px',
-                sm: '350px',
-                md: '50%',
-              },
-              borderRadius: '6px',
-              overflow: 'hidden',
-              cursor: 'pointer',
-            }}
-          >
-            <Box
-              component="img"
-              src="/images/bias.png"
-              alt="scroll"
-              ref={(el) => addToRefs(el, 5)}
-              onMouseEnter={() => handleMouseEnter(5)}
-              onMouseLeave={() => handleMouseLeave(5)}
-              sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-              }}
-            />
-          </Box>
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            color: '#000000',
-            textAlign: 'start',
-            mt: { xs: '20px', md: '15px' } // Aumenté la separación
-          }}>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '18px' }} fontFamily={'Poppins'} fontWeight={500} sx={{ mb: '4px' }}>LIPOASPIRACION LÁSER</Typography>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '16px' }} fontFamily={'Poppins'} color="text.secondary" fontWeight={500}>Bodytite, Morpheus8</Typography>
-          </Box>
-        </Box>
-
-        {/* Séptimo elemento */}
-        <Box
-          sx={{
-            marginTop: { xs: '35px', md: '71px' },
-            width: { xs: '100%', md: 'auto' },
-            gridColumn: { xs: 'auto', md: '1 / 5' },
-            gridRow: { xs: 'auto', md: '3 / 4' },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            justifyContent: 'start',
-          }}
-        >
-          <Box
-            sx={{
-              width: '100%',
-              height: {
-                xs: '320px',
-                sm: '360px',
-                md: '90%',
-              },
-              borderRadius: '6px',
-              overflow: 'hidden',
-              cursor: 'pointer',
-            }}
-          >
-            <Box
-              component="img"
-              src="/images/bias.png"
-              alt="scroll"
-              ref={(el) => addToRefs(el, 6)}
-              onMouseEnter={() => handleMouseEnter(6)}
-              onMouseLeave={() => handleMouseLeave(6)}
-              sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-              }}
-            />
-          </Box>
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            color: '#000000',
-            textAlign: 'start',
-            mt: { xs: '20px', md: '15px' } // Aumenté la separación
-          }}>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '18px' }} fontFamily={'Poppins'} fontWeight={500} sx={{ mb: '4px' }}>MOMMY MAKEOVER</Typography>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '16px' }} fontFamily={'Poppins'} color="text.secondary" fontWeight={500}>Bodytite, Morpheus8</Typography>
-          </Box>
-        </Box>
-
-        {/* Octavo elemento */}
-        <Box
-          sx={{
-            marginTop: { xs: '35px', md: '71px' },
-            width: { xs: '100%', md: 'auto' },
-            gridColumn: { xs: 'auto', md: '5 / 9' },
-            gridRow: { xs: 'auto', md: '3 / 4' },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            justifyContent: 'start',
-          }}
-        >
-          <Box
-            sx={{
-              width: '100%',
-              height: {
-                xs: '280px',
-                sm: '320px',
-                md: '50%',
-              },
-              borderRadius: '6px',
-              overflow: 'hidden',
-              cursor: 'pointer',
-            }}
-          >
-            <Box
-              component="img"
-              src="/images/bias.png"
-              alt="scroll"
-              ref={(el) => addToRefs(el, 7)}
-              onMouseEnter={() => handleMouseEnter(7)}
-              onMouseLeave={() => handleMouseLeave(7)}
-              sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-              }}
-            />
-          </Box>
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            color: '#000000',
-            textAlign: 'start',
-            mt: { xs: '20px', md: '15px' } // Aumenté la separación
-          }}>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '18px' }} fontFamily={'Poppins'} fontWeight={500} sx={{ mb: '4px' }}>CIRUGIA MAMARIA</Typography>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '16px' }} fontFamily={'Poppins'} color="text.secondary" fontWeight={500}>Bodytite, Morpheus8</Typography>
-          </Box>
-        </Box>
-
-        {/* Noveno elemento */}
-        <Box
-          sx={{
-            marginTop: { xs: '35px', md: '71px' },
-            width: { xs: '100%', md: 'auto' },
-            gridColumn: { xs: 'auto', md: '9 / 13' },
-            gridRow: { xs: 'auto', md: '3 / 4' },
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            justifyContent: 'start',
-            mb: { xs: '40px', md: '0px' }
-          }}
-        >
-          <Box
-            sx={{
-              width: '100%',
-              height: {
-                xs: '300px',
-                sm: '340px',
-                md: '90%',
-              },
-              borderRadius: '6px',
-              overflow: 'hidden',
-              cursor: 'pointer',
-            }}
-          >
-            <Box
-              component="img"
-              src="/images/bias.png"
-              alt="scroll"
-              ref={(el) => addToRefs(el, 8)}
-              onMouseEnter={() => handleMouseEnter(8)}
-              onMouseLeave={() => handleMouseLeave(8)}
-              sx={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-              }}
-            />
-          </Box>
-          <Box sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'start',
-            color: '#000000',
-            textAlign: 'start',
-            mt: { xs: '20px', md: '15px' } // Aumenté la separación
-          }}>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '18px' }} fontFamily={'Poppins'} fontWeight={500} sx={{ mb: '4px' }}>LIPOASPIRACION LÁSER</Typography>
-            <Typography variant="p" fontSize={{ xs: '14px', md: '16px' }} fontFamily={'Poppins'} color="text.secondary" fontWeight={500}>Bodytite, Morpheus8</Typography>
-          </Box>
-        </Box>
+        ))}
       </Box> {/* Cierre del grid */}
     </Box>
   );

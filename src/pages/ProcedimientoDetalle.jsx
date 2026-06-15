@@ -5,8 +5,7 @@ import { useParams, Link as RouterLink } from "react-router-dom"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Box, Typography } from "@mui/material"
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward"
-import { Sparkles, ShieldCheck, HeartPulse, Users, Cpu } from "lucide-react"
+import { Sparkles, ShieldCheck, HeartPulse, Users, Cpu, Check } from "lucide-react"
 
 import Footer from "../components/UI/Footer"
 import ProcessSteps from "../components/procedimientos/ProcessSteps.tsx"
@@ -119,6 +118,33 @@ const procedimientosData = {
     },
     tecnica: "Incisiones ocultas en pliegues naturales. Eliminación de exceso de piel y grasa.",
     recuperacion: "Hematomas desaparecen en 7-10 días. Resultado definitivo en 2-3 meses."
+  },
+  "06": {
+    number: "06",
+    title: "Tratamientos Faciales",
+    subtitle: "INDIBA & DEKA DuoGlide",
+    category: "Medicina Estética Facial",
+    imageSrc: "/images/image.png",
+    catchPhrase: "Regeneración y resurfacing facial sin cirugía, combinando lo mejor de INDIBA y DEKA DuoGlide.",
+    description: "¿Sabías que también podemos usar DEKA DuoGlide para tratamientos faciales? INDIBA trabaja desde la regeneración, mientras que DuoGlide actúa de forma más intensa sobre la corrección de la piel.",
+    specs: {
+      tipo: "Ambulatorio",
+      lugar: "Consultorio",
+      anestesia: "Tópica / No requiere",
+      duracion: "30–60 minutos"
+    },
+    comparativa: {
+      indiba: {
+        title: "INDIBA → Regenerar y reafirmar",
+        items: ["Estimula colágeno", "Mejora firmeza y luminosidad", "Desinflama", "Mejora la calidad de piel", "Sin downtime"]
+      },
+      duoglide: {
+        title: "DUOGlide → Renovar y corregir",
+        items: ["Manchas", "Textura", "Poros", "Cicatrices", "Arrugas y resurfacing"]
+      }
+    },
+    tecnica: "Combinamos INDIBA (radiofrecuencia regenerativa) con el láser DEKA DuoGlide para abordar tanto la regeneración profunda como la corrección de la superficie de la piel, adaptando el protocolo a cada paciente.",
+    recuperacion: "INDIBA no requiere downtime. Con DuoGlide puede haber un enrojecimiento leve y transitorio según la intensidad del resurfacing."
   }
 }
 
@@ -294,7 +320,7 @@ export default function ProcedimientoDetalle() {
           position: { md: "sticky" },
           top: "140px",
           alignSelf: "start",
-          height: { xs: "400px", md: "75vh" },
+          height: { xs: "320px", md: "50vh" },
           borderRadius: "12px",
           overflow: "hidden"
         }}>
@@ -324,41 +350,43 @@ export default function ProcedimientoDetalle() {
           gridColumn: { xs: "1 / -1", md: "8 / 13" },
           display: "flex",
           flexDirection: "column",
-          gap: 8,
+          gap: 5,
           pt: { md: 4 }
         }}>
 
-          {/* Specs Grid */}
-          <Box sx={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: "24px 16px",
-            borderBottom: "1px solid rgba(0,0,0,0.1)",
-            pb: 6
-          }}>
-            {Object.entries(procedimiento.specs).map(([key, value]) => (
-              <Box key={key}>
-                <Typography sx={{
-                  fontFamily: "Poppins", fontSize: "12px", textTransform: "uppercase",
-                  color: "rgba(0,0,0,0.4)", fontWeight: 600, letterSpacing: "0.05em", mb: 0.5,
-                  textAlign: "left",
-                }}>
-                  {key}
-                </Typography>
-                <Typography sx={{
-                  fontFamily: "Poppins", fontSize: "15px", color: "#111", fontWeight: 500,
-                  textAlign: "left",
-                }}>
-                  {value}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
+          {/* Specs Grid — oculto en Cirugía Mamaria (id "01") porque agrupa todos los procesos */}
+          {id !== "01" && (
+            <Box sx={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "24px 16px",
+              borderBottom: "1px solid rgba(0,0,0,0.1)",
+              pb: 6
+            }}>
+              {Object.entries(procedimiento.specs).map(([key, value]) => (
+                <Box key={key}>
+                  <Typography sx={{
+                    fontFamily: "Poppins", fontSize: "12px", textTransform: "uppercase",
+                    color: "rgba(0,0,0,0.4)", fontWeight: 600, letterSpacing: "0.05em", mb: 0.5,
+                    textAlign: "left",
+                  }}>
+                    {key}
+                  </Typography>
+                  <Typography sx={{
+                    fontFamily: "Poppins", fontSize: "15px", color: "#111", fontWeight: 500,
+                    textAlign: "left",
+                  }}>
+                    {value}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+          )}
 
           {/* Description */}
           <Box>
             <Typography variant="h3" sx={{
-              fontFamily: "Poppins", fontSize: { xs: "22px", md: "26px" }, fontWeight: 500, mb: 3, textAlign: "left",
+              fontFamily: "Poppins", fontSize: { xs: "16px", md: "18px" }, fontWeight: 600, mb: 1.5, textAlign: "left",
             }}>
               Sobre el procedimiento
             </Typography>
@@ -369,12 +397,47 @@ export default function ProcedimientoDetalle() {
             </Typography>
           </Box>
 
-
+          {/* Comparativa INDIBA / DUOGLIDE (solo Tratamientos Faciales) */}
+          {procedimiento.comparativa && (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              {[
+                { c: procedimiento.comparativa.indiba, bg: "#ffffff" },
+                { c: procedimiento.comparativa.duoglide, bg: "#f5f5f5" },
+              ].map(({ c, bg }, i) => (
+                <Box key={i} sx={{
+                  backgroundColor: bg,
+                  borderRadius: "12px",
+                  p: { xs: 3, md: 3.5 },
+                  border: "1px solid rgba(0,0,0,0.06)",
+                }}>
+                  <Typography sx={{
+                    fontFamily: "Poppins", fontSize: { xs: "16px", md: "18px" }, fontWeight: 600,
+                    color: "#111", mb: 2, textAlign: "left",
+                  }}>
+                    {c.title}
+                  </Typography>
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1.2 }}>
+                    {c.items.map((item, j) => (
+                      <Box key={j} sx={{ display: "flex", gap: 1.5, alignItems: "flex-start" }}>
+                        <Check size={16} strokeWidth={2.4} color="#0081C7" style={{ marginTop: "3px", flexShrink: 0 }} />
+                        <Typography sx={{
+                          fontFamily: "Poppins", fontSize: { xs: "14px", md: "15px" },
+                          color: "rgba(0,0,0,0.72)", lineHeight: 1.5, textAlign: "left",
+                        }}>
+                          {item}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Box>
+                </Box>
+              ))}
+            </Box>
+          )}
 
           {/* Technique */}
           <Box>
             <Typography variant="h3" sx={{
-              fontFamily: "Poppins", fontSize: { xs: "22px", md: "26px" }, fontWeight: 500, mb: 3, textAlign: "left",
+              fontFamily: "Poppins", fontSize: { xs: "16px", md: "18px" }, fontWeight: 600, mb: 1.5, textAlign: "left",
             }}>
               Técnica Quirúrgica
             </Typography>

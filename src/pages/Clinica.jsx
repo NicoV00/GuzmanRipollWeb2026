@@ -3,8 +3,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Box, Grid, Typography, IconButton, useTheme } from "@mui/material"
 import { useLocation } from "react-router-dom"
-import ArrowRightIcon from "@mui/icons-material/ArrowRight"
-import ArrowLeftIcon from "@mui/icons-material/ArrowLeft"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 

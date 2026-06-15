@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { Add as Plus } from "@mui/icons-material";
+import { Plus } from "lucide-react";
 import {
   Box,
   Typography,
@@ -87,10 +87,11 @@ export default function Faq() {
               fontWeight: 400,
               fontFamily: 'Poppins, sans-serif',
               color: 'text.primary',
+              fontSize: { xs: '2rem', md: '3.75rem' },
               mb: 1
             }}
           >
-            Tenes Dudas?
+            Tenes dudas?
           </Typography>
           <Typography
             variant="h2"
@@ -99,6 +100,7 @@ export default function Faq() {
               fontWeight: 400,
               fontFamily: 'Poppins, sans-serif',
               color: 'textAccent',
+              fontSize: { xs: '2rem', md: '3.75rem' },
               mb: 2
             }}
           >
@@ -151,7 +153,7 @@ export default function Faq() {
                           fontSize: { xs: '16px', md: '20px' },
                           lineHeight: 1.75,
                           pb: 2,
-                          maxWidth: { xs: '100%', md: 'calc(100% - 150px)' }
+                          maxWidth: { xs: '100%', md: 'calc(100% - 280px)' }
                         }}
                       >
                         {item.answer}
@@ -171,7 +173,7 @@ export default function Faq() {
                     '&:hover': { backgroundColor: 'transparent' }
                   }}
                 >
-                  <Plus fontSize="small" />
+                  <Plus size={18} strokeWidth={2} />
                 </IconButton>
               </Box>
             </Box>
