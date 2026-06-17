@@ -81,6 +81,21 @@ export default function Faq() {
           mb: "80px",
           textAlign: 'start',
         }}>
+          {/* Eyebrow numerado — consistente con el resto de la home */}
+          <Box sx={{ display: 'flex', alignItems: 'baseline', gap: '10px', mb: { xs: '20px', md: '24px' } }}>
+            <Typography component="span" sx={{
+              fontFamily: "Poppins, sans-serif", fontSize: { xs: "16px", md: "18px" },
+              fontWeight: 600, color: "rgba(0,0,0,0.42)", lineHeight: 1,
+            }}>
+              05
+            </Typography>
+            <Typography component="span" sx={{
+              fontFamily: "Poppins, sans-serif", fontSize: { xs: "16px", md: "18px" }, fontWeight: 500,
+              textTransform: "uppercase", color: "#000000", letterSpacing: "0.03em", lineHeight: 1,
+            }}>
+              FAQ
+            </Typography>
+          </Box>
           <Typography
             variant="h2"
             component="h1"

@@ -268,10 +268,25 @@ const TestimoniosCarousel = () => {
             marginBottom: { xs: '60px', md: '64px' }
           }}
         >
-          <Typography 
-            color="#1F2937" 
-            fontFamily={'Poppins'} 
-            fontSize={{ xs: '45px', md: '45px', xl: '70px' }} 
+          {/* Eyebrow numerado — consistente con el resto de la home */}
+          <Box sx={{ display: 'flex', alignItems: 'baseline', gap: '10px', mb: { xs: '20px', md: '24px' } }}>
+            <Typography component="span" sx={{
+              fontFamily: "Poppins, sans-serif", fontSize: { xs: "16px", md: "18px" },
+              fontWeight: 600, color: "rgba(0,0,0,0.42)", lineHeight: 1,
+            }}>
+              04
+            </Typography>
+            <Typography component="span" sx={{
+              fontFamily: "Poppins, sans-serif", fontSize: { xs: "16px", md: "18px" }, fontWeight: 500,
+              textTransform: "uppercase", color: "#000000", letterSpacing: "0.03em", lineHeight: 1,
+            }}>
+              Testimonios
+            </Typography>
+          </Box>
+          <Typography
+            color="#1F2937"
+            fontFamily={'Poppins'}
+            fontSize={{ xs: '45px', md: '45px', xl: '70px' }}
             sx={{ 
               width: '100%', 
               lineHeight: { xs: '1.2', md: '1.1' },
