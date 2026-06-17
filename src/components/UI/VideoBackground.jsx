@@ -25,15 +25,31 @@ export default function VideoBackground({
     const video = videoRef.current;
     if (!video) return;
 
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
+    // Forzar autoplay silencioso en mobile: React no setea de forma confiable el atributo `muted`,
+    // y sin él iOS/Android bloquean el autoplay (aparece el botón de play). Lo seteamos a mano.
+    video.muted = true;
+    video.defaultMuted = true;
+    video.setAttribute("muted", "");
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
 
     const tryPlay = () => {
-      if (prefersReducedMotion) return;
       const p = video.play();
       if (p && typeof p.catch === "function") p.catch(() => {});
     };
+
+    // Reintentar apenas el video tiene datos (clave en mobile)
+    video.addEventListener("loadeddata", tryPlay);
+    video.addEventListener("canplay", tryPlay);
+
+    // Último recurso: si el navegador igual bloquea, arrancar al primer gesto
+    const onFirstInteraction = () => {
+      tryPlay();
+      window.removeEventListener("touchstart", onFirstInteraction);
+      window.removeEventListener("click", onFirstInteraction);
+    };
+    window.addEventListener("touchstart", onFirstInteraction, { passive: true });
+    window.addEventListener("click", onFirstInteraction);
 
     // Pausar/reanudar según visibilidad en el viewport (ahorra CPU/GPU al decodificar)
     let observer;
@@ -57,9 +73,15 @@ export default function VideoBackground({
     };
     document.addEventListener("visibilitychange", handleVisibility);
 
+    tryPlay();
+
     return () => {
       if (observer) observer.disconnect();
       document.removeEventListener("visibilitychange", handleVisibility);
+      video.removeEventListener("loadeddata", tryPlay);
+      video.removeEventListener("canplay", tryPlay);
+      window.removeEventListener("touchstart", onFirstInteraction);
+      window.removeEventListener("click", onFirstInteraction);
     };
   }, []);
 

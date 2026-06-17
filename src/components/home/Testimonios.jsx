@@ -247,7 +247,7 @@ const TestimoniosCarousel = () => {
       sx={{
         padding: { xs: '80px 0 40px 0', md: '80px 0' },
         width: '100%',
-        backgroundColor: '#F2F2F2'
+        backgroundColor: '#FAFFFF'
       }}
     >
       <div style={{
@@ -353,13 +353,13 @@ const TestimoniosCarousel = () => {
                     style={{
                       height: 'auto',
                       minHeight: window.innerWidth < 768 ? '340px' : '280px',
-                      borderRadius: '12px',
+                      borderRadius: '16px',
                       padding: window.innerWidth < 768 ? '28px' : '32px',
                       display: 'flex',
                       textAlign: 'left',
                       flexDirection: 'column',
                       justifyContent: 'center',
-                      backgroundColor: '#F8F8F8',
+                      backgroundColor: '#F2F2F2',
                       boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)',
                       transition: 'all 0.3s ease',
                       position: 'relative',

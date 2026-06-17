@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useLenis } from 'lenis/dist/lenis-react';
+import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 /**
@@ -18,6 +19,14 @@ export default function LenisScrollTriggerSetup() {
     }
 
     lenis.on('scroll', update);
+
+    // Sincronizar Lenis con el ticker de GSAP para que el scroll y los pins
+    // se actualicen en el MISMO frame (evita el "rebote" al fijar secciones).
+    function raf(time) {
+      lenis.raf(time * 1000);
+    }
+    gsap.ticker.add(raf);
+    gsap.ticker.lagSmoothing(0);
 
     // Hacer que ScrollTrigger use el método de Lenis para obtener la posición de scroll
     ScrollTrigger.scrollerProxy(document.documentElement, {
@@ -43,6 +52,7 @@ export default function LenisScrollTriggerSetup() {
 
     return () => {
       lenis.off('scroll', update);
+      gsap.ticker.remove(raf);
       ScrollTrigger.removeEventListener('refresh', () => lenis.resize());
     };
   }, [lenis]);

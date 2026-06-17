@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three/webgpu";
 import { attribute, float, PI2, time, vec3, mix, select, hash } from "three/tsl";
 
@@ -40,7 +40,7 @@ export class Spinner extends THREE.Points {
 		const progress = particleIndex.div(config.particleCount) 
 		const origin = this.plotFunction( progress , float(.7).add(time.mul(3).sin().mul(0.02)), config )
 
-		const animatedProgress = time.div(4).mod(1); 
+		const animatedProgress = time.div(9).mod(1);
 		const trailLength = float(0.3);  
 		const animationGradient =  progress.sub(animatedProgress).add(1).mod(1);
 		const insideTrail = animationGradient.lessThanEqual(trailLength);
@@ -121,9 +121,28 @@ export const plotFunctionLoops = (progress, detailScale, config) => {
 	)
 };
 
+// Nudo de toro (trefoil) — lazo cerrado continuo con profundidad 3D.
+// Fluye de forma hipnótica al rotar; ideal para "Consulta Inicial".
+export const plotFunctionFlow = (progress, detailScale, config) => {
+	const t = PI2.mul(progress)
+	const p = float(config.flowP)
+	const q = float(config.flowQ)
+	const R = float(config.flowR)
+	const r = float(config.flowr).add(detailScale.mul(config.flowBreath))
+	const qt = t.mul(q)
+	const pt = t.mul(p)
+	const ring = R.add(r.mul(qt.cos()))
+	const scale = float(config.flowScale)
+	const x = ring.mul(pt.cos()).mul(scale)
+	const y = ring.mul(pt.sin()).mul(scale)
+	const z = r.mul(qt.sin()).mul(scale)
+	return vec3(x, y, z)
+};
+
 export default function WebGPUSpinnerComponent({ type = "spiral" }) {
   const containerRef = useRef(null);
   const rendererRef = useRef(null);
+  const [hasFallback, setHasFallback] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -137,6 +156,11 @@ export default function WebGPUSpinnerComponent({ type = "spiral" }) {
 
     const mount = async () => {
       if (!host) return;
+
+      if (!navigator.gpu) {
+        setHasFallback(true);
+        return;
+      }
 
       const width = host.clientWidth || 160;
       const height = host.clientHeight || 160;
@@ -159,9 +183,15 @@ export default function WebGPUSpinnerComponent({ type = "spiral" }) {
       if (type === "rose") camera.position.z = 0.9;
       else if (type === "lissajous") camera.position.z = 1.2;
       else if (type === "loops") camera.position.z = 1.2;
+      else if (type === "flow") camera.position.z = 1.85;
       else camera.position.z = 1.2;
 
-      if (type === "rose") {
+      if (type === "flow") {
+        spinner = new Spinner(
+          {"strokeWidth":0.3,"particleCount":100000,"flowP":3,"flowQ":2,"flowR":0.5,"flowr":0.22,"flowScale":0.78,"flowBreath":0.03},
+          plotFunctionFlow
+        );
+      } else if (type === "rose") {
         spinner = new Spinner(
           {"strokeWidth":0.3,"particleCount":100000,"roseA":23,"roseABoost":11.7,"roseK":3,"roseBreathBase":0.01,"roseBreathBoost":0.01,"roseScale":1},
           plotFunctionRose
@@ -189,7 +219,7 @@ export default function WebGPUSpinnerComponent({ type = "spiral" }) {
         if (disposed) return;
 
         animationFrameId = requestAnimationFrame(animate);
-        spinner.rotation.z += 0.002;
+        spinner.rotation.z += 0.0009;
         await renderer.render(scene, camera);
       };
 
@@ -210,6 +240,7 @@ export default function WebGPUSpinnerComponent({ type = "spiral" }) {
 
     mount().catch((error) => {
       console.error("WebGPUSpinner init failed", error);
+      setHasFallback(true);
     });
 
     return () => {
@@ -242,6 +273,57 @@ export default function WebGPUSpinnerComponent({ type = "spiral" }) {
       }
     };
   }, [type]);
+
+  if (hasFallback) {
+    return (
+      <div
+        aria-hidden="true"
+        style={{
+          width: "100%",
+          height: "100%",
+          minHeight: "150px",
+          display: "grid",
+          placeItems: "center",
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+      >
+        <div
+          style={{
+            width: 72,
+            height: 72,
+            borderRadius: "999px",
+            border: "1px solid rgba(255,255,255,0.45)",
+            boxShadow: "inset 0 0 0 12px rgba(255,255,255,0.08), 0 0 28px rgba(255,255,255,0.18)",
+            display: "grid",
+            placeItems: "center",
+          }}
+        >
+          <div
+            style={{
+              width: 28,
+              height: 28,
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 4,
+            }}
+          >
+            {Array.from({ length: 9 }).map((_, index) => (
+              <span
+                key={index}
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: 2,
+                  background: index % 2 === 0 ? "#fff" : "rgba(255,255,255,0.35)",
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 

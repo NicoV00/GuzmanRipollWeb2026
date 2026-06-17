@@ -66,9 +66,10 @@ export default function Faq() {
     <Box sx={{
       display: 'grid',
       gridTemplateColumns: 'repeat(12, 1fr)',
-      mx: 'auto', 
-      p: 3, 
-      bgcolor: '#F2F2F2' 
+      mx: 'auto',
+      p: 3,
+      pt: { xs: '64px', md: '120px' },
+      bgcolor: '#FAFFFF'
     }}>
       <Box sx={{
         gridColumn: '1 / 13',
@@ -87,7 +88,7 @@ export default function Faq() {
               fontWeight: 400,
               fontFamily: 'Poppins, sans-serif',
               color: 'text.primary',
-              fontSize: { xs: '2rem', md: '3.75rem' },
+              fontSize: { xs: 'clamp(28px, 8vw, 38px)', md: '45px', xl: '70px' },
               mb: 1
             }}
           >
@@ -100,7 +101,7 @@ export default function Faq() {
               fontWeight: 400,
               fontFamily: 'Poppins, sans-serif',
               color: 'textAccent',
-              fontSize: { xs: '2rem', md: '3.75rem' },
+              fontSize: { xs: 'clamp(28px, 8vw, 38px)', md: '45px', xl: '70px' },
               mb: 2
             }}
           >

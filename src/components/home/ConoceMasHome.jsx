@@ -77,7 +77,7 @@ export default function ConoceMasHome() {
         zIndex: 1,
         height: { xs: "auto", md: "150vh" },
         display: "grid",
-        backgroundColor: "#F2F2F2",
+        backgroundColor: "#FAFFFF",
         gridTemplateColumns: "repeat(12, 1fr)",
         marginInline: { xs: "20px", md: "70px" },
         columnGap: { xs: "16px", md: "20px" },

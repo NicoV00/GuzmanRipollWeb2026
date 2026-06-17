@@ -1,7 +1,16 @@
 // theme.js
 import { createTheme } from '@mui/material/styles';
 
+// Escala de corner radius que crece con el tamaño del componente
+// (mantiene la misma suavidad visual a distintas escalas).
+//   xs → 12px  botones, tags
+//   sm → 16px  cards, inputs
+//   md → 24px  modals, paneles
+export const radii = { xs: 12, sm: 16, md: 24 };
+
 export const lightTheme = createTheme({
+  shape: { borderRadius: radii.sm },
+  radii,
   palette: {
     mode: 'light',
     primary: { main: '#ffffffff' },
@@ -18,6 +27,8 @@ export const lightTheme = createTheme({
 });
 
 export const darkTheme = createTheme({
+  shape: { borderRadius: radii.sm },
+  radii,
   palette: {
     mode: 'dark',
     primary: { main: '#90caf9' },

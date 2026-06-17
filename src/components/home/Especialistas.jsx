@@ -6,7 +6,7 @@ export default function Especialistas() {
   return (
     <Box sx={{ 
       minHeight: '80vh', 
-      bgcolor: '#F2F2F2',
+      bgcolor: '#FAFFFF',
       display: 'flex',
       flexDirection: { xs: 'column', md: 'row' } // Responsive layout
     }}>

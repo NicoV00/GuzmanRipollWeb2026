@@ -19,8 +19,8 @@ const navLinks = [
 const procedimientosLinks = [
   { to: "/procedimiento/01", text: "Cirugía Mamaria" },
   { to: "/procedimiento/02", text: "Lipoescultura VASER" },
-  { to: "/procedimiento/03", text: "Abdominoplastia" },
-  { to: "/procedimiento/04", text: "Aumento Mamario" },
+  { to: "/procedimiento/04", text: "Abdominoplastia" },
+  { to: "/procedimiento/01", text: "Aumento Mamario" },
   { to: "/procedimiento/06", text: "Tratamientos Faciales" },
 ];
 
@@ -65,7 +65,24 @@ const socialCircleStyles = {
   "&:hover": { backgroundColor: "#000" },
 };
 
-export default function Footer() {
+// Estilo base del wordmark grande (compartido por la capa nítida y la borrosa)
+const brandBaseStyles = {
+  fontFamily: "'Archivo', sans-serif",
+  fontWeight: 400,
+  color: COLORS.textDark,
+  lineHeight: 1.0,
+  letterSpacing: { xs: "-2px", md: "-4px" },
+  textTransform: "uppercase",
+  fontSize: { xs: "12.6vw", md: "clamp(52px, 6.7vw, 110px)" },
+  textAlign: { xs: "left", md: "right" },
+  whiteSpace: "nowrap",
+  width: { xs: "100%", md: "auto" },
+  m: 0,
+};
+
+const footerWordmarkText = "Guzm\u00e1n Ripoll";
+
+export default function Footer({ backgroundColor = "transparent", cardBackgroundColor = "white" }) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -75,9 +92,10 @@ export default function Footer() {
       mx: "auto",
       px: { xs: "20px", md: "70px" },
       pt: { xs: "20px", md: "60px" },
-      pb: { xs: "calc(12px + env(safe-area-inset-bottom))", md: "40px" },
+      pb: { xs: "calc(8px + env(safe-area-inset-bottom))", md: "8px" },
       width: "100%",
       boxSizing: "border-box",
+      backgroundColor,
     }}>
       {/* ─── CARD (no pasa el margen: ocupa exactamente col 1 → col 12) ─── */}
       <Box component="footer" sx={{
@@ -85,9 +103,9 @@ export default function Footer() {
         px: { xs: "24px", md: "56px" },
         pt: { xs: "44px", md: "64px" },
         pb: { xs: "32px", md: "44px" },
-        bgcolor: "white",
+        bgcolor: cardBackgroundColor,
         color: COLORS.textDark,
-        borderRadius: "20px",
+        borderRadius: "24px",
         boxSizing: "border-box",
         border: "1px solid rgba(0,0,0,0.05)",
         boxShadow: "0 4px 20px rgba(0,0,0,0.02)",
@@ -171,7 +189,7 @@ export default function Footer() {
         }}>
           <Typography sx={{
             fontFamily: "Poppins, sans-serif",
-            fontSize: "15px",
+            fontSize: "18px",
             fontWeight: 600,
             color: "#111",
             textAlign: "left",
@@ -205,7 +223,7 @@ export default function Footer() {
         position: { xs: "relative", md: "static" },
         left: { xs: "50%", md: "auto" },
         transform: { xs: "translateX(-50%)", md: "none" },
-        px: { xs: "8px", md: 0 },
+        px: { xs: 0, md: 0 },
         boxSizing: "border-box",
       }}>
         <Typography sx={{
@@ -215,24 +233,53 @@ export default function Footer() {
           color: "#000000",
           textAlign: "left",
           whiteSpace: { xs: "normal", md: "nowrap" },
+          mb: { xs: "8px", md: "10px" },
+          pl: { xs: "20px", md: 0 },
+          pr: { xs: "20px", md: 0 },
         }}>
           © {currentYear} Dr. Guzmán Ripoll. Todos los derechos reservados.
         </Typography>
 
-        <Typography sx={{
-          fontFamily: "'Red Hat Display', sans-serif",
-          fontWeight: 400,
-          color: COLORS.textDark,
-          lineHeight: 0.9,
-          letterSpacing: "-0.04em",
-          textTransform: "uppercase",
-          fontSize: { xs: "11.6vw", md: "clamp(54px, 7vw, 116px)" },
-          textAlign: { xs: "left", md: "right" },
-          whiteSpace: "nowrap",
+        {/* Wordmark grande con glass/refraction sutil contenido dentro de la letra */}
+        <Box sx={{
+          position: "relative",
           width: { xs: "100%", md: "auto" },
+          overflow: "hidden",
+          isolation: "isolate",
+          pb: "0.02em",
+          mb: { xs: "-0.12em", md: "-0.14em" },
         }}>
-          Guzmán Ripoll
-        </Typography>
+          {/* Capa nitida principal */}
+          <Typography sx={{
+            ...brandBaseStyles,
+            position: "relative",
+            backgroundImage: "linear-gradient(180deg, #000 0%, #000 80%, #181818 90%, #000 100%)",
+            WebkitBackgroundClip: "text",
+            backgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            textShadow: "none",
+            WebkitMaskImage: "linear-gradient(to bottom, #000 0%, #000 90%, rgba(0,0,0,0.86) 100%)",
+            maskImage: "linear-gradient(to bottom, #000 0%, #000 90%, rgba(0,0,0,0.86) 100%)",
+          }}>
+            {footerWordmarkText}
+          </Typography>
+          {/* Refraccion cromatica fina */}
+          <Typography aria-hidden sx={{
+            ...brandBaseStyles,
+            position: "absolute",
+            inset: 0,
+            color: "transparent",
+            opacity: 0.12,
+            filter: "blur(0.08px)",
+            textShadow: "0.4px 0 rgba(0,122,255,0.6), -0.4px 0 rgba(255,126,36,0.45)",
+            clipPath: "polygon(0 82%, 100% 82%, 100% 93%, 0 93%)",
+            WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, transparent 80%, rgba(0,0,0,0.55) 88%, transparent 96%)",
+            maskImage: "linear-gradient(to bottom, transparent 0%, transparent 80%, rgba(0,0,0,0.55) 88%, transparent 96%)",
+            pointerEvents: "none",
+          }}>
+            {footerWordmarkText}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

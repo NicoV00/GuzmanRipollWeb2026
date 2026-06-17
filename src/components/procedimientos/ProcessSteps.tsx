@@ -1,15 +1,8 @@
 "use client"
 
-import { useRef, useEffect } from "react"
+import { useRef } from "react"
 import { Box, Typography } from "@mui/material"
-import { ArrowUpRight } from "lucide-react"
-import { gsap } from "gsap"
-import { ScrollTrigger } from "gsap/ScrollTrigger"
 import WebGPUSpinnerComponent from "../animations/WebGPUSpinner"
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger)
-}
 
 // ─── Custom Pixel Grid Icon ──────────────────────────────
 const PixelGridIcon = ({ stepIndex, isBlue }: { stepIndex: number, isBlue: boolean }) => {
@@ -60,7 +53,7 @@ export default function ProcessSteps({ procedureId }: { procedureId?: string }) 
       title: "Consulta Inicial",
       description: "Evaluación integral de tus expectativas y anatomía para un plan único.",
       isBlue: true,
-      type: "spiral"
+      type: "flow"
     },
     {
       title: isBreastSurgery ? "Planificación 3D" : "Evaluación Médica",
@@ -83,30 +76,6 @@ export default function ProcessSteps({ procedureId }: { procedureId?: string }) 
       type: "loops"
     }
   ];
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Staggered reveal for cards
-      gsap.fromTo(
-        ".process-card",
-        { y: 50, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.15,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "top 85%",
-            toggleActions: "play none none none"
-          }
-        }
-      )
-    }, containerRef)
-
-    return () => ctx.revert()
-  }, [])
 
   return (
     <Box
@@ -197,7 +166,7 @@ function ProcessCard({ step, index }: { step: any, index: number }) {
       {/* Top: Centered Action/Spinner */}
       <Box sx={{ position: "relative", zIndex: 1, width: "100%", height: "150px", mb: 2, display: "flex", justifyContent: "center", alignItems: "center" }}>
         {/* Expanded bounding box so the canvas doesn't hard crop on the sides */}
-        <Box sx={{ width: "160px", height: "160px", position: "relative", zIndex: 2 }}>
+        <Box sx={{ width: "140px", height: "140px", position: "relative", zIndex: 2 }}>
            <WebGPUSpinnerComponent type={step.type} />
         </Box>
 

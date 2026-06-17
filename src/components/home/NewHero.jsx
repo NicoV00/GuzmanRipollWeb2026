@@ -3,6 +3,7 @@ import { Box, Typography } from "@mui/material";
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { Link as RouterLink } from "react-router-dom";
+import { ChevronDown } from "lucide-react";
 import UnicornScene from "unicornstudio-react";
 
 export default function NewHero() {
@@ -302,6 +303,35 @@ export default function NewHero() {
             Ver procedimientos
           </Box>
         </Box>
+      </Box>
+
+      {/* Indicador de scroll — flechita hacia abajo */}
+      <Box
+        role="button"
+        aria-label="Bajar"
+        onClick={() => window.scrollBy({ top: window.innerHeight * 0.9, behavior: "smooth" })}
+        sx={{
+          position: "absolute",
+          bottom: { xs: "20px", md: "28px" },
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 2,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: "rgba(255,255,255,0.7)",
+          cursor: "pointer",
+          transition: "color 0.3s ease",
+          animation: "heroBounce 2s ease-in-out infinite",
+          "&:hover": { color: "rgba(255,255,255,1)" },
+          "@keyframes heroBounce": {
+            "0%, 100%": { transform: "translateX(-50%) translateY(0)" },
+            "50%": { transform: "translateX(-50%) translateY(6px)" },
+          },
+          "@media (prefers-reduced-motion: reduce)": { animation: "none" },
+        }}
+      >
+        <ChevronDown size={28} strokeWidth={1.75} />
       </Box>
     </Box>
   );

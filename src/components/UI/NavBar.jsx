@@ -40,8 +40,8 @@ export default function NavBar() {
   const procedureSubLinks = [
     { name: "Cirugía Mamaria", path: "/procedimiento/01" },
     { name: "Lipoescultura VASER", path: "/procedimiento/02" },
-    { name: "Abdominoplastia", path: "/procedimiento/03" },
-    { name: "Blefaroplastia", path: "/procedimiento/04" },
+    { name: "Abdominoplastia", path: "/procedimiento/04" },
+    { name: "Tratamientos Faciales", path: "/procedimiento/06" },
   ]
 
   useEffect(() => {

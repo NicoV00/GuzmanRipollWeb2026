@@ -7,22 +7,25 @@ import gsap from "gsap";
 const procedures = [
   {
     name: "CIRUGIA MAMARIA",
+    to: "/procedimiento/01",
     subtitle: "Aumento, mastopexia y reconstrucción",
-    image: "/images/mamaria.png",
+    image: "/images/mama.png",
     col: { xs: "auto", md: "1 / 5" },
     row: 1,
     height: { xs: "290px", sm: "330px", md: "50%" },
   },
   {
     name: "AUMENTO MAMARIO",
+    to: "/procedimiento/01",
     subtitle: "Implantes de gel cohesivo",
-    image: "/images/mamaria.jpg",
-    col: { xs: "auto", md: "5 / 9" },
-    row: 1,
-    height: { xs: "340px", sm: "380px", md: "80%" },
+    image: "/images/aumento.png",
+    col: { xs: "auto", md: "9 / 13" },
+    row: 2,
+    height: { xs: "310px", sm: "350px", md: "80%" },
   },
   {
     name: "TRATAMIENTOS FACIALES",
+    to: "/procedimiento/06",
     subtitle: "INDIBA & DEKA DuoGlide",
     image: "/images/image.png",
     col: { xs: "auto", md: "9 / 13" },
@@ -31,16 +34,18 @@ const procedures = [
   },
   {
     name: "MOMMY MAKEOVER",
+    to: "/procedimiento/04",
     subtitle: "Abdomen y mamas en un solo proceso",
-    image: "/images/mommy.png",
+    image: "/images/mom.png",
     col: { xs: "auto", md: "1 / 5" },
     row: 2,
     height: { xs: "320px", sm: "360px", md: "80%" },
   },
   {
     name: "ABDOMINOPLASTIA",
+    to: "/procedimiento/04",
     subtitle: "Remodelación del abdomen",
-    image: "/images/abdomen.png",
+    image: "/images/abdo.png",
     objectPosition: "center bottom",
     col: { xs: "auto", md: "5 / 9" },
     row: 2,
@@ -48,11 +53,12 @@ const procedures = [
   },
   {
     name: "LIPOESCULTURA VASER",
+    to: "/procedimiento/02",
     subtitle: "Definición corporal de alta precisión",
-    image: "/images/morpheus.png",
-    col: { xs: "auto", md: "9 / 13" },
-    row: 2,
-    height: { xs: "310px", sm: "350px", md: "80%" },
+    image: "/images/lipo2.png",
+    col: { xs: "auto", md: "5 / 9" },
+    row: 1,
+    height: { xs: "340px", sm: "380px", md: "80%" },
   },
 ];
 
@@ -108,7 +114,7 @@ export default function VerMasProcedimientosHome() {
       id="procedimientos-home-section"  // ID único para detectar esta sección
       sx={{
         position: 'relative',
-        height: { xs: 'auto', md: 'calc(200vh + 100px)' },
+        height: { xs: 'auto', md: 'calc(200vh + 260px)' },
         overflowY: { xs: 'visible', md: 'scroll' },
         overflowX: 'hidden',
         '&::-webkit-scrollbar': {
@@ -119,7 +125,7 @@ export default function VerMasProcedimientosHome() {
         display: 'flex',
         flexDirection: 'column',
         paddingInline: { xs: '20px', md: '70px' },
-        paddingBottom: { xs: '110px', md: '210px' },
+        paddingBottom: { xs: '150px', md: '440px' },
       }}
     >
       {/* Header con numeración y enlace */}
@@ -212,6 +218,8 @@ export default function VerMasProcedimientosHome() {
         {procedures.map((card, index) => (
           <Box
             key={card.name}
+            component={RouterLink}
+            to={card.to}
             sx={{
               marginTop: { xs: '35px', md: '71px' },
               width: { xs: '100%', md: 'auto' },
@@ -221,6 +229,8 @@ export default function VerMasProcedimientosHome() {
               flexDirection: 'column',
               alignItems: 'start',
               justifyContent: 'start',
+              textDecoration: 'none',
+              color: 'inherit',
               mb: { xs: index === procedures.length - 1 ? '40px' : '0px', md: '0px' },
             }}
           >

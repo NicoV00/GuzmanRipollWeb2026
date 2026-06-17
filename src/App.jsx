@@ -147,6 +147,7 @@ const App = () => {
         <CssBaseline />
         <ReactLenis
           root
+          autoRaf={false}
           options={{
             lerp: 0.1, duration: 1.0, smoothTouch: false, smoothWheel: true,
             wheelMultiplier: 1, touchMultiplier: 2, infinite: false, syncTouch: false,

@@ -132,7 +132,7 @@ export default function Clinica({ id }) {
             variant="h1"
             sx={{
               fontFamily: "Poppins, sans-serif",
-              fontSize: { xs: "32px", md: "76px" },
+              fontSize: { xs: "36px", md: "76px" },
               fontWeight: 500,
               lineHeight: 1.1,
               mb: { xs: "40px", md: "40px" },

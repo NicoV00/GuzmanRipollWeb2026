@@ -25,7 +25,7 @@ export default function MedicalProcedures() {
       id: "01",
       number: "001",
       name: "Cirugía Mamaria",
-      image: "/images/mamaria.png",
+      image: "/images/mama.png",
       description: "Procedimientos destinados a mejorar la forma, el volumen y la posición de las mamas mediante técnicas personalizadas.",
       listTitle: "Incluye",
       items: [
@@ -40,7 +40,7 @@ export default function MedicalProcedures() {
       id: "02",
       number: "002",
       name: "Lipoescultura VASER",
-      image: "/images/morpheus.png",
+      image: "/images/lipo.png",
       description: "Remodelación corporal mediante eliminación de grasa localizada utilizando tecnología avanzada.",
       listTitle: "Tecnologías",
       items: [
@@ -49,19 +49,19 @@ export default function MedicalProcedures() {
       ]
     },
     {
-      id: "03",
+      id: "04",
       number: "003",
       name: "Abdominoplastia",
-      image: "/images/mommy.png",
+      image: "/images/abdo.png",
       description: "Procedimiento quirúrgico que permite remodelar el abdomen eliminando exceso de piel y grasa.",
       listTitle: null,
       items: []
     },
     {
-      id: "04",
+      id: "01",
       number: "004",
       name: "Aumento Mamario",
-      image: "/images/implantes.png",
+      image: "/images/aumento.png",
       description: "Utilización de implantes de alta gama o transferencia de grasa propia para mejorar el volumen y proyección de las mamas.",
       listTitle: "Técnicas",
       items: [

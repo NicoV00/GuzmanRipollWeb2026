@@ -163,21 +163,25 @@ export default function About() {
       <Box sx={{
         mt: { xs: 2, md: 3 },
         mb: { xs: "60px", md: 10 },
-        borderRadius: 1,
+        borderRadius: { xs: "16px", md: "20px" },
         overflow: "hidden",
+        clipPath: { xs: "inset(0 round 16px)", md: "inset(0 round 20px)" },
         gridColumn: { xs: '1 / 13', md: '7 / 11' },
         zIndex: 1,
-        height: "auto"
+        height: "auto",
+        width: "100%"
       }}>
         <img
           ref={doctorImageRef}
           src="/images/foto-perfil-guzman.webp"
           alt="Dr. Guzman Ripoll"
           style={{
+            width: "100%",
             height: "auto",
             display: "block",
             objectFit: "contain",
-            maxHeight: "780px"
+            maxHeight: "780px",
+            borderRadius: "inherit"
           }}
         />
       </Box>

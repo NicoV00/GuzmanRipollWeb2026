@@ -58,9 +58,8 @@ export default function CTAhome() {
         end: isMobile() ? "bottom+=5000% top" : "bottom+=300% top",
         pin: isMobile() ? false : true,
         pinSpacing: false,
-        scrub: true,
         markers: false,
-        anticipatePin: 1,
+        invalidateOnRefresh: true,
       });
     };
 
@@ -279,7 +278,10 @@ export default function CTAhome() {
           marginTop: { xs: "28px", md: "100px" },
         }}
       >
-        {cards.map((card, index) => (
+        {cards.map((card, index) => {
+          // Cards cuyas placas van dentro de una card gris estilo Apple
+          const isPlateCard = card.title === "Técnologia" || card.title === "Simulación";
+          return (
           <Box
             key={index}
             sx={{
@@ -338,15 +340,22 @@ export default function CTAhome() {
 
               <Box
                 sx={{
-                  width: "100%",
+                  width: isPlateCard ? "fit-content" : "100%",
+                  maxWidth: "100%",
+                  mx: isPlateCard ? "auto" : 0,
                   display: "flex",
                   justifyContent: "center",
+                  alignItems: "center",
                   mt: { xs: 4, md: 3 },
                   mb: { xs: 4, md: card.title === "Recuperación" ? 2 : 4 },
-                  height: { xs: "280px", md: card.title === "Recuperación" ? "320px" : "auto" },
-                  borderRadius: 0,
-                  overflow: "visible",
-                  backgroundColor: "transparent",
+                  height: isPlateCard
+                    ? "auto"
+                    : { xs: "280px", md: card.title === "Recuperación" ? "320px" : "auto" },
+                  // Placas (BodyTite/Morpheus y Crisalix 3D) en una card gris compacta estilo Apple
+                  borderRadius: isPlateCard ? "16px" : 0,
+                  overflow: isPlateCard ? "hidden" : "visible",
+                  backgroundColor: isPlateCard ? "#EAEAEC" : "transparent",
+                  p: isPlateCard ? { xs: "22px", md: "30px" } : 0,
                 }}
               >
                 <Box
@@ -354,8 +363,12 @@ export default function CTAhome() {
                   src={card.image}
                   alt={card.title}
                   sx={{
-                    width: { xs: card.title === "Recuperación" ? "68%" : "58%", md: card.title === "Recuperación" ? "60%" : "50%" },
-                    height: { xs: card.title === "Recuperación" ? "100%" : "300px", md: card.title === "Recuperación" ? "100%" : "300px" },
+                    width: isPlateCard
+                      ? "auto"
+                      : { xs: card.title === "Recuperación" ? "68%" : "58%", md: card.title === "Recuperación" ? "60%" : "50%" },
+                    height: isPlateCard
+                      ? { xs: "185px", md: "225px" }
+                      : { xs: card.title === "Recuperación" ? "100%" : "300px", md: card.title === "Recuperación" ? "100%" : "300px" },
                     objectFit: "contain",
                   }}
                 />
@@ -388,7 +401,8 @@ export default function CTAhome() {
               </Box>
             </Box>
           </Box>
-        ))}
+          );
+        })}
       </Box>
     </Box>
   );

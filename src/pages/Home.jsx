@@ -30,7 +30,7 @@ export default function Home({ toggleTheme }) {
       </Box>
 
       {/* Content scrolling over the Hero */}
-      <Box sx={{ position: 'relative', zIndex: 10, backgroundColor: '#F2F2F2' }}>
+      <Box sx={{ position: 'relative', zIndex: 10, backgroundColor: '#FAFFFF' }}>
         <ConoceMasHome />
 
         <VerMasProcedimientosHome />
@@ -43,7 +43,7 @@ export default function Home({ toggleTheme }) {
 
         <Faq />
 
-        <Footer />
+        <Footer backgroundColor="#FAFFFF" cardBackgroundColor="#F2F2F2" />
       </Box>
     </Box>
   );

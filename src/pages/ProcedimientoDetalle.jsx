@@ -22,7 +22,7 @@ const procedimientosData = {
     title: "Cirugía Mamaria",
     subtitle: "Aumento, Reducción & Reconstrucción",
     category: "Especialización Principal",
-    imageSrc: "/images/implantes.png",
+    imageSrc: "/images/mama.png",
     secondaryImageSrc: "/images/implantes2.jpg",
     catchPhrase: "Procedimientos seguros y personalizados para lograr resultados naturales y armoniosos.",
     description: "La cirugía mamaria es una decisión médica importante. Por eso, requiere información clara y una evaluación responsable.",
@@ -48,7 +48,7 @@ const procedimientosData = {
     title: "Lipoescultura VASER",
     subtitle: "BodyTite & Morpheus8",
     category: "Contorno Corporal",
-    imageSrc: "/images/imagen5.jpg",
+    imageSrc: "/images/lipo.png",
     catchPhrase: "Tecnología de vanguardia para remodelación corporal avanzada con resultados inmediatos.",
     description: "Tecnología avanzada de remodelación corporal que combina BodyTite (radiofrequencia asistida) con Morpheus8 para contornear y definir tu figura ideal con mínima invasión y máximos resultados.",
     objetivo: "Remodelación corporal avanzada, eliminación de grasa localizada y tensado de piel simultáneo.",
@@ -65,59 +65,23 @@ const procedimientosData = {
       { name: "Morpheus8", description: "Tratamiento fraccionado profundo para remodelación dérmica." }
     ]
   },
-  "03": {
-    number: "03",
-    title: "Rinoplastia",
-    subtitle: "Estética & Funcional",
-    category: "Cirugía Facial",
-    imageSrc: "/images/imagen4.jpg",
-    catchPhrase: "Armonía facial perfecta mediante técnicas quirúrgicas precisas y resultados naturales.",
-    description: "La rinoplastia es un procedimiento quirúrgico diseñado para mejorar la forma y función de la nariz, logrando armonía con las demás características faciales.",
-    objetivo: "Corrección estética y funcional de la nariz, mejora de la armonía facial.",
-    specs: {
-      tipo: "Ambulatoria",
-      lugar: "Block quirúrgico",
-      anestesia: "General",
-      duracion: "2-3 horas"
-    },
-    tecnica: "Técnica abierta o cerrada según el caso, con remodelación de estructuras óseas y cartilaginosas.",
-    recuperacion: "Férula nasal por 7-10 días. Inflamación inicial disminuye en 2-3 semanas."
-  },
   "04": {
     number: "04",
     title: "Abdominoplastia",
     subtitle: "Remodelación Completa",
     category: "Contorno Corporal",
-    imageSrc: "/images/imagen4.jpg",
+    imageSrc: "/images/abdo.png",
     catchPhrase: "Recupera tu silueta ideal con procedimientos avanzados de tensado.",
     description: "La abdominoplastia es un procedimiento integral que elimina el exceso de piel y grasa abdominal, repara la musculatura y redefine el contorno.",
     objetivo: "Eliminación de exceso de piel, corrección de diástasis, mejora del contorno.",
     specs: {
-      tipo: "Internación 24h",
+      tipo: "Ambulatoria",
       lugar: "Block quirúrgico",
       anestesia: "General",
       duracion: "3-4 horas"
     },
     tecnica: "Incisión horizontal baja, eliminación de exceso de piel y grasa, reparación muscular.",
     recuperacion: "Reposo relativo por 2 semanas. Uso de faja compresiva por 6-8 semanas."
-  },
-  "05": {
-    number: "05",
-    title: "Blefaroplastia",
-    subtitle: "Rejuvenecimiento Facial",
-    category: "Cirugía Facial",
-    imageSrc: "/images/imagen4.jpg",
-    catchPhrase: "Revitaliza tu expresión con procedimientos que devuelven juventud.",
-    description: "La blefaroplastia elimina el exceso de piel y grasa en los párpados, reduciendo bolsas y flacidez para lograr una mirada más juvenil.",
-    objetivo: "Rejuvenecimiento periocular, eliminación de bolsas y exceso de piel.",
-    specs: {
-      tipo: "Ambulatoria",
-      lugar: "Block quirúrgico",
-      anestesia: "Local / Sedación",
-      duracion: "1-2 horas"
-    },
-    tecnica: "Incisiones ocultas en pliegues naturales. Eliminación de exceso de piel y grasa.",
-    recuperacion: "Hematomas desaparecen en 7-10 días. Resultado definitivo en 2-3 meses."
   },
   "06": {
     number: "06",
@@ -186,17 +150,6 @@ export default function ProcedimientoDetalle() {
         { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out", delay: 0.5 }
       )
 
-      // Benefits cards staggered entrance
-      gsap.fromTo(".benefit-card",
-        { y: 40, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 0.6, stagger: 0.12, ease: "power3.out",
-          scrollTrigger: {
-            trigger: ".benefits-grid",
-            start: "top 85%",
-          }
-        }
-      )
     }, containerRef)
     return () => ctx.revert()
   }, [id])
@@ -204,7 +157,7 @@ export default function ProcedimientoDetalle() {
   if (!procedimiento) return <Box>No encontrado</Box>
 
   return (
-    <Box ref={containerRef} sx={{ backgroundColor: "#F2F2F2", minHeight: "100vh" }}>
+    <Box ref={containerRef} sx={{ backgroundColor: "#FAFFFF", minHeight: "100vh" }}>
 
       {/* ─── HERO SECTION ──────────────────────── */}
       <Box sx={{
@@ -229,7 +182,7 @@ export default function ProcedimientoDetalle() {
                 alignItems: "center",
                 px: { xs: "12px", md: "16px" },
                 py: { xs: "6px", md: "8px" },
-                borderRadius: "10px",
+                borderRadius: "12px",
                 backdropFilter: "blur(24px) saturate(180%)",
                 WebkitBackdropFilter: "blur(24px) saturate(180%)",
                 borderTop: "1px solid",
@@ -241,7 +194,7 @@ export default function ProcedimientoDetalle() {
                 borderRightColor: proc.number === id ? "rgba(255, 255, 255, 0.04)" : "rgba(255, 255, 255, 0.3)",
                 borderBottomColor: proc.number === id ? "rgba(255, 255, 255, 0.02)" : "rgba(255, 255, 255, 0.2)",
                 boxShadow: proc.number === id ? "0 4px 16px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.15)" : "0 4px 12px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.6)",
-                background: proc.number === id ? "linear-gradient(135deg, rgba(18, 20, 24, 0.9), rgba(30, 32, 38, 0.8))" : "rgba(255, 255, 255, 0.65)",
+                background: proc.number === id ? "linear-gradient(135deg, rgba(18, 20, 24, 0.9), rgba(30, 32, 38, 0.8))" : "#F0F0F1",
                 textDecoration: "none",
                 fontFamily: "Poppins, sans-serif",
                 fontSize: { xs: "12px", md: "13px" },
@@ -250,7 +203,7 @@ export default function ProcedimientoDetalle() {
                 letterSpacing: "-0.01em",
                 transition: "all 0.25s ease",
                 "&:hover": {
-                  background: proc.number === id ? "linear-gradient(135deg, rgba(28, 30, 34, 0.95), rgba(40, 42, 48, 0.85))" : "rgba(255, 255, 255, 0.95)",
+                  background: proc.number === id ? "linear-gradient(135deg, rgba(28, 30, 34, 0.95), rgba(40, 42, 48, 0.85))" : "#E7E7E9",
                   transform: "translateY(-1px)"
                 },
                 "&:active": {
@@ -280,7 +233,7 @@ export default function ProcedimientoDetalle() {
         {/* Title */}
         <Typography variant="h1" className="hero-text-reveal" sx={{
           fontFamily: "Poppins",
-          fontSize: { xs: "48px", md: "80px", lg: "96px" },
+          fontSize: { xs: "38px", md: "60px", lg: "72px" },
           fontWeight: 500,
           lineHeight: 1.05,
           letterSpacing: "-0.03em",
@@ -295,7 +248,7 @@ export default function ProcedimientoDetalle() {
         {/* Subtitle / Catchphrase */}
         <Typography className="hero-text-reveal" sx={{
           fontFamily: "Poppins",
-          fontSize: { xs: "20px", md: "28px" },
+          fontSize: { xs: "17px", md: "22px" },
           fontWeight: 400,
           color: "rgba(0,0,0,0.7)",
           maxWidth: "800px",
@@ -318,10 +271,11 @@ export default function ProcedimientoDetalle() {
         <Box sx={{
           gridColumn: { xs: "1 / -1", md: "1 / 7" },
           position: { md: "sticky" },
-          top: "140px",
+          top: "120px",
           alignSelf: "start",
-          height: { xs: "320px", md: "50vh" },
-          borderRadius: "12px",
+          height: { xs: "380px", md: "78vh" },
+          maxHeight: { md: "820px" },
+          borderRadius: "16px",
           overflow: "hidden"
         }}>
           <Box sx={{
@@ -337,6 +291,7 @@ export default function ProcedimientoDetalle() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
+                objectPosition: "center 35%",
                 display: "block",
                 clipPath: "inset(25% 20% 25% 20%)",
                 transform: "scale(1.1)"
@@ -402,11 +357,11 @@ export default function ProcedimientoDetalle() {
             <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               {[
                 { c: procedimiento.comparativa.indiba, bg: "#ffffff" },
-                { c: procedimiento.comparativa.duoglide, bg: "#f5f5f5" },
+                { c: procedimiento.comparativa.duoglide, bg: "#ffffff" },
               ].map(({ c, bg }, i) => (
                 <Box key={i} sx={{
                   backgroundColor: bg,
-                  borderRadius: "12px",
+                  borderRadius: "16px",
                   p: { xs: 3, md: 3.5 },
                   border: "1px solid rgba(0,0,0,0.06)",
                 }}>
@@ -449,7 +404,12 @@ export default function ProcedimientoDetalle() {
           </Box>
 
           {/* Recovery */}
-          <Box sx={{ backgroundColor: "#f5f5f5", p: 4, borderRadius: "12px" }}>
+          <Box sx={{
+            backgroundColor: "#F0F0F1",
+            border: "1px solid rgba(0,0,0,0.04)",
+            p: 4,
+            borderRadius: "16px",
+          }}>
             <Typography variant="h3" sx={{
               fontFamily: "Poppins", fontSize: { xs: "20px", md: "22px" }, fontWeight: 500, mb: 2, textAlign: "left",
             }}>
@@ -463,7 +423,7 @@ export default function ProcedimientoDetalle() {
           </Box>
 
           {procedimiento.secondaryImageSrc && (
-            <Box sx={{ width: "100%", borderRadius: "12px", overflow: "hidden" }}>
+            <Box sx={{ width: "100%", borderRadius: "16px", overflow: "hidden" }}>
               <Box
                 component="img"
                 src={procedimiento.secondaryImageSrc}
@@ -483,7 +443,7 @@ export default function ProcedimientoDetalle() {
       {/* ─── CRISALIX SECTION (Breast Surgery Only) ─── */}
       {id === "01" && (
         <Box sx={{
-          backgroundColor: "#F2F2F2",
+          backgroundColor: "#FAFFFF",
           py: { xs: 10, md: 15 },
           px: { xs: "20px", md: "70px" },
           borderTop: "1px solid rgba(0,0,0,0.05)"
@@ -491,38 +451,44 @@ export default function ProcedimientoDetalle() {
           <Box sx={{
             display: "grid",
             gridTemplateColumns: { xs: "1fr", md: "repeat(12, 1fr)" },
-            gap: { xs: 4, md: 8 },
+            gap: { xs: 4, md: 6 },
             alignItems: "center"
           }}>
+            {/* SaaS-style Crisalix preview card */}
             <Box sx={{
-              gridColumn: { xs: "1 / -1", md: "1 / 7" },
-              backgroundColor: "#fff",
-              borderRadius: "24px",
-              padding: { xs: "24px", md: "40px" },
-              boxShadow: "0 20px 40px rgba(0,0,0,0.03)",
-              border: "1px solid rgba(0,129,199,0.1)",
+              gridColumn: { xs: "1 / -1", md: "2 / 6" },
+              backgroundColor: "#F2F2F2",
+              borderRadius: { xs: "22px", md: "20px" },
+              padding: { xs: "5px", md: "5px" },
               position: "relative",
-              overflow: "hidden"
+              border: "1px solid rgba(0,0,0,0.04)",
+              boxShadow: "0 16px 42px rgba(0,0,0,0.05), inset 0 0 0 1px rgba(255,255,255,0.55)",
             }}>
-              {/* Horizontal layout: info left, slider right on desktop */}
-              <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: { xs: 3, md: 2 }, alignItems: { md: "stretch" } }}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 {/* Left: Text Info */}
-                <Box sx={{ flex: 1 }}>
-                  <Box sx={{ mb: 3 }}>
+                <Box sx={{
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: { xs: "18px", md: "16px" },
+                  px: { xs: "18px", md: "18px" },
+                  py: { xs: "14px", md: "14px" },
+                  border: "1px solid rgba(0,0,0,0.05)",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.035)",
+                }}>
+                  <Box sx={{ mb: 0 }}>
                     <Typography sx={{
-                      fontFamily: "Poppins", fontSize: "12px", textTransform: "uppercase",
+                      fontFamily: "Poppins", fontSize: { xs: "11px", md: "10px" }, textTransform: "uppercase",
                       color: "#0081C7", fontWeight: 600, letterSpacing: "0.1em", mb: 1, textAlign: "left"
                     }}>
                       Previsualización 3D
                     </Typography>
                     <Typography sx={{
-                      fontFamily: "Poppins", fontSize: { xs: "22px", md: "28px" }, fontWeight: 500, color: "#111", lineHeight: 1.1, textAlign: "left", whiteSpace: "nowrap"
+                      fontFamily: "Poppins", fontSize: { xs: "20px", md: "21px" }, fontWeight: 500, color: "#111", lineHeight: 1.1, textAlign: "left", whiteSpace: "nowrap"
                     }}>
                       Tecnología Crisalix®
                     </Typography>
                   </Box>
 
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <Box sx={{ display: "none", flexDirection: "column", gap: 2 }}>
                     {[
                       { t: "Simulación Realista", d: "Motor de renderizado 3D basado en tu anatomía real." },
                       { t: "Alineación de Expectativas", d: "Elegí el volumen y forma con total seguridad." },
@@ -546,21 +512,53 @@ export default function ProcedimientoDetalle() {
                   </Box>
                 </Box>
 
-                {/* Right: Compact Before/After Slider – same height as info */}
-                <Box sx={{ width: { xs: "280px", md: "240px" }, mx: "auto", flexShrink: 0, display: "flex" }}>
-                  <Box sx={{ width: "100%", borderRadius: "16px", overflow: "hidden" }}>
-                    <BeforeAfterSlider
-                      beforeSrc="/videos/antes.mp4"
-                      afterSrc="/videos/despues.mp4"
-                    />
-                  </Box>
+                {/* Right: Before/After Slider */}
+                <Box sx={{
+                  width: "100%",
+                  maxWidth: "none",
+                  mx: 0,
+                  flexShrink: 0,
+                  backgroundColor: "transparent",
+                  borderRadius: { xs: "18px", md: "16px" },
+                  p: 0,
+                  overflow: "hidden",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.035)",
+                }}>
+                  <BeforeAfterSlider
+                    beforeSrc="/videos/antes.mp4"
+                    afterSrc="/videos/despues.mp4"
+                    beforeAlt="Simulación Crisalix: torso antes del aumento mamario"
+                    afterAlt="Simulación Crisalix: torso después del aumento mamario"
+                    aspectRatio="4 / 3"
+                  />
+                </Box>
+                <Box sx={{
+                  backgroundColor: "#FFFFFF",
+                  borderRadius: { xs: "16px", md: "14px" },
+                  px: { xs: "14px", md: "14px" },
+                  py: { xs: "10px", md: "10px" },
+                  border: "1px solid rgba(0,0,0,0.05)",
+                  display: "grid",
+                  gridTemplateColumns: "repeat(4, 1fr)",
+                  gap: 1,
+                }}>
+                  {["Original", "Simulado", "Volumen", "Perfil"].map((label) => (
+                    <Typography key={label} sx={{
+                      fontFamily: "Poppins",
+                      fontSize: { xs: "10px", md: "10px" },
+                      color: "rgba(0,0,0,0.58)",
+                      textAlign: "center",
+                      whiteSpace: "nowrap",
+                    }}>
+                      {label}
+                    </Typography>
+                  ))}
                 </Box>
               </Box>
-
             </Box>
 
             {/* Content Left */}
-            <Box sx={{ gridColumn: { xs: "1 / -1", md: "8 / 13" } }}>
+            <Box sx={{ gridColumn: { xs: "1 / -1", md: "7 / 12" } }}>
               <Typography variant="h2" sx={{
                 fontFamily: "Poppins",
                 fontSize: { xs: "32px", md: "48px" },
@@ -585,7 +583,7 @@ export default function ProcedimientoDetalle() {
 
       {/* ─── PHILOSOPHY SECTION ─── */}
       <Box sx={{
-        backgroundColor: "#F2F2F2",
+        backgroundColor: "#FAFFFF",
         py: { xs: 10, md: 15 },
         px: { xs: "20px", md: "70px" },
         borderTop: "1px solid rgba(0,0,0,0.05)"
@@ -640,7 +638,7 @@ export default function ProcedimientoDetalle() {
       </Box>
 
       {/* ─── BENEFITS GRID (Approach-style) ─────────────────────── */}
-      <Box sx={{ backgroundColor: "#ffffff", px: { xs: "20px", md: "70px" }, py: { xs: 8, md: 12 } }}>
+      <Box sx={{ backgroundColor: "#FAFFFF", px: { xs: "20px", md: "70px" }, py: { xs: 8, md: 12 } }}>
         <Box sx={{
           maxWidth: { md: "1100px" },
           mx: { md: "auto" },
@@ -664,7 +662,7 @@ export default function ProcedimientoDetalle() {
           {/* Outer container */}
           <Box sx={{
             backgroundColor: "#EEEEEE",
-            borderRadius: { xs: "14px", md: "18px" },
+            borderRadius: { xs: "16px", md: "24px" },
             p: { xs: "8px", md: "10px" },
             maxWidth: { md: "1100px" },
             mx: { md: "auto" },
@@ -679,7 +677,7 @@ export default function ProcedimientoDetalle() {
                 <Box key={idx} className="benefit-card" sx={{
                   gridColumn: { xs: "auto", md: idx < 3 ? "span 2" : "span 3" },
                   backgroundColor: "#E2E2E2",
-                  borderRadius: { xs: "10px", md: "12px" },
+                  borderRadius: { xs: "12px", md: "16px" },
                   px: { xs: "16px", md: "24px" },
                   py: { xs: "18px", md: "24px" },
                   transition: "background-color 0.25s ease",
@@ -728,7 +726,7 @@ export default function ProcedimientoDetalle() {
       {/* ─── PROCESS STEPS ─────────────────────── */}
       <ProcessSteps procedureId={id} />
 
-      <Footer />
+      <Footer backgroundColor="#FAFFFF" cardBackgroundColor="#F2F2F2" />
     </Box>
   )
 }
