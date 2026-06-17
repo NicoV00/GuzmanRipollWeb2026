@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { useEffect } from "react";
+import { Play } from "lucide-react";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -31,9 +32,9 @@ const cards = [
     text: "Empleamos técnicas de última generación diseñadas a medida para cada paciente. Nuestro enfoque combina precisión técnica con criterio estético para resultados naturales.",
   },
   {
-    title: "Recuperación",
+    title: "Recuperación", // imagen placeholder de un video (se reemplazará por <video>)
     number: "4",
-    image: "/images/recuperacion.png",
+    image: "/images/recupera.png",
     subtitle: "Cuidado integral post cirugía",
     text: "Contarás con un plan de seguimiento personalizado y asesoría continua. Nuestro equipo te acompaña en cada etapa para una recuperación óptima.",
   },
@@ -340,6 +341,7 @@ export default function CTAhome() {
 
               <Box
                 sx={{
+                  position: "relative",
                   width: isPlateCard ? "fit-content" : "100%",
                   maxWidth: "100%",
                   mx: isPlateCard ? "auto" : 0,
@@ -372,6 +374,32 @@ export default function CTAhome() {
                     objectFit: "contain",
                   }}
                 />
+
+                {/* Botón de play — placeholder de video (hardcoded por ahora) */}
+                {card.title === "Recuperación" && (
+                  <Box
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      width: { xs: "46px", md: "54px" },
+                      height: { xs: "46px", md: "54px" },
+                      borderRadius: "50%",
+                      backgroundColor: "rgba(255,255,255,0.18)",
+                      backdropFilter: "blur(8px)",
+                      WebkitBackdropFilter: "blur(8px)",
+                      border: "1.5px solid rgba(255,255,255,0.7)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <Play size={19} color="#fff" fill="#fff" style={{ marginLeft: "2px" }} />
+                  </Box>
+                )}
               </Box>
             </Box>
 
