@@ -468,6 +468,9 @@ export default function ProcedimientoDetalle() {
             target="_blank"
             rel="noopener noreferrer"
             sx={{
+              position: "relative",
+              overflow: "hidden",
+              isolation: "isolate",
               display: "inline-flex",
               alignItems: "center",
               gap: 1.5,
@@ -475,13 +478,58 @@ export default function ProcedimientoDetalle() {
               px: 3,
               py: 1.6,
               borderRadius: "999px",
-              backgroundColor: "#111",
+              background: "linear-gradient(180deg, rgba(48,48,52,0.86) 0%, rgba(16,16,18,0.94) 100%)",
+              backdropFilter: "blur(22px) saturate(180%)",
+              WebkitBackdropFilter: "blur(22px) saturate(180%)",
+              border: "1px solid rgba(255,255,255,0.16)",
               textDecoration: "none",
-              transition: "transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease",
-              boxShadow: "0 10px 26px rgba(0,0,0,0.14)",
+              transition:
+                "transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease, border-color 0.35s ease",
+              boxShadow: [
+                "inset 0 1px 0 rgba(255,255,255,0.22)",
+                "inset 0 -1px 1px rgba(255,255,255,0.05)",
+                "0 1px 2px rgba(0,0,0,0.2)",
+                "0 12px 30px rgba(0,0,0,0.18)",
+              ].join(", "),
+              // Sheen superior: la luz "apoyada" sobre el vidrio
+              "&::before": {
+                content: '""',
+                position: "absolute",
+                inset: 0,
+                borderRadius: "inherit",
+                background:
+                  "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0) 58%)",
+                pointerEvents: "none",
+              },
+              // Reflejo especular que barre la pill en hover
+              "&::after": {
+                content: '""',
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                left: "-70%",
+                width: "55%",
+                background:
+                  "linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%)",
+                transform: "skewX(-18deg)",
+                transition: "left 0.65s cubic-bezier(0.22,1,0.36,1)",
+                pointerEvents: "none",
+              },
               "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: "0 14px 32px rgba(0,0,0,0.2)",
+                transform: "translateY(-2px) scale(1.015)",
+                borderColor: "rgba(255,255,255,0.24)",
+                boxShadow: [
+                  "inset 0 1px 0 rgba(255,255,255,0.3)",
+                  "inset 0 -1px 1px rgba(255,255,255,0.07)",
+                  "0 2px 4px rgba(0,0,0,0.2)",
+                  "0 18px 42px rgba(0,0,0,0.24)",
+                ].join(", "),
+              },
+              "&:hover::after": {
+                left: "120%",
+              },
+              "&:active": {
+                transform: "translateY(0) scale(0.98)",
               },
             }}
           >
