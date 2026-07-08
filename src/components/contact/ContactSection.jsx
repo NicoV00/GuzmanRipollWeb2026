@@ -210,7 +210,7 @@ export function ContactSection({ id }) {
 
             <div className="contact-image-wrap">
               <img
-                src="/images/imagen5.jpg"
+                src="/images/cloinica.png"
                 alt="Clínica Guzmán Ripoll"
               />
             </div>
@@ -235,7 +235,7 @@ export function ContactSection({ id }) {
 
         <div data-reveal className="contact-image-wrap contact-image-wrap-mobile">
           <img
-            src="/images/imagen5.jpg"
+            src="/images/cloinica.png"
             alt="Clínica Guzmán Ripoll"
           />
         </div>
@@ -653,8 +653,9 @@ export function ContactSection({ id }) {
           }
 
           .contact-form-wrapper-mobile .contact-form-title {
-            font-size: clamp(28px, 7.2vw, 40px);
-            letter-spacing: -0.045em;
+            font-size: clamp(36px, 8.8vw, 52px);
+            line-height: 0.98;
+            letter-spacing: -0.075em;
             margin-bottom: 24px;
           }
 
@@ -679,6 +680,7 @@ export function ContactSection({ id }) {
           }
 
           .contact-title-mobile {
+            display: none;
             font-size: clamp(36px, 8.8vw, 52px);
             line-height: 0.98;
             letter-spacing: -0.075em;
@@ -743,6 +745,11 @@ export function ContactSection({ id }) {
             line-height: 1;
           }
 
+          .contact-form-wrapper-mobile .contact-form-title {
+            font-size: clamp(34px, 9.8vw, 44px);
+            line-height: 1;
+          }
+
           .contact-image-wrap-mobile {
             aspect-ratio: 1 / 1.06;
           }
@@ -768,6 +775,11 @@ export function ContactSection({ id }) {
           }
 
           .contact-title-mobile {
+            font-size: clamp(31px, 9.2vw, 38px);
+            line-height: 1.01;
+          }
+
+          .contact-form-wrapper-mobile .contact-form-title {
             font-size: clamp(31px, 9.2vw, 38px);
             line-height: 1.01;
           }

@@ -10,6 +10,7 @@ export default function BeforeAfterSlider({
   beforeSrc,
   afterSrc,
   aspectRatio = "3 / 4",
+  fit = "cover",              // "cover" = llena y recorta | "contain" = muestra completo sin recortar
   beforeAlt = "Antes de la simulación",
   afterAlt = "Después de la simulación",
 }) {
@@ -75,7 +76,7 @@ export default function BeforeAfterSlider({
     inset: 0,
     width: "100%",
     height: "100%",
-    objectFit: "cover",
+    objectFit: fit,
     display: "block",
     pointerEvents: "none",
   };

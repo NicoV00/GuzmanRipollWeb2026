@@ -8,6 +8,7 @@ import CTAhome from "../components/home/CTAhome";
 import Testimonios from "../components/home/Testimonios";
 import Especialistas from "../components/home/Especialistas";
 import Faq from "../components/home/faq";
+import CTAFinalHome from "../components/home/CTAFinalHome";
 import Footer from "../components/UI/Footer";
 
 export default function Home({ toggleTheme }) {
@@ -43,7 +44,9 @@ export default function Home({ toggleTheme }) {
 
         <Faq />
 
-        <Footer backgroundColor="#FAFFFF" cardBackgroundColor="#F2F2F2" />
+        <CTAFinalHome />
+
+        <Footer backgroundColor="#FAFFFF" cardBackgroundColor="#EBEDEF" />
       </Box>
     </Box>
   );

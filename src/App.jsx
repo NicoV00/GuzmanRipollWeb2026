@@ -10,6 +10,8 @@ import Clinica from "./pages/Clinica";
 import Resultados from "./pages/Resultados";
 import ProcedimientoDetalle from "./pages/ProcedimientoDetalle";
 import NotFound from "./pages/NotFound";
+import PoliticaPrivacidad from "./pages/PoliticaPrivacidad";
+import ProcesamientoDatos from "./pages/ProcesamientoDatos";
 // import Research from "./pages/Research"; // Research oculto temporalmente
 
 import NavBar from "./components/UI/NavBar";
@@ -230,6 +232,8 @@ function AppShell({ toggleTheme }) {
           <Route path="/research" element={<Research />} /> */}
           <Route path="/contacto" element={<ContactSection />} />
           <Route path="/cir-mamaria" element={<ProcedimientoCero />} />
+          <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
+          <Route path="/procesamiento-datos" element={<ProcesamientoDatos />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
 

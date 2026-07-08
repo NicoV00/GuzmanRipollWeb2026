@@ -52,7 +52,7 @@ export default function MedicalProcedures() {
       id: "04",
       number: "003",
       name: "Abdominoplastia",
-      image: "/images/abdo.png",
+      image: "/images/abdomino.webp",
       description: "Procedimiento quirúrgico que permite remodelar el abdomen eliminando exceso de piel y grasa.",
       listTitle: null,
       items: []
@@ -195,7 +195,7 @@ export default function MedicalProcedures() {
             fontFamily: "Poppins, sans-serif",
             fontSize: { xs: "32px", md: "56px", lg: "64px" },
             fontWeight: 500,
-            lineHeight: 1.08,
+            lineHeight: 1.18,
             letterSpacing: "-0.04em",
             color: "black",
             textAlign: "left",
@@ -254,19 +254,6 @@ export default function MedicalProcedures() {
               backgroundColor: { xs: "#EBEBEB", md: "white" },
               position: "relative",
               transition: "all 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-              /* Subtle top-left glare flash */
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                top: 0,
-                left: 0,
-                width: "120px",
-                height: "120px",
-                background: "radial-gradient(circle at 0% 0%, rgba(255,255,255,0.35) 0%, transparent 70%)",
-                zIndex: 2,
-                pointerEvents: "none",
-                borderRadius: "14px 0 0 0",
-              },
               "&:hover": {
                 backgroundColor: "#FFFFFF",
                 boxShadow: "0 20px 40px rgba(0, 0, 0, 0.04)",

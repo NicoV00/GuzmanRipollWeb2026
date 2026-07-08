@@ -99,6 +99,16 @@ export default function Clinica({ id }) {
     { src: '/images/logo-apaisado.png', alt: 'Logo 4' },
   ];
 
+  const imageGrainSx = {
+    position: "absolute",
+    inset: 0,
+    pointerEvents: "none",
+    opacity: 0.13,
+    mixBlendMode: "multiply",
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E")`,
+    backgroundSize: "140px 140px",
+  };
+
   return (
     <Box id={id} sx={{
       position: "relative",
@@ -187,19 +197,23 @@ export default function Clinica({ id }) {
             >
               <Box sx={{
                 width: "100%",
-                height: { xs: "400px", md: "900px" }, // Reduced height as requested
+                height: { xs: "400px", md: "800px" }, // Reduced height as requested
                 overflow: "hidden",
                 borderRadius: "2px",
                 position: "relative"
               }}>
                 <img
-                  src="/images/Paper Texture@2160p.png"
+                  src="/images/clinic1.webp"
                   alt="Clínica Guzmán Ripoll"
                   style={{
                     width: "100%",
                     height: "100%",
                     objectFit: "cover"
                   }}
+                />
+                <Box
+                  aria-hidden="true"
+                  sx={imageGrainSx}
                 />
               </Box>
             </Box>
@@ -223,16 +237,75 @@ export default function Clinica({ id }) {
           {/* 01 NUESTRO PROPÓSITO */}
           <PurposeSection />
 
+          {/* Imagen full-width entre propósito y liderazgo */}
+          <Box sx={{
+            gridColumn: "1 / -1",
+            width: "100%",
+            height: { xs: "300px", md: "86vh" },
+            maxHeight: { md: "800px" },
+            borderRadius: { xs: "16px", md: "2px" },
+            cornerShape: "squircle",
+            overflow: "hidden",
+            mb: { xs: "60px", md: "120px" },
+            position: "relative",
+          }}>
+            <img
+              src="/images/cloinica.png"
+              alt="Clínica Guzmán Ripoll"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                objectPosition: "center 75%",
+                display: "block",
+              }}
+            />
+            <Box
+              aria-hidden="true"
+              sx={imageGrainSx}
+            />
+          </Box>
 
+          {/* 02 LIDERAZGO — Dr. Guzmán Ripoll (imagen del cirujano) */}
+          <About />
 
           {/* LOGO GRID - Logos separados con gutter entre ellos */}
           <Box sx={{
             gridColumn: { xs: '1 / 13', md: '1 / 13' },
             zIndex: 1,
             width: '100%',
-            py: { xs: "40px", md: "80px" },
+            pt: 0,
+            pb: { xs: "40px", md: "80px" },
             backgroundColor: 'transparent',
           }}>
+            {/* Eyebrow numerado — número y título pegados (como 02 LIDERAZGO) */}
+            <Box sx={{
+              display: "flex",
+              alignItems: "baseline",
+              gap: "10px",
+              mb: { xs: "28px", md: "48px" },
+            }}>
+              <Typography component="span" sx={{
+                fontFamily: "Poppins, sans-serif",
+                fontSize: { xs: "16px", md: "18px" },
+                fontWeight: 500,
+                color: "rgba(0, 0, 0, 0.37)",
+                lineHeight: 1,
+              }}>
+                (03)
+              </Typography>
+              <Typography component="span" sx={{
+                fontFamily: "Poppins, sans-serif",
+                fontSize: { xs: "16px", md: "18px" },
+                fontWeight: 500,
+                color: "black",
+                textTransform: "uppercase",
+                letterSpacing: "-0.03em",
+                lineHeight: 1,
+              }}>
+                SOCIEDADES QUE INTEGRA
+              </Typography>
+            </Box>
             <Box sx={{
               display: 'grid',
               position: 'relative',
@@ -259,8 +332,8 @@ export default function Clinica({ id }) {
                       justifyContent: 'center',
                       padding: { xs: '30px 15px', md: '60px 40px' },
                       minHeight: { xs: '120px', md: '200px' },
-                      border: '1px solid rgba(0, 0, 0, 0.06)',
-                      backgroundColor: '#ffffff',
+                      border: '1px solid rgba(0, 0, 0, 0.12)',
+                      backgroundColor: 'transparent',
                       overflow: 'hidden',
                       zIndex: 1,
                       position: 'relative',
@@ -276,6 +349,8 @@ export default function Clinica({ id }) {
                         height: 'auto',
                         objectFit: 'contain',
                         filter: 'grayscale(100%) brightness(1.1)',
+                        // Funde el fondo blanco de los logos (JPG) con el fondo de la página
+                        mixBlendMode: 'multiply',
                         opacity: 0.6,
                         transition: 'all 0.3s ease',
                       }}
@@ -295,7 +370,9 @@ export default function Clinica({ id }) {
           </Box>
 
           <Conexion />
-          <About />
+
+          {/* Aire antes del footer */}
+          <Box sx={{ gridColumn: "1 / -1", height: { xs: "80px", md: "160px" } }} />
         </Box>
       </Box>
 

@@ -10,6 +10,7 @@ const procedures = [
     to: "/procedimiento/01",
     subtitle: "Aumento, mastopexia y reconstrucción",
     image: "/images/mama.png",
+    topBlur: true,
     col: { xs: "auto", md: "1 / 5" },
     row: 1,
     height: { xs: "290px", sm: "330px", md: "50%" },
@@ -19,6 +20,7 @@ const procedures = [
     to: "/procedimiento/01",
     subtitle: "Implantes de gel cohesivo",
     image: "/images/aumento.png",
+    topBlur: true,
     col: { xs: "auto", md: "9 / 13" },
     row: 2,
     height: { xs: "310px", sm: "350px", md: "80%" },
@@ -45,7 +47,7 @@ const procedures = [
     name: "ABDOMINOPLASTIA",
     to: "/procedimiento/04",
     subtitle: "Remodelación del abdomen",
-    image: "/images/abdo.png",
+    image: "/images/abdomino.webp",
     objectPosition: "center bottom",
     col: { xs: "auto", md: "5 / 9" },
     row: 2,
@@ -236,6 +238,7 @@ export default function VerMasProcedimientosHome() {
           >
             <Box
               sx={{
+                position: 'relative',
                 width: '100%',
                 height: card.height,
                 borderRadius: '6px',
@@ -259,6 +262,24 @@ export default function VerMasProcedimientosHome() {
                   boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
                 }}
               />
+              {/* Blur muy sutil en el borde superior de la imagen */}
+              {card.topBlur && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '26%',
+                    backdropFilter: 'blur(3px)',
+                    WebkitBackdropFilter: 'blur(3px)',
+                    WebkitMaskImage: 'linear-gradient(to bottom, #000 0%, transparent 100%)',
+                    maskImage: 'linear-gradient(to bottom, #000 0%, transparent 100%)',
+                    pointerEvents: 'none',
+                    zIndex: 2,
+                  }}
+                />
+              )}
             </Box>
             <Box sx={{
               display: 'flex',

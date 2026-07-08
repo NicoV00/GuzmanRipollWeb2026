@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useRef, useLayoutEffect } from "react"
+import React, { useRef, useLayoutEffect, useState, useEffect } from "react"
 import { useParams, Link as RouterLink } from "react-router-dom"
+import { fetchProcedimiento, fetchProcedimientos, mergeProcedimiento } from "../lib/sanity"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { Box, Typography } from "@mui/material"
@@ -70,7 +71,7 @@ const procedimientosData = {
     title: "Abdominoplastia",
     subtitle: "Remodelación Completa",
     category: "Contorno Corporal",
-    imageSrc: "/images/abdo.png",
+    imageSrc: "/images/abdomino.webp",
     catchPhrase: "Recupera tu silueta ideal con procedimientos avanzados de tensado.",
     description: "La abdominoplastia es un procedimiento integral que elimina el exceso de piel y grasa abdominal, repara la musculatura y redefine el contorno.",
     objetivo: "Eliminación de exceso de piel, corrección de diástasis, mejora del contorno.",
@@ -127,7 +128,33 @@ export default function ProcedimientoDetalle() {
   const containerRef = useRef(null)
   const heroImageRef = useRef(null)
 
-  const procedimiento = procedimientosData[id] || procedimientosData["01"]
+  const fallback = procedimientosData[id] || procedimientosData["01"]
+  const [procedimiento, setProcedimiento] = useState(fallback)
+  const [procedimientos, setProcedimientos] = useState(allProcedures)
+
+  // Trae los datos frescos de Sanity y los mezcla sobre el texto/imagen actual.
+  // Si Sanity no responde o un campo está vacío, se queda el contenido del sitio.
+  useEffect(() => {
+    let active = true
+    // Cambio INSTANTÁNEO al contenido local; Sanity refina después sin bloquear la navegación.
+    setProcedimiento(fallback)
+    fetchProcedimiento(id).then((doc) => {
+      if (active && doc) setProcedimiento(mergeProcedimiento(doc, fallback))
+    })
+    return () => { active = false }
+  }, [id])
+
+  // Lista de procedimientos para las pills de navegación (con fallback al set actual).
+  useEffect(() => {
+    let active = true
+    fetchProcedimientos().then((docs) => {
+      if (!active || !docs.length) return
+      setProcedimientos(
+        docs.map((d) => mergeProcedimiento(d, procedimientosData[d.number] || {}))
+      )
+    })
+    return () => { active = false }
+  }, [])
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0)
@@ -145,7 +172,12 @@ export default function ProcedimientoDetalle() {
         )
       }
 
-      gsap.fromTo(".hero-text-reveal",
+      // Orden de entrada por IMPORTANCIA, no por posición en el DOM:
+      // título (h1) → catchphrase (descripción) → meta (nº/categoría) → nav pills.
+      // Las pills están más arriba pero son lo menos importante, así que entran últimas.
+      const revealEls = gsap.utils.toArray(".hero-text-reveal")
+        .sort((a, b) => Number(a.dataset.revealOrder) - Number(b.dataset.revealOrder))
+      gsap.fromTo(revealEls,
         { y: 50, opacity: 0 },
         { y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power3.out", delay: 0.5 }
       )
@@ -166,13 +198,13 @@ export default function ProcedimientoDetalle() {
         px: { xs: "20px", md: "70px" },
       }}>
         {/* ─── Procedure Nav (Clean Pills) ─────── */}
-        <Box className="hero-text-reveal" sx={{
+        <Box className="hero-text-reveal" data-reveal-order="4" sx={{
           display: "flex",
           flexWrap: "wrap",
           gap: { xs: "8px", md: "10px" },
           mb: { xs: 5, md: 6 },
         }}>
-          {allProcedures.map((proc) => (
+          {procedimientos.map((proc) => (
             <Box
               key={proc.number}
               component={RouterLink}
@@ -182,29 +214,34 @@ export default function ProcedimientoDetalle() {
                 alignItems: "center",
                 px: { xs: "12px", md: "16px" },
                 py: { xs: "6px", md: "8px" },
-                borderRadius: "12px",
-                backdropFilter: "blur(24px) saturate(180%)",
-                WebkitBackdropFilter: "blur(24px) saturate(180%)",
-                borderTop: "1px solid",
-                borderLeft: "1px solid",
-                borderRight: "1px solid",
-                borderBottom: "1px solid",
-                borderTopColor: proc.number === id ? "rgba(255, 255, 255, 0.2)" : "rgba(255, 255, 255, 0.8)",
-                borderLeftColor: proc.number === id ? "rgba(255, 255, 255, 0.1)" : "rgba(255, 255, 255, 0.6)",
-                borderRightColor: proc.number === id ? "rgba(255, 255, 255, 0.04)" : "rgba(255, 255, 255, 0.3)",
-                borderBottomColor: proc.number === id ? "rgba(255, 255, 255, 0.02)" : "rgba(255, 255, 255, 0.2)",
-                boxShadow: proc.number === id ? "0 4px 16px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.15)" : "0 4px 12px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.6)",
-                background: proc.number === id ? "linear-gradient(135deg, rgba(18, 20, 24, 0.9), rgba(30, 32, 38, 0.8))" : "#F0F0F1",
+                position: "relative",
+                zIndex: 1,
+                cursor: "pointer",
+                borderRadius: "999px",
+                // Glass sólido con luz entrando por el borde superior-izquierdo (-45°).
+                backdropFilter: "blur(22px) saturate(105%)",
+                WebkitBackdropFilter: "blur(22px) saturate(105%)",
+                border: "1px solid",
+                borderColor: proc.number === id ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.75)",
+                background: proc.number === id
+                  ? "linear-gradient(135deg, rgba(26,28,32,0.92) 0%, rgba(38,40,46,0.82) 100%)"
+                  : "linear-gradient(135deg, rgba(238,240,243,0.88) 0%, rgba(226,229,233,0.62) 100%)",
+                // Rim-light: highlight blanco arriba-izq, sombra sutil abajo-der = grosor de vidrio + drop shadow sólido.
+                boxShadow: proc.number === id
+                  ? "inset 1.5px 1.5px 1.5px rgba(255,255,255,0.28), inset -1.5px -1.5px 2px rgba(0,0,0,0.4), 0 8px 22px rgba(0,0,0,0.22)"
+                  : "inset 1.5px 1.5px 1.5px rgba(255,255,255,0.95), inset -1.5px -1.5px 2px rgba(0,0,0,0.05), 0 8px 22px rgba(0,0,0,0.10)",
                 textDecoration: "none",
                 fontFamily: "Poppins, sans-serif",
                 fontSize: { xs: "12px", md: "13px" },
                 fontWeight: proc.number === id ? 600 : 500,
                 color: proc.number === id ? "#fff" : "#111",
                 letterSpacing: "-0.01em",
-                transition: "all 0.25s ease",
+                transition: "transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease, background 0.25s ease",
                 "&:hover": {
-                  background: proc.number === id ? "linear-gradient(135deg, rgba(28, 30, 34, 0.95), rgba(40, 42, 48, 0.85))" : "#E7E7E9",
-                  transform: "translateY(-1px)"
+                  transform: "translateY(-1.5px)",
+                  boxShadow: proc.number === id
+                    ? "inset 1.5px 1.5px 1.5px rgba(255,255,255,0.35), inset -1.5px -1.5px 2px rgba(0,0,0,0.4), 0 12px 28px rgba(0,0,0,0.26)"
+                    : "inset 1.5px 1.5px 1.5px rgba(255,255,255,1), inset -1.5px -1.5px 2px rgba(0,0,0,0.06), 0 12px 28px rgba(0,0,0,0.14)"
                 },
                 "&:active": {
                   transform: "translateY(0)"
@@ -217,7 +254,7 @@ export default function ProcedimientoDetalle() {
         </Box>
 
         {/* Number & Category */}
-        <Box sx={{ display: "flex", alignItems: "baseline", gap: 2, mb: 4 }} className="hero-text-reveal">
+        <Box sx={{ display: "flex", alignItems: "baseline", gap: 2, mb: 4 }} className="hero-text-reveal" data-reveal-order="3">
           <Typography sx={{
             fontFamily: "Poppins", fontSize: "16px", fontWeight: 600, color: "rgba(0,0,0,0.4)"
           }}>
@@ -231,9 +268,9 @@ export default function ProcedimientoDetalle() {
         </Box>
 
         {/* Title */}
-        <Typography variant="h1" className="hero-text-reveal" sx={{
+        <Typography variant="h1" className="hero-text-reveal" data-reveal-order="1" sx={{
           fontFamily: "Poppins",
-          fontSize: { xs: "38px", md: "60px", lg: "72px" },
+          fontSize: { xs: "30px", md: "42px", lg: "48px" },
           fontWeight: 500,
           lineHeight: 1.05,
           letterSpacing: "-0.03em",
@@ -246,12 +283,12 @@ export default function ProcedimientoDetalle() {
         </Typography>
 
         {/* Subtitle / Catchphrase */}
-        <Typography className="hero-text-reveal" sx={{
+        <Typography className="hero-text-reveal" data-reveal-order="2" sx={{
           fontFamily: "Poppins",
-          fontSize: { xs: "17px", md: "22px" },
+          fontSize: { xs: "15px", md: "18px" },
           fontWeight: 400,
           color: "rgba(0,0,0,0.7)",
-          maxWidth: "800px",
+          maxWidth: "680px",
           lineHeight: 1.4,
           textAlign: "left",
         }}>
@@ -273,8 +310,8 @@ export default function ProcedimientoDetalle() {
           position: { md: "sticky" },
           top: "120px",
           alignSelf: "start",
-          height: { xs: "380px", md: "78vh" },
-          maxHeight: { md: "820px" },
+          height: { xs: "300px", md: "58vh" },
+          maxHeight: { md: "620px" },
           borderRadius: "16px",
           overflow: "hidden"
         }}>
@@ -422,6 +459,47 @@ export default function ProcedimientoDetalle() {
             </Typography>
           </Box>
 
+          {/* CTA WhatsApp — consulta directa por este procedimiento */}
+          <Box
+            component="a"
+            href={`https://wa.me/59899016358?text=${encodeURIComponent(
+              `Hola! Quiero hacer una consulta por ${procedimiento.title}.`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            sx={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 1.5,
+              alignSelf: "flex-start",
+              px: 3,
+              py: 1.6,
+              borderRadius: "999px",
+              backgroundColor: "#111",
+              textDecoration: "none",
+              transition: "transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease",
+              boxShadow: "0 10px 26px rgba(0,0,0,0.14)",
+              "&:hover": {
+                transform: "translateY(-2px)",
+                boxShadow: "0 14px 32px rgba(0,0,0,0.2)",
+              },
+            }}
+          >
+            <Box component="svg" viewBox="0 0 24 24" sx={{ width: 18, height: 18, flexShrink: 0 }} fill="#25D366" aria-hidden>
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+            </Box>
+            <Typography sx={{
+              fontFamily: "Poppins, sans-serif",
+              fontSize: { xs: "13px", md: "14px" },
+              fontWeight: 500,
+              color: "#fff",
+              lineHeight: 1,
+              whiteSpace: "nowrap",
+            }}>
+              Consultar por este procedimiento
+            </Typography>
+          </Box>
+
           {procedimiento.secondaryImageSrc && (
             <Box sx={{ width: "100%", borderRadius: "16px", overflow: "hidden" }}>
               <Box
@@ -529,7 +607,8 @@ export default function ProcedimientoDetalle() {
                     afterSrc="/videos/despues.mp4"
                     beforeAlt="Simulación Crisalix: torso antes del aumento mamario"
                     afterAlt="Simulación Crisalix: torso después del aumento mamario"
-                    aspectRatio="4 / 3"
+                    aspectRatio="1 / 1"
+                    fit="contain"
                   />
                 </Box>
                 <Box sx={{
@@ -726,7 +805,7 @@ export default function ProcedimientoDetalle() {
       {/* ─── PROCESS STEPS ─────────────────────── */}
       <ProcessSteps procedureId={id} />
 
-      <Footer backgroundColor="#FAFFFF" cardBackgroundColor="#F2F2F2" />
+      <Footer backgroundColor="#FAFFFF" cardBackgroundColor="#EBEDEF" />
     </Box>
   )
 }

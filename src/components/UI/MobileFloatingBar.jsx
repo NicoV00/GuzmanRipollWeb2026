@@ -105,14 +105,51 @@ export default function MobileFloatingBar() {
         px: '8px',
         py: '8px',
         borderRadius: '100px',
-        background: 'rgba(35, 38, 45, 0.8)',
-        backdropFilter: 'blur(32px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(32px) saturate(180%)',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        boxShadow: '0 12px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+        overflow: 'hidden',
+        isolation: 'isolate',
+        // ── Liquid glass senior ──────────────────────────────
+        // Frost real: blur + saturate alto. Gradiente vertical para dar profundidad.
+        background: 'linear-gradient(180deg, rgba(52,56,66,0.66) 0%, rgba(26,28,34,0.82) 100%)',
+        backdropFilter: 'blur(36px) saturate(200%)',
+        WebkitBackdropFilter: 'blur(36px) saturate(200%)',
+        border: '1px solid rgba(255, 255, 255, 0.14)',
+        // Elevación externa + highlights internos (top brillo, bottom sombra, bordes luz)
+        boxShadow: [
+          '0 18px 48px rgba(0, 0, 0, 0.42)',
+          '0 4px 12px rgba(0, 0, 0, 0.28)',
+          'inset 0 1px 0 rgba(255, 255, 255, 0.28)',
+          'inset 0 -1px 0 rgba(0, 0, 0, 0.34)',
+          'inset 1px 0 0 rgba(255, 255, 255, 0.08)',
+          'inset -1px 0 0 rgba(255, 255, 255, 0.06)',
+        ].join(', '),
         gap: '10px',
         alignItems: 'center',
         justifyContent: 'center',
+        // Reflejo especular en la mitad superior (la "luz" del vidrio)
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '52%',
+          borderRadius: '100px 100px 50% 50% / 100px 100px 34px 34px',
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.05) 55%, transparent 100%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        },
+        // Sheen de refracción suave desde la esquina superior izquierda
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          borderRadius: 'inherit',
+          background: 'radial-gradient(130% 90% at 0% 0%, rgba(255,255,255,0.12), transparent 52%)',
+          pointerEvents: 'none',
+          zIndex: 0,
+        },
+        // El contenido (botones) por encima de los reflejos
+        '& > *': { position: 'relative', zIndex: 1 },
       }}
     >
       <Box
@@ -126,18 +163,19 @@ export default function MobileFloatingBar() {
           px: '22px',
           py: '12px',
           borderRadius: '100px',
-          background: 'linear-gradient(135deg, rgba(30, 80, 200, 0.7), rgba(20, 60, 160, 0.6))',
-          backdropFilter: 'blur(10px)',
+          background: 'linear-gradient(180deg, rgba(38, 96, 224, 0.92), rgba(18, 58, 158, 0.92))',
+          backdropFilter: 'blur(10px) saturate(160%)',
+          WebkitBackdropFilter: 'blur(10px) saturate(160%)',
           color: '#fff',
           textDecoration: 'none',
           fontFamily: 'Poppins, sans-serif',
           fontSize: '13px',
           fontWeight: 600,
           whiteSpace: 'nowrap',
-          transition: 'all 0.2s ease',
-          border: '1px solid rgba(255, 255, 255, 0.2)',
-          boxShadow: 'inset 0 1.5px 0 rgba(255, 255, 255, 0.3), 0 4px 12px rgba(20, 60, 160, 0.2)',
-          '&:active': { transform: 'scale(0.98)' },
+          transition: `all 0.25s ${'cubic-bezier(0.22, 1, 0.36, 1)'}`,
+          border: '1px solid rgba(255, 255, 255, 0.28)',
+          boxShadow: 'inset 0 1.5px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(0,0,0,0.22), 0 6px 16px rgba(20,60,160,0.38)',
+          '&:active': { transform: 'scale(0.97)' },
         }}
       >
         Agendar consulta
@@ -154,18 +192,19 @@ export default function MobileFloatingBar() {
           px: '18px',
           py: '12px',
           borderRadius: '100px',
-          background: 'rgba(255, 255, 255, 0.1)',
-          backdropFilter: 'blur(10px)',
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.07))',
+          backdropFilter: 'blur(14px) saturate(160%)',
+          WebkitBackdropFilter: 'blur(14px) saturate(160%)',
           color: '#fff',
           textDecoration: 'none',
           fontFamily: 'Poppins, sans-serif',
           fontSize: '13px',
           fontWeight: 500,
           whiteSpace: 'nowrap',
-          transition: 'all 0.2s ease',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          boxShadow: 'inset 0 1.5px 0 rgba(255, 255, 255, 0.2)',
-          '&:active': { transform: 'scale(0.98)' },
+          transition: `all 0.25s ${'cubic-bezier(0.22, 1, 0.36, 1)'}`,
+          border: '1px solid rgba(255, 255, 255, 0.18)',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.30), inset 0 -1px 0 rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.18)',
+          '&:active': { transform: 'scale(0.97)' },
         }}
       >
         Ver más

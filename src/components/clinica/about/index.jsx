@@ -11,6 +11,16 @@ export default function About() {
   const contentRef = useRef(null)
   const doctorImageRef = useRef(null)
 
+  const imageGrainSx = {
+    position: "absolute",
+    inset: 0,
+    pointerEvents: "none",
+    opacity: 0.13,
+    mixBlendMode: "multiply",
+    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E")`,
+    backgroundSize: "140px 140px",
+  }
+
   useEffect(() => {
     const elements = [
       { ref: doctorTitleRef, y: 50 },
@@ -169,11 +179,12 @@ export default function About() {
         gridColumn: { xs: '1 / 13', md: '7 / 11' },
         zIndex: 1,
         height: "auto",
-        width: "100%"
+        width: "100%",
+        position: "relative",
       }}>
         <img
           ref={doctorImageRef}
-          src="/images/foto-perfil-guzman.webp"
+          src="/images/clinica3.webp"
           alt="Dr. Guzman Ripoll"
           style={{
             width: "100%",
@@ -184,6 +195,10 @@ export default function About() {
             borderRadius: "inherit"
           }}
         />
+        <Box
+          aria-hidden="true"
+          sx={imageGrainSx}
+        />
       </Box>
     </>
   );
@@ -193,7 +208,7 @@ export default function About() {
 const doctorTitleStyle = {
   fontFamily: "Poppins",
   fontWeight: { xs: 600, md: 400 },
-  fontSize: { xs: "30px", md: "3.8rem" },
+  fontSize: { xs: "30px", md: "3.4rem" },
   lineHeight: { xs: 1.06, md: 1.1 },
   letterSpacing: { xs: "-0.01em", md: "-0.03em" },
   color: "text.primary",

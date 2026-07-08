@@ -46,10 +46,18 @@ const colLinkStyles = {
   "&:hover": { color: "#111" },
 };
 
+// lucide no incluye el logo de WhatsApp (marca registrada) — SVG inline
+const WhatsAppIcon = ({ size = 18 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+  </svg>
+);
+
 const socials = [
   { href: "https://www.instagram.com/clinicaripoll/", Icon: Instagram, label: "Instagram" },
   { href: "https://facebook.com/guzmanripoll", Icon: Facebook, label: "Facebook" },
   { href: "https://linkedin.com", Icon: Linkedin, label: "LinkedIn" },
+  { href: "https://wa.me/59899016358", Icon: WhatsAppIcon, label: "WhatsApp" },
 ];
 
 const socialCircleStyles = {
@@ -73,14 +81,12 @@ const brandBaseStyles = {
   lineHeight: 1.0,
   letterSpacing: { xs: "-2px", md: "-4px" },
   textTransform: "uppercase",
-  fontSize: { xs: "12.6vw", md: "clamp(52px, 6.7vw, 110px)" },
+  fontSize: { xs: "10.6vw", md: "clamp(48px, 6.2vw, 100px)" },
   textAlign: { xs: "left", md: "right" },
   whiteSpace: "nowrap",
   width: { xs: "100%", md: "auto" },
   m: 0,
 };
-
-const footerWordmarkText = "Guzm\u00e1n Ripoll";
 
 export default function Footer({ backgroundColor = "transparent", cardBackgroundColor = "white" }) {
   const currentYear = new Date().getFullYear();
@@ -90,7 +96,7 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
     <Box sx={{
       maxWidth: "1920px",
       mx: "auto",
-      px: { xs: "20px", md: "70px" },
+      px: { xs: "10px", md: "70px" },
       pt: { xs: "20px", md: "60px" },
       pb: { xs: "calc(8px + env(safe-area-inset-bottom))", md: "8px" },
       width: "100%",
@@ -105,7 +111,9 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
         pb: { xs: "32px", md: "44px" },
         bgcolor: cardBackgroundColor,
         color: COLORS.textDark,
-        borderRadius: "24px",
+        borderRadius: { xs: "16px", md: "24px" },
+        // Squircle (corner smoothing iOS) — progressive enhancement, Chromium 139+
+        cornerShape: "squircle",
         boxSizing: "border-box",
         border: "1px solid rgba(0,0,0,0.05)",
         boxShadow: "0 4px 20px rgba(0,0,0,0.02)",
@@ -197,16 +205,28 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
             Cirugía inteligente, conexión humana.
           </Typography>
 
-          <MuiLink component={RouterLink} to="/contacto" underline="none" sx={{
-            fontFamily: "Poppins, sans-serif",
-            fontSize: "14px",
-            fontWeight: 500,
-            color: "#111",
-            transition: "opacity 0.2s ease",
-            "&:hover": { opacity: 0.6 },
-          }}>
-            Política y privacidad
-          </MuiLink>
+          <Box sx={{ display: "flex", gap: "20px", alignItems: "center", flexWrap: "wrap" }}>
+            <MuiLink component={RouterLink} to="/politica-privacidad" underline="none" sx={{
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "14px",
+              fontWeight: 500,
+              color: "#111",
+              transition: "opacity 0.2s ease",
+              "&:hover": { opacity: 0.6 },
+            }}>
+              Política y privacidad
+            </MuiLink>
+            <MuiLink component={RouterLink} to="/procesamiento-datos" underline="none" sx={{
+              fontFamily: "Poppins, sans-serif",
+              fontSize: "14px",
+              fontWeight: 500,
+              color: "#111",
+              transition: "opacity 0.2s ease",
+              "&:hover": { opacity: 0.6 },
+            }}>
+              Procesamiento de datos
+            </MuiLink>
+          </Box>
         </Box>
       </Box>
 
@@ -214,7 +234,8 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
       <Box sx={{
         mt: { xs: "28px", md: "40px" },
         display: "flex",
-        flexDirection: { xs: "column", md: "row" },
+        // En mobile: GUZMÁN RIPOLL arriba y el © abajo (column-reverse). Desktop sin cambios.
+        flexDirection: { xs: "column-reverse", md: "row" },
         justifyContent: "space-between",
         alignItems: { xs: "flex-start", md: "flex-end" },
         gap: { xs: "16px", md: "20px" },
@@ -248,20 +269,36 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
           isolation: "isolate",
           pb: "0.02em",
           mb: { xs: "-0.12em", md: "-0.14em" },
+          // Margen lateral en mobile (el bloque es full-bleed y quedaba pegado al borde)
+          px: { xs: "20px", md: 0 },
+          boxSizing: "border-box",
+          // Efecto tipo "J A C O": por defecto solo se ven las iniciales (G, R) y el resto
+          // queda invisible pero CONSERVANDO su espacio; al hover aparece el nombre completo.
+          "& .wm-rest": {
+            opacity: 0,
+            transition: "opacity 0.6s cubic-bezier(0.22,1,0.36,1)",
+          },
+          "&:hover .wm-rest": { opacity: 1 },
+          // En touch (sin hover) el nombre completo queda fijo, sin efecto
+          "@media (hover: none)": {
+            "& .wm-rest": { opacity: 1, transition: "none" },
+          },
         }}>
           {/* Capa nitida principal */}
+          {/* Color directo (sin background-clip): con el clip de gradiente, la opacidad
+              de los spans no tiene efecto y el nombre se ve siempre completo. */}
           <Typography sx={{
             ...brandBaseStyles,
             position: "relative",
-            backgroundImage: "linear-gradient(180deg, #000 0%, #000 80%, #181818 90%, #000 100%)",
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-            WebkitTextFillColor: "transparent",
+            color: "#000",
             textShadow: "none",
             WebkitMaskImage: "linear-gradient(to bottom, #000 0%, #000 90%, rgba(0,0,0,0.86) 100%)",
             maskImage: "linear-gradient(to bottom, #000 0%, #000 90%, rgba(0,0,0,0.86) 100%)",
           }}>
-            {footerWordmarkText}
+            <Box component="span" className="wm-initial">G</Box>
+            <Box component="span" className="wm-rest">uzm{"á"}n&nbsp;</Box>
+            <Box component="span" className="wm-initial">R</Box>
+            <Box component="span" className="wm-rest">ipoll</Box>
           </Typography>
           {/* Refraccion cromatica fina */}
           <Typography aria-hidden sx={{
@@ -277,7 +314,10 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
             maskImage: "linear-gradient(to bottom, transparent 0%, transparent 80%, rgba(0,0,0,0.55) 88%, transparent 96%)",
             pointerEvents: "none",
           }}>
-            {footerWordmarkText}
+            <Box component="span" className="wm-initial">G</Box>
+            <Box component="span" className="wm-rest">uzm{"á"}n&nbsp;</Box>
+            <Box component="span" className="wm-initial">R</Box>
+            <Box component="span" className="wm-rest">ipoll</Box>
           </Typography>
         </Box>
       </Box>
