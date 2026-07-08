@@ -735,10 +735,15 @@ export function ContactSection({ id }) {
           }
 
           .contact-form-wrapper-mobile .contact-form-title {
-            font-size: clamp(36px, 8.8vw, 52px);
-            line-height: 0.98;
-            letter-spacing: -0.075em;
-            margin-bottom: 24px;
+            font-size: clamp(28px, 7.2vw, 38px);
+            line-height: 1.03;
+            letter-spacing: -0.055em;
+            margin-bottom: 22px;
+            max-width: 100%;
+          }
+
+          .contact-form-wrapper-mobile .contact-form-title br {
+            display: none;
           }
 
           .contact-form-wrapper-mobile .contact-form {
@@ -828,8 +833,8 @@ export function ContactSection({ id }) {
           }
 
           .contact-form-wrapper-mobile .contact-form-title {
-            font-size: clamp(34px, 9.8vw, 44px);
-            line-height: 1;
+            font-size: clamp(26px, 7.4vw, 34px);
+            line-height: 1.04;
           }
 
           .contact-image-wrap-mobile {
@@ -862,8 +867,8 @@ export function ContactSection({ id }) {
           }
 
           .contact-form-wrapper-mobile .contact-form-title {
-            font-size: clamp(31px, 9.2vw, 38px);
-            line-height: 1.01;
+            font-size: clamp(24px, 7.3vw, 30px);
+            line-height: 1.04;
           }
 
           .contact-mobile-row a,

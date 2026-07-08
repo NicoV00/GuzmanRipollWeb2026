@@ -1,19 +1,29 @@
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
-import { schemaTypes } from './schemas'
+import { contentSchemaTypes, consultaSchemaTypes } from './schemas'
 
-// ⚠️ REEMPLAZAR 'TU_PROJECT_ID' por el Project ID que te da sanity.io al crear el proyecto.
-export default defineConfig({
-  name: 'default',
-  title: 'Guzmán Ripoll',
+const projectId = 'nzg7h3zh'
 
-  projectId: 'nzg7h3zh',
-  dataset: 'production',
-
-  plugins: [structureTool(), visionTool()],
-
-  schema: {
-    types: schemaTypes,
+export default defineConfig([
+  {
+    name: 'contenido',
+    title: 'Guzman Ripoll',
+    projectId,
+    dataset: 'production',
+    plugins: [structureTool(), visionTool()],
+    schema: {
+      types: contentSchemaTypes,
+    },
   },
-})
+  {
+    name: 'consultas',
+    title: 'Consultas',
+    projectId,
+    dataset: 'consultas',
+    plugins: [structureTool()],
+    schema: {
+      types: consultaSchemaTypes,
+    },
+  },
+])

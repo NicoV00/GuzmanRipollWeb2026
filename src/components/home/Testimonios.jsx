@@ -374,7 +374,7 @@ const TestimoniosCarousel = () => {
                       textAlign: 'left',
                       flexDirection: 'column',
                       justifyContent: 'center',
-                      backgroundColor: '#F2F2F2',
+                      backgroundColor: '#EBEDEF',
                       boxShadow: '0 2px 10px rgba(0, 0, 0, 0.05)',
                       transition: 'all 0.3s ease',
                       position: 'relative',

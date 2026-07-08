@@ -10,8 +10,7 @@ export default function Conexion() {
   const pointsRef = useRef([])
 
   useEffect(() => {
-    // Reset points ref array to ensure clean start
-    pointsRef.current = pointsRef.current.slice(0, 3);
+    pointsRef.current = pointsRef.current.slice(0, 3)
 
     const elements = [humanConnectionTitleRef.current, ...pointsRef.current]
 
@@ -31,7 +30,7 @@ export default function Conexion() {
             start: "top 85%",
             toggleActions: "play none none none"
           },
-          delay: index * 0.1 // Stagger effect
+          delay: index * 0.1
         }
       )
     })
@@ -58,39 +57,38 @@ export default function Conexion() {
 
   return (
     <>
-      {/* IMAGEN - Arriba en móvil, izquierda en desktop */}
       <Box sx={{
         gridColumn: { xs: '1 / 13', md: '1 / 6' },
         position: "relative",
-        height: { xs: "70vh", md: "110vh" }, // AJUSTE: Altura equilibrada
-        marginBottom: { xs: 4, md: 0 },
+        height: { xs: "58vh", md: "96vh" },
+        maxHeight: { md: "760px" },
+        marginTop: { xs: "-4px", md: "-132px" },
+        marginBottom: { xs: 6, md: 0 },
+        marginLeft: { xs: 0, md: "-34px" },
         zIndex: 1,
         order: { xs: 1, md: 1 },
       }}>
         <Box sx={{
-          borderRadius: "24px", // AJUSTE: Más border radius
+          borderRadius: "24px",
           overflow: "hidden",
           height: "100%",
           backgroundImage: 'url("/images/conexion.webp")',
           backgroundSize: "cover",
           backgroundPosition: "center",
-        }}>
-        </Box>
-      </Box >
+        }} />
+      </Box>
 
-      {/* TEXTO - Abajo en móvil, derecha en desktop */}
       <Box sx={{
-        gridColumn: { xs: '1 / 13', md: '7 / 13' }, // AJUSTE: Comienza exactamente en col 7 (deja col 6 de gap)
+        gridColumn: { xs: '1 / 13', md: '7 / 13' },
         zIndex: 1,
         order: { xs: 2, md: 2 },
-        py: { xs: 5, md: 0 },
+        py: { xs: 2, md: 0 },
         display: "grid",
         gridTemplateColumns: { md: "repeat(6, 1fr)" },
         columnGap: "20px",
-        height: "auto", // Remove fixed centering
-        pt: { md: 10 } // Manual padding to start nicely
+        height: "auto",
+        pt: { md: 0 }
       }}>
-        {/* Human Connection Section */}
         <Box component="section" sx={{
           gridColumn: "1 / 7",
           display: "flex",
@@ -104,14 +102,14 @@ export default function Conexion() {
               px: { xs: "0.1rem", md: 0 },
               whiteSpace: "nowrap",
               fontSize: { xs: "2.4rem", md: "3.5rem" },
-              mb: 12, // Más separación debajo del titular
+              mb: { xs: 5, md: 8 },
               textAlign: "left"
             }}
           >
             Conexión humana
           </Typography>
 
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 12 }}> {/* Más separación entre bloques */}
+          <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 6, md: 8 } }}>
             {humanConnectionPoints.map((point, index) => (
               <Box
                 key={index}
@@ -126,7 +124,7 @@ export default function Conexion() {
                 <Typography variant="body1" sx={{ ...pointNumberStyle, gridColumn: "1 / 2", textAlign: "left" }}>
                   0{index + 1}.
                 </Typography>
-                <Box sx={{ gridColumn: "2 / 7", display: "flex", flexDirection: "column", gap: 3 }}>
+                <Box sx={{ gridColumn: "2 / 7", display: "flex", flexDirection: "column", gap: { xs: 2, md: 2.5 } }}>
                   <Typography variant="h3" sx={{ ...pointTitleStyle, mt: "2px" }}>
                     {point.title}
                   </Typography>
@@ -140,7 +138,7 @@ export default function Conexion() {
         </Box>
       </Box>
     </>
-  );
+  )
 }
 
 const sectionTitle = {
@@ -157,25 +155,25 @@ const pointNumberStyle = {
   fontSize: "1.1rem",
   color: "rgba(0,0,0,0.5)",
   minWidth: "60px",
-  fontWeight: 500, // Medium
+  fontWeight: 500,
   display: "inline-block"
 }
 
 const pointTitleStyle = {
   fontFamily: "Poppins",
-  fontSize: "1.4rem", // AJUSTE: Un poco más grande para mejor jerarquía
-  fontWeight: 500, // Medium
+  fontSize: "1.4rem",
+  fontWeight: 500,
   color: "#000",
   display: "inline-block",
   textAlign: "left"
 }
 
 const pointDescriptionStyle = {
-  mt: 2,
-  fontSize: "1.25rem", // AJUSTE: Más grande
+  mt: 1,
+  fontSize: "1.25rem",
   color: "rgba(0,0,0,0.5)",
-  lineHeight: 1.5,
-  fontWeight: 500, // AJUSTE: Medium
+  lineHeight: 1.45,
+  fontWeight: 500,
   textAlign: "left",
-  maxWidth: "520px", // AJUSTE: Más ancho
+  maxWidth: "520px",
 }

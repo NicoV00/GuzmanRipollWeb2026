@@ -95,7 +95,7 @@ export default function Clinica({ id }) {
   const logos = [
     { src: '/images/logo-apaisado.png', alt: 'FILACP — Federación Ibero Latinoamericana de Cirugía Plástica' },
     { src: '/images/logo-scpreu.png', alt: 'SCPREU — Sociedad de Cirugía Plástica y Reconstructiva del Uruguay' },
-    { src: '/images/images.jpg', alt: 'ALAM' },
+    { src: '/images/alam-logo.png', alt: 'ALAM — Asociación Latinoamericana de Microcirugía', size: 78 },
   ];
 
   const imageGrainSx = {
@@ -274,7 +274,7 @@ export default function Clinica({ id }) {
             zIndex: 1,
             width: '100%',
             pt: 0,
-            pb: { xs: "40px", md: "80px" },
+            pb: { xs: "12px", md: "18px" },
             backgroundColor: 'transparent',
           }}>
             {/* Eyebrow numerado — número y título pegados (como 02 LIDERAZGO) */}
@@ -282,7 +282,7 @@ export default function Clinica({ id }) {
               display: "flex",
               alignItems: "baseline",
               gap: "10px",
-              mb: { xs: "28px", md: "48px" },
+              mb: { xs: "18px", md: "24px" },
             }}>
               <Typography component="span" sx={{
                 fontFamily: "Poppins, sans-serif",
@@ -308,9 +308,9 @@ export default function Clinica({ id }) {
             {/* Cinta infinita de logos (marquee) — se pausa al pasar el mouse */}
             <Box sx={{
               position: 'relative',
-              width: '100%',
+              width: { xs: '100%', md: '50%' },
               overflow: 'hidden',
-              py: { xs: '24px', md: '40px' },
+              py: { xs: '12px', md: '18px' },
               // Desvanece los logos en los bordes de la cinta
               maskImage: 'linear-gradient(to right, transparent, black 14%, black 86%, transparent)',
               WebkitMaskImage: 'linear-gradient(to right, transparent, black 14%, black 86%, transparent)',
@@ -342,24 +342,23 @@ export default function Clinica({ id }) {
                       src={logo.src}
                       alt={logo.alt}
                       style={{
-                        maxHeight: '46px',
+                        maxHeight: `${logo.size || 46}px`,
                         maxWidth: '190px',
                         width: 'auto',
                         height: 'auto',
                         objectFit: 'contain',
-                        filter: 'grayscale(100%) brightness(1.1)',
-                        // Funde el fondo blanco de los logos (JPG) con el fondo de la página
+                        // Sin opacity: rompería el multiply y el fondo blanco
+                        // de los JPG volvería a verse como recuadro.
+                        // El desvanecido se logra con brightness sobre el gris.
+                        filter: 'grayscale(100%) brightness(1.45)',
                         mixBlendMode: 'multiply',
-                        opacity: 0.6,
-                        transition: 'filter 0.3s ease, opacity 0.3s ease',
+                        transition: 'filter 0.3s ease',
                       }}
                       onMouseEnter={(e) => {
                         e.target.style.filter = 'grayscale(0%) brightness(1)';
-                        e.target.style.opacity = '1';
                       }}
                       onMouseLeave={(e) => {
-                        e.target.style.filter = 'grayscale(100%) brightness(1.1)';
-                        e.target.style.opacity = '0.6';
+                        e.target.style.filter = 'grayscale(100%) brightness(1.45)';
                       }}
                     />
                   </Box>
@@ -371,7 +370,7 @@ export default function Clinica({ id }) {
           <Conexion />
 
           {/* Aire antes del footer */}
-          <Box sx={{ gridColumn: "1 / -1", height: { xs: "80px", md: "160px" } }} />
+          <Box sx={{ gridColumn: "1 / -1", height: { xs: "96px", md: "190px" } }} />
         </Box>
       </Box>
 

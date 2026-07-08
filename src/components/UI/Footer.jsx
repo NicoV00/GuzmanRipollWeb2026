@@ -81,7 +81,7 @@ const brandBaseStyles = {
   lineHeight: 1.0,
   letterSpacing: { xs: "-2px", md: "-4px" },
   textTransform: "uppercase",
-  fontSize: { xs: "10.6vw", md: "clamp(48px, 6.2vw, 100px)" },
+  fontSize: { xs: "9.7vw", md: "clamp(48px, 6.2vw, 100px)" },
   textAlign: { xs: "left", md: "right" },
   whiteSpace: "nowrap",
   width: { xs: "100%", md: "auto" },
@@ -97,7 +97,7 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
       maxWidth: "1920px",
       mx: "auto",
       px: { xs: "10px", md: "70px" },
-      pt: { xs: "20px", md: "60px" },
+      pt: { xs: "14px", md: "60px" },
       pb: { xs: "calc(8px + env(safe-area-inset-bottom))", md: "8px" },
       width: "100%",
       boxSizing: "border-box",
@@ -106,9 +106,9 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
       {/* ─── CARD (no pasa el margen: ocupa exactamente col 1 → col 12) ─── */}
       <Box component="footer" sx={{
         width: "100%",
-        px: { xs: "24px", md: "56px" },
-        pt: { xs: "44px", md: "64px" },
-        pb: { xs: "32px", md: "44px" },
+        px: { xs: "18px", md: "56px" },
+        pt: { xs: "28px", md: "64px" },
+        pb: { xs: "22px", md: "44px" },
         bgcolor: cardBackgroundColor,
         color: COLORS.textDark,
         borderRadius: { xs: "16px", md: "24px" },
@@ -125,7 +125,7 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
         <Box sx={{
           display: "flex",
           flexWrap: "wrap",
-          gap: { xs: "36px 48px", md: "72px" },
+          gap: { xs: "22px 34px", md: "72px" },
           alignItems: "flex-start",
         }}>
           {/* Navegación */}
@@ -187,8 +187,8 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
 
         {/* Fila inferior de la card: tagline izquierda + Política derecha */}
         <Box sx={{
-          mt: { xs: "44px", md: "auto" },
-          pt: { xs: "36px", md: "56px" },
+          mt: { xs: "26px", md: "auto" },
+          pt: { xs: "22px", md: "56px" },
           display: "flex",
           flexDirection: { xs: "column", md: "row" },
           justifyContent: "space-between",
@@ -232,13 +232,13 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
 
       {/* ─── FUERA DE LA CARD: copyright (col 1) + nombre grande (col 12) ─── */}
       <Box sx={{
-        mt: { xs: "28px", md: "40px" },
+        mt: { xs: "12px", md: "40px" },
         display: "flex",
         // En mobile: GUZMÁN RIPOLL arriba y el © abajo (column-reverse). Desktop sin cambios.
         flexDirection: { xs: "column-reverse", md: "row" },
         justifyContent: "space-between",
         alignItems: { xs: "flex-start", md: "flex-end" },
-        gap: { xs: "16px", md: "20px" },
+        gap: { xs: "2px", md: "20px" },
         // En mobile el bloque se sale del padding del wrapper (full-bleed) para que GUZMÁN RIPOLL ocupe todo el ancho
         width: { xs: "100vw", md: "100%" },
         position: { xs: "relative", md: "static" },
@@ -249,14 +249,14 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
       }}>
         <Typography sx={{
           fontFamily: "Poppins, sans-serif",
-          fontSize: { xs: "13px", md: "16px" },
+          fontSize: { xs: "11px", md: "16px" },
           fontWeight: 500,
           color: "#000000",
           textAlign: "left",
           whiteSpace: { xs: "normal", md: "nowrap" },
-          mb: { xs: "8px", md: "10px" },
-          pl: { xs: "20px", md: 0 },
-          pr: { xs: "20px", md: 0 },
+          mb: { xs: 0, md: "10px" },
+          pl: { xs: "16px", md: 0 },
+          pr: { xs: "16px", md: 0 },
         }}>
           © {currentYear} Dr. Guzmán Ripoll. Todos los derechos reservados.
         </Typography>
@@ -268,9 +268,9 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
           overflow: "hidden",
           isolation: "isolate",
           pb: "0.02em",
-          mb: { xs: "-0.12em", md: "-0.14em" },
+          mb: { xs: "-0.2em", md: "-0.14em" },
           // Margen lateral en mobile (el bloque es full-bleed y quedaba pegado al borde)
-          px: { xs: "20px", md: 0 },
+          px: { xs: "16px", md: 0 },
           boxSizing: "border-box",
           // Efecto tipo "J A C O": por defecto solo se ven las iniciales (G, R) y el resto
           // queda invisible pero CONSERVANDO su espacio; al hover aparece el nombre completo.

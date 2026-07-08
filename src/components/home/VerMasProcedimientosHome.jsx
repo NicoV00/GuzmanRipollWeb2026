@@ -9,7 +9,7 @@ const procedures = [
     name: "CIRUGIA MAMARIA",
     to: "/procedimiento/01",
     subtitle: "Aumento, mastopexia y reconstrucción",
-    image: "/images/mama.png",
+    image: "/images/mamaria.webp",
     topBlur: true,
     col: { xs: "auto", md: "1 / 5" },
     row: 1,

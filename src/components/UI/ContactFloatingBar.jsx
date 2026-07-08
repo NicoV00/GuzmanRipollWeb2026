@@ -1,45 +1,104 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
-import { useLocation } from 'react-router-dom';
-import { Plus, X, MessageCircle, Stethoscope } from 'lucide-react';
-import BeamCTAButton from './BeamCTAButton';
-import GlassSurface from './GlassSurface';
+import React, { useEffect, useId, useRef, useState } from 'react';
+import { Box } from '@mui/material';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
+import { ChevronUp, MessageCircle, Sparkles, X } from 'lucide-react';
+import './ContactFloatingBar.css';
+
+const navItems = [
+  { label: 'Clinica', to: '/clinica' },
+  { label: 'Procedimientos', to: '/procedimientos' },
+  { label: 'Resultados', to: '/resultados' },
+];
+
+const clampByte = (value) => Math.max(0, Math.min(255, Math.round(value)));
+
+function makeOutpaceGlassMap(width, height, radius) {
+  if (typeof document === 'undefined' || width <= 0 || height <= 0) return '';
+
+  const pixelRatio = Math.min(Math.max(Math.round(window.devicePixelRatio || 1), 1), 2);
+  const canvasWidth = Math.max(1, Math.round(width * pixelRatio));
+  const canvasHeight = Math.max(1, Math.round(height * pixelRatio));
+  const canvas = document.createElement('canvas');
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return '';
+
+  const image = ctx.createImageData(canvasWidth, canvasHeight);
+  const data = image.data;
+  const cx = canvasWidth / 2;
+  const cy = canvasHeight / 2;
+  const halfWidth = canvasWidth / 2;
+  const halfHeight = canvasHeight / 2;
+  const glassRadius = Math.max(0, Math.min(radius * pixelRatio, halfWidth, halfHeight));
+  const rimDepth = Math.max(14, Math.min(42, Math.min(width, height) * 0.28)) * pixelRatio;
+  const curvature = 2.85;
+  const splay = -1;
+
+  for (let y = 0; y < canvasHeight; y += 1) {
+    for (let x = 0; x < canvasWidth; x += 1) {
+      const px = x + 0.5 - cx;
+      const py = y + 0.5 - cy;
+      const absX = Math.abs(px);
+      const absY = Math.abs(py);
+      const signX = px < 0 ? -1 : 1;
+      const signY = py < 0 ? -1 : 1;
+      const qx = absX - (halfWidth - glassRadius);
+      const qy = absY - (halfHeight - glassRadius);
+
+      let offsetX = 0;
+      let offsetY = 0;
+
+      if (qx > 0 && qy > 0) {
+        const len = Math.hypot(qx, qy);
+        const inward = glassRadius - len;
+        if (inward > 0 && inward < rimDepth) {
+          const bend = splay * Math.pow(1 - inward / rimDepth, curvature);
+          const dirX = len > 0 ? (qx / len) * signX : Math.SQRT1_2 * signX;
+          const dirY = len > 0 ? (qy / len) * signY : Math.SQRT1_2 * signY;
+          offsetX = dirX * bend;
+          offsetY = dirY * bend;
+        }
+      } else {
+        const inX = halfWidth - absX;
+        const inY = halfHeight - absY;
+        if (inX > 0 && inX < rimDepth) {
+          offsetX += signX * splay * Math.pow(1 - inX / rimDepth, curvature);
+        }
+        if (inY > 0 && inY < rimDepth) {
+          offsetY += signY * splay * Math.pow(1 - inY / rimDepth, curvature);
+        }
+      }
+
+      const index = (y * canvasWidth + x) * 4;
+      data[index] = clampByte(128 + offsetX * 127);
+      data[index + 1] = clampByte(128 + offsetY * 127);
+      data[index + 2] = 128;
+      data[index + 3] = 255;
+    }
+  }
+
+  ctx.putImageData(image, 0, 0);
+  return canvas.toDataURL('image/png');
+}
 
 export default function ContactFloatingBar() {
   const location = useLocation();
+  const navRef = useRef(null);
+  const filterId = useId().replace(/:/g, '');
   const [isVisible, setIsVisible] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [glassMap, setGlassMap] = useState('');
 
   const isContacto = location.pathname === '/contacto';
+  const primaryLabel = isContacto ? 'Ver procedimientos' : 'Agendar consulta';
+  const primaryLink = isContacto ? '/procedimientos' : '/contacto';
 
   useEffect(() => {
-    if (isContacto) {
-      const timer = setTimeout(() => setIsVisible(true), 100);
-
-      const handleFooterAwareScroll = () => {
-        const footerElement = document.querySelector('footer');
-        if (!footerElement) {
-          setIsVisible(true);
-          return;
-        }
-
-        const footerRect = footerElement.getBoundingClientRect();
-        const windowHeight = window.innerHeight;
-        setIsVisible(footerRect.top >= windowHeight);
-      };
-
-      window.addEventListener('scroll', handleFooterAwareScroll, { passive: true });
-      handleFooterAwareScroll();
-
-      return () => {
-        clearTimeout(timer);
-        window.removeEventListener('scroll', handleFooterAwareScroll);
-      };
-    }
-
     const handleScroll = () => {
       const footerElement = document.querySelector('footer');
-      const isPastThreshold = window.scrollY > 100;
+      const isPastThreshold = isContacto || window.scrollY > 100;
 
       if (!footerElement) {
         setIsVisible(isPastThreshold);
@@ -47,253 +106,142 @@ export default function ContactFloatingBar() {
       }
 
       const footerRect = footerElement.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      setIsVisible(isPastThreshold && footerRect.top >= windowHeight);
+      setIsVisible(isPastThreshold && footerRect.top >= window.innerHeight);
     };
 
+    const timer = setTimeout(handleScroll, 100);
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleScroll);
+    };
   }, [isContacto]);
 
   useEffect(() => {
     setIsPanelOpen(false);
   }, [location.pathname]);
 
-  const buttonText = isContacto ? 'Ver todos' : 'Agendar consulta';
-  const buttonLink = isContacto ? '/procedimientos' : '/contacto';
+  useEffect(() => {
+    const node = navRef.current;
+    if (!node) return undefined;
+
+    let frame = 0;
+    const updateMap = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const rect = node.getBoundingClientRect();
+        const radius = parseFloat(getComputedStyle(node).borderTopLeftRadius) || rect.height / 2;
+        setGlassMap(makeOutpaceGlassMap(rect.width, rect.height, radius));
+      });
+    };
+
+    updateMap();
+    const observer = new ResizeObserver(updateMap);
+    observer.observe(node);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [isPanelOpen]);
 
   return (
     <>
-      {/* PANEL DESPLEGABLE SUPERIOR - Actualizado para matchear el Glass Effect */}
+      <svg className="mobile-glass-filter" aria-hidden="true" focusable="false">
+        <defs>
+          <filter id={`mobile-liquid-glass-${filterId}`} colorInterpolationFilters="sRGB" x="-8%" y="-8%" width="116%" height="116%">
+            <feImage href={glassMap} x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="glassMap" />
+            <feDisplacementMap in="SourceGraphic" in2="glassMap" scale="38" xChannelSelector="R" yChannelSelector="G" result="glassGreen" />
+            <feDisplacementMap in="SourceGraphic" in2="glassMap" scale="41" xChannelSelector="R" yChannelSelector="G" result="glassRed" />
+            <feDisplacementMap in="SourceGraphic" in2="glassMap" scale="34" xChannelSelector="R" yChannelSelector="G" result="glassBlue" />
+            <feColorMatrix in="glassRed" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red" />
+            <feColorMatrix in="glassGreen" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green" />
+            <feColorMatrix in="glassBlue" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue" />
+            <feBlend in="red" in2="green" mode="screen" result="redGreen" />
+            <feBlend in="redGreen" in2="blue" mode="screen" />
+          </filter>
+        </defs>
+      </svg>
+
       <Box
-        sx={{
-          position: 'fixed',
-          bottom: isPanelOpen ? '110px' : '-400px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: { xs: 'flex', md: 'none' },
-          flexDirection: 'column',
-          zIndex: 999,
-          width: 'calc(100% - 40px)',
-          maxWidth: '400px',
-          borderRadius: '20px',
-          background: 'rgba(30, 30, 30, 0.45)', // Transparente y neutro
-          backdropFilter: 'blur(40px) saturate(200%)',
-          WebkitBackdropFilter: 'blur(40px) saturate(200%)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          boxShadow: `
-            0 -8px 40px rgba(0, 0, 0, 0.4), 
-            inset 0 1.5px 1px rgba(255, 255, 255, 0.15)
-          `,
-          transition: 'bottom 0.4s cubic-bezier(0.23, 1, 0.32, 1)',
-          overflow: 'hidden',
-        }}
+        ref={navRef}
+        component="nav"
+        aria-label="Navegacion rapida"
+        data-open={isPanelOpen ? 'true' : 'false'}
+        data-visible={isVisible ? 'true' : 'false'}
+        className="mobile-glass-nav"
+        style={{ '--mobile-glass-filter': `url(#mobile-liquid-glass-${filterId})` }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', px: '20px', pt: '18px', pb: '12px' }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Stethoscope size={16} color="rgba(255,255,255,0.6)" strokeWidth={2} />
-            <Typography
-              sx={{
-                fontFamily: 'Poppins, sans-serif',
-                fontSize: '13px',
-                fontWeight: 600,
-                color: 'rgba(255,255,255,0.9)',
-                letterSpacing: '0.02em',
-              }}
-            >
-              Proceso Personalizado
-            </Typography>
-          </Box>
-        </Box>
+        <div className="mobile-glass-rim" aria-hidden="true" />
 
-        <Box sx={{ height: '1px', mx: '20px', background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent)' }} />
+        <div className="mobile-glass-compact" aria-hidden={isPanelOpen}>
+          <RouterLink className="mobile-glass-primary" to={primaryLink} tabIndex={isPanelOpen ? -1 : 0}>
+            {primaryLabel}
+          </RouterLink>
 
-        <Box sx={{ px: '24px', py: '18px', textAlign: 'left' }}>
-          <Typography
-            sx={{
-              fontFamily: 'Poppins, sans-serif',
-              fontSize: '13px',
-              lineHeight: 1.6,
-              color: 'rgba(255,255,255,0.7)',
-              fontWeight: 400,
-              letterSpacing: '0.01em',
-            }}
-          >
-            Evaluamos cada caso de forma individual para diseñar un plan quirúrgico a medida, adaptado a tu anatomía y expectativas reales. Nuestro compromiso es brindarte un seguimiento profesional continuo en cada etapa, asegurando resultados naturales y una recuperación óptima.
-          </Typography>
-        </Box>
-      </Box>
-
-      {/* CONTENEDOR PRINCIPAL DE LA BARRA (GLASS EFFECT PURO) */}
-      <Box
-        sx={{
-          position: 'fixed',
-          bottom: isVisible ? { xs: 'calc(20px + env(safe-area-inset-bottom))', md: '34px' } : '-100px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: { xs: 'flex', md: 'none' },
-          zIndex: 1000,
-          transition: 'all 0.6s cubic-bezier(0.32, 0.72, 0, 1)',
-          width: isPanelOpen ? '60px' : 'auto',
-          height: '56px',
-          minWidth: isPanelOpen ? '60px' : '324px',
-          px: isPanelOpen ? 0 : '6px',
-          py: '6px',
-          borderRadius: '999px',
-          background: 'rgba(30, 30, 30, 0.35)', 
-          backdropFilter: 'blur(40px) saturate(200%)',
-          WebkitBackdropFilter: 'blur(40px) saturate(200%)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          boxShadow: `
-            0 24px 48px rgba(0, 0, 0, 0.4), 
-            inset 0 1.5px 1px rgba(255, 255, 255, 0.15), 
-            inset 0 -1px 1px rgba(0, 0, 0, 0.3)
-          `,
-          gap: '7px',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        {!isPanelOpen && (
-          <BeamCTAButton
-            to={buttonLink}
-            fullWidth
-            tone="dark"
-            sx={{
-              flex: 1,
-              minHeight: '44px',
-              px: '22px',
-              py: '9px',
-              fontSize: '13px',
-              fontWeight: 600,
-              whiteSpace: 'nowrap',
-              borderRadius: '999px',
-              background: 'rgba(255, 255, 255, 0.09)',
-              backdropFilter: 'blur(40px) saturate(180%)',
-              WebkitBackdropFilter: 'blur(40px) saturate(180%)',
-              border: '1px solid rgba(255, 255, 255, 0.11)',
-              boxShadow: `
-                0 4px 20px rgba(0, 0, 0, 0.18),
-                inset 0 1.5px 0 rgba(255, 255, 255, 0.38),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.12),
-                inset 1px 0 0 rgba(255, 255, 255, 0.09),
-                inset -1px 0 0 rgba(255, 255, 255, 0.05)
-              `,
-              color: 'rgba(255,255,255,0.92)',
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                inset: 0,
-                borderRadius: 'inherit',
-                background: 'linear-gradient(135deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 38%, transparent 58%)',
-                pointerEvents: 'none',
-                zIndex: 0,
-              },
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                height: '45%',
-                borderRadius: '999px 999px 60% 60% / 999px 999px 40px 40px',
-                background: 'linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 100%)',
-                pointerEvents: 'none',
-                zIndex: 0,
-              },
-              '&:hover': {
-                transform: 'translateY(-1px)',
-                background: 'rgba(255, 255, 255, 0.13)',
-                boxShadow: `
-                  0 8px 28px rgba(0, 0, 0, 0.22),
-                  inset 0 1.5px 0 rgba(255, 255, 255, 0.48),
-                  inset 0 -1px 0 rgba(0, 0, 0, 0.14),
-                  inset 1px 0 0 rgba(255, 255, 255, 0.12),
-                  inset -1px 0 0 rgba(255, 255, 255, 0.07)
-                `,
-              },
-            }}
-            beamProps={{ strength: 0.05, brightness: 0.92, saturation: 0.2, hueRange: 0, duration: 5 }}
-          >
-            {buttonText}
-          </BeamCTAButton>
-        )}
-
-        {/* BOTÓN WHATSAPP - Con GlassSurface efecto completo */}
-        {!isPanelOpen && (
-          <Box
-            component="a"
-            href="https://wa.me/5491112345678"
+          <a
+            className="mobile-glass-icon"
+            href="https://wa.me/59892566656"
             target="_blank"
-            sx={{
-              flex: '0 0 44px',
-              width: '44px',
-              height: '44px',
-              display: 'block',
-              textDecoration: 'none',
-              transition: 'transform 0.25s cubic-bezier(0.23, 1, 0.32, 1)',
-              '&:active': { transform: 'scale(0.92)' },
-            }}
+            rel="noopener noreferrer"
+            aria-label="Escribir por WhatsApp"
+            tabIndex={isPanelOpen ? -1 : 0}
           >
-            <GlassSurface
-              width={44}
-              height={44}
-              borderRadius={22}
-              borderWidth={0.12}
-              brightness={58}
-              opacity={1}
-              blur={10}
-              displace={3}
-              backgroundOpacity={0.2}
-              saturation={1.8}
-              distortionScale={-220}
-              redOffset={8}
-              greenOffset={-15}
-              blueOffset={-35}
-              mixBlendMode="screen"
-            >
-              <MessageCircle size={19} strokeWidth={2.1} color="#F5F8FF" />
-            </GlassSurface>
-          </Box>
-        )}
+            <MessageCircle size={19} strokeWidth={2.05} />
+          </a>
 
-        {/* BOTÓN TOGGLE (CHISPAS/X) - Con GlassSurface efecto completo */}
-        <Box
-          onClick={() => setIsPanelOpen((prev) => !prev)}
-          sx={{
-            flex: '0 0 44px',
-            width: '44px',
-            height: '44px',
-            display: 'block',
-            cursor: 'pointer',
-            transition: 'transform 0.25s cubic-bezier(0.23, 1, 0.32, 1)',
-            '&:active': { transform: 'scale(0.92)' },
-          }}
-        >
-          <GlassSurface
-            width={44}
-            height={44}
-            borderRadius={22}
-            borderWidth={0.12}
-            brightness={isPanelOpen ? 65 : 58}
-            opacity={1}
-            blur={10}
-            displace={3}
-            backgroundOpacity={isPanelOpen ? 0.25 : 0.2}
-            saturation={1.8}
-            distortionScale={-220}
-            redOffset={8}
-            greenOffset={-15}
-            blueOffset={-35}
-            mixBlendMode="screen"
+          <button
+            className="mobile-glass-icon mobile-glass-toggle"
+            type="button"
+            aria-label="Abrir menu rapido"
+            aria-expanded={isPanelOpen}
+            onClick={() => setIsPanelOpen(true)}
+            tabIndex={isPanelOpen ? -1 : 0}
           >
-            {isPanelOpen ? (
-              <X size={20} color="#fff" strokeWidth={2.5} />
-            ) : (
-              <Plus size={20} color="#fff" strokeWidth={2} />
-            )}
-          </GlassSurface>
-        </Box>
+            <Sparkles size={18} strokeWidth={2.05} />
+          </button>
+        </div>
+
+        <div className="mobile-glass-expanded" aria-hidden={!isPanelOpen}>
+          <button
+            className="mobile-glass-heading"
+            type="button"
+            onClick={() => setIsPanelOpen(false)}
+            aria-label="Cerrar menu rapido"
+            tabIndex={isPanelOpen ? 0 : -1}
+          >
+            <span>Menu</span>
+            <ChevronUp size={16} strokeWidth={2.2} />
+          </button>
+
+          <div className="mobile-glass-list">
+            <RouterLink className="mobile-glass-row mobile-glass-row-main" to={primaryLink} tabIndex={isPanelOpen ? 0 : -1}>
+              {primaryLabel}
+            </RouterLink>
+            {navItems.map((item, index) => (
+              <RouterLink
+                key={item.to}
+                className="mobile-glass-row"
+                style={{ '--item-index': index + 1 }}
+                to={item.to}
+                tabIndex={isPanelOpen ? 0 : -1}
+              >
+                {item.label}
+              </RouterLink>
+            ))}
+          </div>
+
+          <div className="mobile-glass-actions">
+            <a href="https://wa.me/59892566656" target="_blank" rel="noopener noreferrer" tabIndex={isPanelOpen ? 0 : -1}>
+              WhatsApp
+            </a>
+            <button type="button" onClick={() => setIsPanelOpen(false)} aria-label="Cerrar" tabIndex={isPanelOpen ? 0 : -1}>
+              <X size={16} strokeWidth={2.2} />
+            </button>
+          </div>
+        </div>
       </Box>
     </>
   );

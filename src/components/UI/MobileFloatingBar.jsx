@@ -107,20 +107,18 @@ export default function MobileFloatingBar() {
         borderRadius: '100px',
         overflow: 'hidden',
         isolation: 'isolate',
-        // ── Liquid glass senior ──────────────────────────────
-        // Frost real: blur + saturate alto. Gradiente vertical para dar profundidad.
-        background: 'linear-gradient(180deg, rgba(52,56,66,0.66) 0%, rgba(26,28,34,0.82) 100%)',
-        backdropFilter: 'blur(36px) saturate(200%)',
-        WebkitBackdropFilter: 'blur(36px) saturate(200%)',
-        border: '1px solid rgba(255, 255, 255, 0.14)',
-        // Elevación externa + highlights internos (top brillo, bottom sombra, bordes luz)
+        // ── Liquid glass claro (estilo Outpace) ──────────────
+        // Sin base oscura: el vidrio toma el fondo real vía blur + saturación.
+        background: 'linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 100%)',
+        backdropFilter: 'blur(28px) saturate(190%)',
+        WebkitBackdropFilter: 'blur(28px) saturate(190%)',
+        border: '1px solid rgba(255, 255, 255, 0.45)',
+        // Elevación externa + highlights internos (rim de luz arriba)
         boxShadow: [
-          '0 18px 48px rgba(0, 0, 0, 0.42)',
-          '0 4px 12px rgba(0, 0, 0, 0.28)',
-          'inset 0 1px 0 rgba(255, 255, 255, 0.28)',
-          'inset 0 -1px 0 rgba(0, 0, 0, 0.34)',
-          'inset 1px 0 0 rgba(255, 255, 255, 0.08)',
-          'inset -1px 0 0 rgba(255, 255, 255, 0.06)',
+          '0 20px 44px rgba(0, 0, 0, 0.18)',
+          '0 2px 8px rgba(0, 0, 0, 0.10)',
+          'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
+          'inset 0 -1px 1px rgba(255, 255, 255, 0.14)',
         ].join(', '),
         gap: '10px',
         alignItems: 'center',

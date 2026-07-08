@@ -1,10 +1,10 @@
 // Cloudflare Pages Function: POST /api/contact
-// Requiere estas variables de entorno en el proyecto de Cloudflare Pages
-// (Settings → Environment variables):
-//   TURNSTILE_SECRET_KEY  → la Secret key del widget de Turnstile
-//   RESEND_API_KEY        → API key de Resend (https://resend.com) para enviar el email
-//   CONTACT_TO_EMAIL      → opcional, destinatario (default: info@guzmanripoll.com)
-//   CONTACT_FROM_EMAIL    → opcional, remitente verificado en Resend
+// Requiere estas variables de entorno en el proyecto de Cloudflare Pages:
+//   TURNSTILE_SECRET_KEY  -> Secret key del widget de Turnstile
+//   SANITY_WRITE_TOKEN    -> token de Sanity con permiso para crear documentos en el dataset privado
+// Opcionales:
+//   SANITY_CONTACT_PROJECT_ID -> default: SANITY_PROJECT_ID o nzg7h3zh
+//   SANITY_CONTACT_DATASET    -> default: consultas
 
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), {
@@ -12,12 +12,18 @@ const json = (data, status = 200) =>
     headers: { 'Content-Type': 'application/json' },
   });
 
+const getSanityConfig = (env) => ({
+  projectId: env.SANITY_CONTACT_PROJECT_ID || env.SANITY_PROJECT_ID || 'nzg7h3zh',
+  dataset: env.SANITY_CONTACT_DATASET || 'consultas',
+  apiVersion: '2024-01-01',
+});
+
 export async function onRequestPost({ request, env }) {
   let body;
   try {
     body = await request.json();
   } catch {
-    return json({ error: 'Solicitud inválida.' }, 400);
+    return json({ error: 'Solicitud invalida.' }, 400);
   }
 
   const { firstName, email, phone, message, token } = body;
@@ -26,7 +32,6 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Faltan campos obligatorios.' }, 400);
   }
 
-  // 1. Verificar el token de Turnstile contra Cloudflare (obligatorio server-side)
   const verifyRes = await fetch(
     'https://challenges.cloudflare.com/turnstile/v0/siteverify',
     {
@@ -42,37 +47,43 @@ export async function onRequestPost({ request, env }) {
   const verify = await verifyRes.json();
 
   if (!verify.success) {
-    return json({ error: 'Falló la verificación anti-bot. Recargá e intentá de nuevo.' }, 403);
+    return json({ error: 'Fallo la verificacion anti-bot. Recarga e intenta de nuevo.' }, 403);
   }
 
-  // 2. Enviar el email vía Resend
-  const to = env.CONTACT_TO_EMAIL || 'info@guzmanripoll.com';
-  const from = env.CONTACT_FROM_EMAIL || 'Web Guzmán Ripoll <onboarding@resend.dev>';
+  const sanityWriteToken = env.SANITY_CONTACT_WRITE_TOKEN || env.SANITY_WRITE_TOKEN;
+  if (!sanityWriteToken) {
+    return json({ error: 'No esta configurado el guardado de consultas.' }, 500);
+  }
 
-  const sendRes = await fetch('https://api.resend.com/emails', {
+  const { projectId, dataset, apiVersion } = getSanityConfig(env);
+  const mutationUrl = `https://${projectId}.api.sanity.io/v${apiVersion}/data/mutate/${dataset}`;
+  const createdAt = new Date().toISOString();
+
+  const saveRes = await fetch(mutationUrl, {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      Authorization: `Bearer ${sanityWriteToken}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from,
-      to: [to],
-      reply_to: email,
-      subject: `Nueva consulta web de ${firstName}`,
-      text: [
-        `Nombre: ${firstName}`,
-        `Email: ${email}`,
-        `Teléfono: ${phone}`,
-        '',
-        'Mensaje:',
-        message,
-      ].join('\n'),
+      mutations: [
+        {
+          create: {
+            _type: 'consulta',
+            firstName: String(firstName).trim(),
+            email: String(email).trim(),
+            phone: String(phone).trim(),
+            message: String(message).trim(),
+            createdAt,
+            source: 'web',
+          },
+        },
+      ],
     }),
   });
 
-  if (!sendRes.ok) {
-    return json({ error: 'No se pudo enviar el mensaje. Intentá más tarde.' }, 502);
+  if (!saveRes.ok) {
+    return json({ error: 'No se pudo guardar la consulta. Intenta mas tarde.' }, 502);
   }
 
   return json({ ok: true });

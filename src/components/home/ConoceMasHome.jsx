@@ -1,7 +1,11 @@
 import { Box, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import SplitType from "split-type";
 import { styled } from "@mui/material/styles";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Estilos para el borde animado
 const AnimatedBorderBox = styled(Box)(({ theme }) => ({
@@ -41,11 +45,106 @@ const AnimatedBorderBox = styled(Box)(({ theme }) => ({
 }));
 
 export default function ConoceMasHome() {
+  const rootRef = useRef(null);
+
   // Texto para desktop - párrafo continuo
   const textDesktop = "El Dr. Guzmán Ripoll es cirujano plástico, especializado en cirugía mamaria estética y reconstructiva, con sede en Punta del Este.";
 
   // Texto para mobile - párrafo completo
   const textMobile = "El Dr. Guzmán Ripoll es cirujano plástico especializado en cirugía mamaria estética y reconstructiva, con sede en Punta del Este.";
+
+  // Reveal por líneas (mismo efecto de máscara que el hero/contacto):
+  // cada línea entra desde abajo dentro de su propia línea, al scrollear.
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    let splits = [];
+    let tweens = [];
+    let cancelled = false;
+
+    const run = () => {
+      if (cancelled) return;
+
+      root.querySelectorAll("[data-line-reveal]").forEach((el) => {
+        // Ignora la copia oculta del layout (desktop vs mobile)
+        if (el.offsetParent === null) return;
+
+        // text-indent del párrafo grande: al partir en líneas-bloque lo
+        // heredarían todas; se preserva solo en la primera.
+        const indent = window.getComputedStyle(el).textIndent;
+        const split = new SplitType(el, { types: "lines" });
+        splits.push(split);
+        if (indent && indent !== "0px" && split.lines.length) {
+          el.style.textIndent = "0";
+          split.lines[0].style.textIndent = indent;
+        }
+
+        // Máscara por línea para que entren "dentro de su propia línea"
+        split.lines.forEach((line) => {
+          const mask = document.createElement("div");
+          mask.style.overflow = "hidden";
+          mask.style.display = "block";
+          line.parentNode.insertBefore(mask, line);
+          mask.appendChild(line);
+        });
+
+        gsap.set(split.lines, { yPercent: 115 });
+        tweens.push(
+          gsap.to(split.lines, {
+            yPercent: 0,
+            duration: 1.05,
+            ease: "power4.out",
+            stagger: 0.09,
+            scrollTrigger: {
+              trigger: el,
+              start: "top 88%",
+              toggleActions: "play none none none",
+            },
+          })
+        );
+      });
+
+      root.querySelectorAll("[data-fade-reveal]").forEach((el) => {
+        if (el.offsetParent === null) return;
+        tweens.push(
+          gsap.fromTo(
+            el,
+            { y: 24, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.9,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: el,
+                start: "top 90%",
+                toggleActions: "play none none none",
+              },
+            }
+          )
+        );
+      });
+
+      ScrollTrigger.refresh();
+    };
+
+    // Espera a que carguen las fuentes para que el corte de líneas sea el real
+    const timer = setTimeout(() => {
+      if (document.fonts?.ready) document.fonts.ready.then(run);
+      else run();
+    }, 100);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timer);
+      tweens.forEach((tw) => {
+        tw.scrollTrigger?.kill();
+        tw.kill();
+      });
+      splits.forEach((s) => s.revert());
+    };
+  }, []);
 
   useEffect(() => {
     // Pin de la imagen hasta el párrafo con sangría
@@ -72,6 +171,7 @@ export default function ConoceMasHome() {
 
   return (
     <Box
+      ref={rootRef}
       sx={{
         position: "relative",
         zIndex: 1,
@@ -122,7 +222,7 @@ export default function ConoceMasHome() {
           display: { xs: "none", md: "block" }
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "baseline", gap: "10px", mb: 3 }}>
+        <Box data-fade-reveal sx={{ display: "flex", alignItems: "baseline", gap: "10px", mb: 3 }}>
           <Typography component="span" sx={{ fontFamily: "Poppins, sans-serif", fontSize: "18px", fontWeight: 600, color: "rgba(0, 0, 0, 0.44)", lineHeight: 1 }}>
             01
           </Typography>
@@ -130,8 +230,11 @@ export default function ConoceMasHome() {
             Clínica
           </Typography>
         </Box>
-        <Typography sx={{ fontFamily: "Poppins", fontSize: "18px", fontWeight: 600, color: "rgb(0, 0, 0)", lineHeight: 1.2, textAlign: "left", mt: 0, height: "calc(40vh - 70px)", display: "flex", alignItems: "flex-end", pb: 1 }}>
-          Como especialistas en cirugía mamaria, combinamos tecnología avanzada, experiencia médica y atención cercana para brindar una experiencia precisa, segura y humana en cada etapa del proceso.
+        <Typography component="div" sx={{ fontFamily: "Poppins", fontSize: "18px", fontWeight: 600, color: "rgb(0, 0, 0)", lineHeight: 1.2, textAlign: "left", mt: 0, height: "calc(40vh - 70px)", display: "flex", alignItems: "flex-end", pb: 1 }}>
+          {/* Span en bloque: el split por líneas no puede vivir directo en un flex */}
+          <Box component="span" data-line-reveal sx={{ display: "block" }}>
+            Como especialistas en cirugía mamaria, combinamos tecnología avanzada, experiencia médica y atención cercana para brindar una experiencia precisa, segura y humana en cada etapa del proceso.
+          </Box>
         </Typography>
       </Box>
 
@@ -146,6 +249,7 @@ export default function ConoceMasHome() {
       >
         <Typography
           id="main-paragraph"
+          data-line-reveal
           sx={{
             fontFamily: "Poppins",
             fontSize: { md: "42px", lg: "74px" },
@@ -163,10 +267,10 @@ export default function ConoceMasHome() {
 
         <Box sx={{ mt: 16, display: "grid", gridTemplateColumns: "repeat(12, 1fr)", columnGap: "20px", width: "100%", alignItems: "start" }}>
           <Box sx={{ gridColumn: "4 / 6", fontFamily: "Poppins", fontSize: "22px", fontWeight: 600, color: "#000", textAlign: "left", alignSelf: "start", pt: 0.5 }}>
-            <Typography sx={{ fontFamily: "inherit", fontSize: "inherit", fontWeight: "inherit", color: "inherit", lineHeight: 1.2 }}>Cirugía plástica</Typography>
-            <Typography sx={{ fontFamily: "inherit", fontSize: "inherit", fontWeight: "inherit", color: "inherit", lineHeight: 1.2 }}>y estética</Typography>
+            <Typography data-line-reveal sx={{ fontFamily: "inherit", fontSize: "inherit", fontWeight: "inherit", color: "inherit", lineHeight: 1.2 }}>Cirugía plástica</Typography>
+            <Typography data-line-reveal sx={{ fontFamily: "inherit", fontSize: "inherit", fontWeight: "inherit", color: "inherit", lineHeight: 1.2 }}>y estética</Typography>
           </Box>
-          <Typography sx={{ gridColumn: "7 / 11", fontFamily: "Poppins", fontSize: "18px", fontWeight: 600, color: "#000", lineHeight: 1.2, textAlign: "left", alignSelf: "start" }}>
+          <Typography data-line-reveal sx={{ gridColumn: "7 / 11", fontFamily: "Poppins", fontSize: "18px", fontWeight: 600, color: "#000", lineHeight: 1.2, textAlign: "left", alignSelf: "start" }}>
             Nuestra práctica abarca un amplio rango de procedimientos, desde intervenciones no quirúrgicas hasta procesos altamente especializados. Lo que nos distingue es nuestro enfoque humano: priorizamos el acompañamiento cercano y el cuidado integral durante todo el proceso.
           </Typography>
         </Box>
@@ -181,22 +285,22 @@ export default function ConoceMasHome() {
           display: { xs: "block", md: "none" }
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "baseline", gap: "10px", mb: 5 }}>
+        <Box data-fade-reveal sx={{ display: "flex", alignItems: "baseline", gap: "10px", mb: 5 }}>
           <Typography component="span" sx={{ fontFamily: "Poppins, sans-serif", fontSize: "16px", fontWeight: 500, color: "rgba(0,0,0,0.2)", lineHeight: 1 }}>01</Typography>
           <Typography component="span" sx={{ fontFamily: "Poppins", fontSize: "16px", fontWeight: 500, textTransform: "uppercase", color: "#000000", letterSpacing: "0.03em", lineHeight: 1 }}>Clínica</Typography>
         </Box>
-        <Typography sx={{ fontFamily: "Poppins", fontSize: "16px", fontWeight: 600, color: "rgba(0,0,0,0.85)", lineHeight: 1.1, textAlign: "left", mb: 6 }}>
+        <Typography data-line-reveal sx={{ fontFamily: "Poppins", fontSize: "16px", fontWeight: 600, color: "rgba(0,0,0,0.85)", lineHeight: 1.1, textAlign: "left", mb: 6 }}>
           Como especialistas en cirugía mamaria, combinamos precisión médica, innovación tecnológica y un acompañamiento cercano en cada etapa del proceso.
         </Typography>
         <Box sx={{ width: "100%", aspectRatio: "1/1", borderRadius: "10px", overflow: "hidden", mb: 8 }}>
           <img src={"/images/Paper Texture@2160p.png"} alt="scroll" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </Box>
-        <Typography sx={{ fontFamily: "Poppins", fontSize: { xs: "28px", sm: "34px" }, fontWeight: 500, lineHeight: 1.08, letterSpacing: "-0.055em", color: "#000000", textAlign: "left", width: { xs: "calc(100% + 16px)", sm: "100%" }, maxWidth: "100vw", mb: 4 }}>
+        <Typography data-line-reveal sx={{ fontFamily: "Poppins", fontSize: { xs: "28px", sm: "34px" }, fontWeight: 500, lineHeight: 1.08, letterSpacing: "-0.055em", color: "#000000", textAlign: "left", width: { xs: "calc(100% + 16px)", sm: "100%" }, maxWidth: "100vw", mb: 4 }}>
           {textMobile}
         </Typography>
         <Box sx={{ mt: 4 }}>
-          <Typography sx={{ fontFamily: "Poppins", fontSize: "18px", fontWeight: 600, color: "#000", mb: 2, textAlign: "left" }}>Cirugía plástica y estética</Typography>
-          <Typography sx={{ fontFamily: "Poppins", fontSize: "16px", fontWeight: 600, color: "#000", lineHeight: 1.1, textAlign: "left" }}>
+          <Typography data-line-reveal sx={{ fontFamily: "Poppins", fontSize: "18px", fontWeight: 600, color: "#000", mb: 2, textAlign: "left" }}>Cirugía plástica y estética</Typography>
+          <Typography data-line-reveal sx={{ fontFamily: "Poppins", fontSize: "16px", fontWeight: 600, color: "#000", lineHeight: 1.1, textAlign: "left" }}>
             Nuestra práctica abarca un amplio rango de procedimientos, desde intervenciones no quirúrgicas hasta procesos altamente especializados. Lo que nos distingue es nuestro enfoque humano: priorizamos el acompañamiento cercano y el cuidado integral durante todo el proceso.
           </Typography>
         </Box>
