@@ -14,8 +14,8 @@ const originalItems = [
   { title: "ABDOMINOPLASTIA", subtitle: "(Cirugía Abdominal)" },
   { title: "RINOPLASTIA", subtitle: "(Cirugía Nasal)" },
   { title: "BLEFAROPLASTIA", subtitle: "(Cirugía de Párpados)" },
-  { title: "OTOPLASTIA", subtitle: "(Cirugía de Orejas)" },
-  { title: "MENTOPLASTIA", subtitle: "(Cirugía de Mentón)" },
+  { title: "AUMENTO MAMARIO", subtitle: "(Cirugía Mamaria)" },
+  { title: "MORPHEUS8", subtitle: "(Radiofrecuencia Facial)" },
   { title: "GINECOMASTIA", subtitle: "(Reducción Mamaria)" },
   { title: "LIFTING FACIAL", subtitle: "(Rejuvenecimiento)" },
 ]

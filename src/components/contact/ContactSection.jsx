@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { Send } from 'lucide-react';
+import { TurnstileWidget } from './TurnstileWidget.jsx';
 
 const LABEL = {
   fontFamily: "'Poppins', sans-serif",
@@ -39,9 +40,43 @@ export function ContactSection({ id }) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const [status, setStatus] = useState('idle'); // idle | sending | sent | error
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    if (status === 'sending') return;
+
+    const token = e.target.elements['cf-turnstile-response']?.value;
+    if (!token) {
+      setStatus('error');
+      setErrorMsg('Confirmá la verificación anti-bot antes de enviar.');
+      return;
+    }
+
+    setStatus('sending');
+    setErrorMsg('');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, token }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || 'No se pudo enviar el mensaje.');
+      }
+
+      setStatus('sent');
+      setFormData({ firstName: '', email: '', phone: '', message: '' });
+    } catch (err) {
+      setStatus('error');
+      setErrorMsg(err.message || 'No se pudo enviar el mensaje. Intentá de nuevo.');
+    } finally {
+      if (window.turnstile) window.turnstile.reset();
+    }
   };
 
   useEffect(() => {
@@ -162,10 +197,28 @@ export function ContactSection({ id }) {
             rows="5"
             required
           />
-          <button type="submit" className="contact-form-submit" aria-label="Enviar mensaje">
+          <button
+            type="submit"
+            className="contact-form-submit"
+            aria-label="Enviar mensaje"
+            disabled={status === 'sending'}
+          >
             <Send size={19} strokeWidth={1.8} />
           </button>
         </div>
+
+        <TurnstileWidget />
+
+        {status === 'sent' && (
+          <p className="contact-form-status contact-form-status-ok" role="status">
+            ¡Gracias! Recibimos tu consulta y te contactaremos a la brevedad.
+          </p>
+        )}
+        {status === 'error' && (
+          <p className="contact-form-status contact-form-status-error" role="alert">
+            {errorMsg}
+          </p>
+        )}
       </form>
     </div>
   );
@@ -549,6 +602,35 @@ export function ContactSection({ id }) {
         .contact-form-message {
           grid-column: 1 / -1;
           position: relative;
+        }
+
+        .contact-turnstile {
+          grid-column: 1 / -1;
+          min-height: 65px;
+        }
+
+        .contact-form-status {
+          grid-column: 1 / -1;
+          margin: 0;
+          font-family: 'Poppins', sans-serif;
+          font-size: 15px;
+          font-weight: 500;
+          letter-spacing: -0.02em;
+          text-align: left;
+        }
+
+        .contact-form-status-ok {
+          color: #1d6b3a;
+        }
+
+        .contact-form-status-error {
+          color: #a4302c;
+        }
+
+        .contact-form-submit:disabled {
+          opacity: 0.55;
+          cursor: wait;
+          transform: none;
         }
 
         .contact-form-field textarea {
