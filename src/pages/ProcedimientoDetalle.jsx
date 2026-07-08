@@ -302,7 +302,7 @@ export default function ProcedimientoDetalle() {
         gridTemplateColumns: { xs: "1fr", md: "repeat(12, 1fr)" },
         gap: { xs: 6, md: 4 },
         px: { xs: "20px", md: "70px" },
-        pb: { xs: 10, md: 15 }
+        pb: { xs: 16, md: 24 }
       }}>
         {/* Left Column: Image (Sticky + Reveal Animation) */}
         <Box sx={{
