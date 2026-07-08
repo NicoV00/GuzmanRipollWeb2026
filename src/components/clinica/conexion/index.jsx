@@ -71,7 +71,7 @@ export default function Conexion() {
           borderRadius: "24px", // AJUSTE: Más border radius
           overflow: "hidden",
           height: "100%",
-          backgroundImage: 'url("/images/imagen5.jpg")',
+          backgroundImage: 'url("/images/conexion.webp")',
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}>
