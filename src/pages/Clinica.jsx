@@ -93,10 +93,9 @@ export default function Clinica({ id }) {
   }, []);
 
   const logos = [
-    { src: '/images/logo-apaisado.png', alt: 'Logo 1' },
-    { src: '/images/logo-scpreu.png', alt: 'Logo 2' },
-    { src: '/images/images.jpg', alt: 'Logo 3' },
-    { src: '/images/logo-apaisado.png', alt: 'Logo 4' },
+    { src: '/images/logo-apaisado.png', alt: 'FILACP — Federación Ibero Latinoamericana de Cirugía Plástica' },
+    { src: '/images/logo-scpreu.png', alt: 'SCPREU — Sociedad de Cirugía Plástica y Reconstructiva del Uruguay' },
+    { src: '/images/images.jpg', alt: 'ALAM' },
   ];
 
   const imageGrainSx = {
@@ -306,45 +305,45 @@ export default function Clinica({ id }) {
                 SOCIEDADES QUE INTEGRA
               </Typography>
             </Box>
+            {/* Cinta infinita de logos (marquee) — se pausa al pasar el mouse */}
             <Box sx={{
-              display: 'grid',
               position: 'relative',
-              gridTemplateColumns: { xs: 'repeat(4, 1fr)', md: 'repeat(12, 1fr)' },
-              columnGap: { xs: "16px", md: "20px" },
-              rowGap: { xs: "16px", md: "0" },
               width: '100%',
-              zIndex: 0,
+              overflow: 'hidden',
+              py: { xs: '24px', md: '40px' },
+              // Desvanece los logos en los bordes de la cinta
+              maskImage: 'linear-gradient(to right, transparent, black 14%, black 86%, transparent)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent, black 14%, black 86%, transparent)',
+              '@keyframes logoMarquee': {
+                from: { transform: 'translateX(0)' },
+                to: { transform: 'translateX(-50%)' },
+              },
             }}>
-              {logos.map((logo, index) => {
-                const mobileCol = index % 2 === 0 ? '1 / 3' : '3 / 5';
-                const desktopCol = `${index * 3 + 1} / ${index * 3 + 4}`;
-
-                return (
+              <Box sx={{
+                display: 'flex',
+                width: 'max-content',
+                alignItems: 'center',
+                animation: 'logoMarquee 30s linear infinite',
+                '&:hover': { animationPlayState: 'paused' },
+              }}>
+                {/* Dos mitades idénticas para que el loop de -50% sea perfecto */}
+                {[...logos, ...logos, ...logos, ...logos].map((logo, index) => (
                   <Box
                     key={index}
                     sx={{
-                      gridColumn: {
-                        xs: mobileCol,
-                        md: desktopCol
-                      },
+                      flexShrink: 0,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      padding: { xs: '30px 15px', md: '60px 40px' },
-                      minHeight: { xs: '120px', md: '200px' },
-                      border: '1px solid rgba(0, 0, 0, 0.12)',
-                      backgroundColor: 'transparent',
-                      overflow: 'hidden',
-                      zIndex: 1,
-                      position: 'relative',
+                      px: { xs: '32px', md: '56px' },
                     }}
                   >
                     <img
                       src={logo.src}
                       alt={logo.alt}
                       style={{
-                        maxWidth: '100%',
-                        maxHeight: index === 2 ? '80px' : '60px',
+                        maxHeight: '46px',
+                        maxWidth: '190px',
                         width: 'auto',
                         height: 'auto',
                         objectFit: 'contain',
@@ -352,7 +351,7 @@ export default function Clinica({ id }) {
                         // Funde el fondo blanco de los logos (JPG) con el fondo de la página
                         mixBlendMode: 'multiply',
                         opacity: 0.6,
-                        transition: 'all 0.3s ease',
+                        transition: 'filter 0.3s ease, opacity 0.3s ease',
                       }}
                       onMouseEnter={(e) => {
                         e.target.style.filter = 'grayscale(0%) brightness(1)';
@@ -364,8 +363,8 @@ export default function Clinica({ id }) {
                       }}
                     />
                   </Box>
-                );
-              })}
+                ))}
+              </Box>
             </Box>
           </Box>
 
