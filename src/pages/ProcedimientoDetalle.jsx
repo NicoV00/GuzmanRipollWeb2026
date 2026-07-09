@@ -551,7 +551,8 @@ export default function ProcedimientoDetalle() {
           </Box>
 
           {procedimiento.secondaryImageSrc && (
-            <Box sx={{ width: "100%", height: { xs: "70vh", md: "115vh" }, borderRadius: "16px", overflow: "hidden" }}>
+            <Box sx={{ width: "100%", borderRadius: "16px", overflow: "hidden" }}>
+              {/* height auto: la imagen es panoramica (2.24:1); con altura fija + cover queda zoomeada/rota */}
               <Box
                 component="img"
                 src={procedimiento.secondaryImageSrc}
@@ -560,8 +561,7 @@ export default function ProcedimientoDetalle() {
                 decoding="async"
                 sx={{
                   width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
+                  height: "auto",
                   display: "block"
                 }}
               />

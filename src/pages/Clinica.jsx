@@ -354,7 +354,7 @@ export default function Clinica({ id }) {
           <Conexion />
 
           {/* Aire antes del footer */}
-          <Box sx={{ gridColumn: "1 / -1", height: { xs: "112px", md: "220px" } }} />
+          <Box sx={{ gridColumn: "1 / -1", height: { xs: "180px", md: "320px" } }} />
         </Box>
       </Box>
 
