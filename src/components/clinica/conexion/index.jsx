@@ -60,8 +60,8 @@ export default function Conexion() {
       <Box sx={{
         gridColumn: { xs: '1 / 13', md: '1 / 6' },
         position: "relative",
-        height: { xs: "58vh", md: "96vh" },
-        maxHeight: { md: "760px" },
+        height: { xs: "64vh", md: "108vh" },
+        maxHeight: { md: "860px" },
         marginTop: { xs: "-4px", md: "-132px" },
         marginBottom: { xs: 6, md: 0 },
         marginLeft: { xs: 0, md: "-34px" },

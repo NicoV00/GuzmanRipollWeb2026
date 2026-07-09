@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useEffect, useRef, useState } from "react"
-import { Box, Grid, Typography, IconButton, useTheme } from "@mui/material"
+import React, { useEffect, useRef } from "react"
+import { Box, Grid, Typography, IconButton } from "@mui/material"
 import { useLocation } from "react-router-dom"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -17,29 +17,10 @@ gsap.registerPlugin(ScrollTrigger)
 
 export default function Clinica({ id }) {
   const location = useLocation()
-  const theme = useTheme()
-  const heroTextRef = useRef(null)
-  const resultadosTitleRef = useRef(null)
-  const doctorTitleRef = useRef(null)
-  const humanConnectionTitleRef = useRef(null)
-  const typographyRef = useRef(null)
   const heroContainerRef = useRef(null)
   const stickyTextRef = useRef(null)
   const imageRef = useRef(null)
   const headlineRef = useRef(null)
-  const [showContent, setShowContent] = useState(false)
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
-  const [isHovering, setIsHovering] = useState(false)
-
-  const handleMouseMove = (e) => {
-    if (typographyRef.current) {
-      const rect = typographyRef.current.getBoundingClientRect()
-      setMousePosition({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-      })
-    }
-  }
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -69,8 +50,6 @@ export default function Clinica({ id }) {
   // Intro Animation useEffect
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowContent(true)
-
       const tl = gsap.timeline({ defaults: { ease: "power3.out", duration: 1.2 } })
 
       tl.fromTo(headlineRef.current,
@@ -273,6 +252,7 @@ export default function Clinica({ id }) {
             gridColumn: { xs: '1 / 13', md: '1 / 13' },
             zIndex: 1,
             width: '100%',
+            mt: { xs: "12px", md: "28px" },
             pt: 0,
             pb: { xs: "12px", md: "18px" },
             backgroundColor: 'transparent',
@@ -370,7 +350,7 @@ export default function Clinica({ id }) {
           <Conexion />
 
           {/* Aire antes del footer */}
-          <Box sx={{ gridColumn: "1 / -1", height: { xs: "96px", md: "190px" } }} />
+          <Box sx={{ gridColumn: "1 / -1", height: { xs: "112px", md: "220px" } }} />
         </Box>
       </Box>
 

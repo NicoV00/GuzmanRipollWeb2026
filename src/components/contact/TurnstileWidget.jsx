@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '0x4AAAAAADyD2p0s99kZklqF';
+const SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY;
 
 let scriptPromise = null;
 
@@ -31,6 +31,10 @@ export function TurnstileWidget() {
 
     loadTurnstileScript().then(() => {
       if (cancelled || !containerRef.current) return;
+      if (!SITE_KEY) {
+        console.error('[TurnstileWidget] Falta VITE_TURNSTILE_SITE_KEY.');
+        return;
+      }
       widgetId = window.turnstile.render(containerRef.current, {
         sitekey: SITE_KEY,
         theme: 'light',

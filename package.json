@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:cf": "npm run build && npx wrangler pages dev dist --compatibility-date=2026-07-09",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

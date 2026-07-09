@@ -18,6 +18,8 @@ coverage/
 .env.*
 !.env.example
 *.local
+.dev.vars
+.wrangler/
 
 # Claude / local AI tooling
 .claude/
