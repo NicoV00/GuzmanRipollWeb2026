@@ -24,6 +24,7 @@ import ContactFloatingBar from "./components/UI/ContactFloatingBar";
 import LenisScrollTriggerSetup from "./components/LenisScrollTriggerSetup";
 
 import { ThemeProvider, CssBaseline } from '@mui/material';
+import { Analytics } from '@vercel/analytics/react';
 import { lightTheme, darkTheme } from './utils/theme';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -161,6 +162,7 @@ const App = () => {
         >
           <AppShell toggleTheme={toggleTheme} />
         </ReactLenis>
+        <Analytics />
       </ThemeProvider>
     </Router>
   );
