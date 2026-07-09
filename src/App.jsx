@@ -25,6 +25,7 @@ import LenisScrollTriggerSetup from "./components/LenisScrollTriggerSetup";
 
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { lightTheme, darkTheme } from './utils/theme';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -163,6 +164,7 @@ const App = () => {
           <AppShell toggleTheme={toggleTheme} />
         </ReactLenis>
         <Analytics />
+        <SpeedInsights />
       </ThemeProvider>
     </Router>
   );
