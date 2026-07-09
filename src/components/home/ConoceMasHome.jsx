@@ -207,8 +207,10 @@ export default function ConoceMasHome() {
         }}
       >
         <img
-          src={"/images/Paper Texture@2160p.png"}
+          src={"/images/Paper Texture@2160p.webp"}
           alt="scroll"
+          loading="lazy"
+          decoding="async"
           style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "8px" }}
         />
       </Box>
@@ -293,7 +295,7 @@ export default function ConoceMasHome() {
           Como especialistas en cirugía mamaria, combinamos precisión médica, innovación tecnológica y un acompañamiento cercano en cada etapa del proceso.
         </Typography>
         <Box sx={{ width: "100%", aspectRatio: "1/1", borderRadius: "10px", overflow: "hidden", mb: 8 }}>
-          <img src={"/images/Paper Texture@2160p.png"} alt="scroll" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <img src={"/images/Paper Texture@2160p.webp"} alt="scroll" loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         </Box>
         <Typography data-line-reveal sx={{ fontFamily: "Poppins", fontSize: { xs: "28px", sm: "34px" }, fontWeight: 500, lineHeight: 1.08, letterSpacing: "-0.055em", color: "#000000", textAlign: "left", width: { xs: "calc(100% + 16px)", sm: "100%" }, maxWidth: "100vw", mb: 4 }}>
           {textMobile}

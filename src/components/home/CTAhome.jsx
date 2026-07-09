@@ -4,7 +4,6 @@ import { Play } from "lucide-react";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import VideoBackground from "../UI/VideoBackground";
 import BeamCTAButton from "../UI/BeamCTAButton";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -13,28 +12,28 @@ const cards = [
   {
     title: "Confianza",
     number: "1",
-    image: "/images/maxi1.png",
+    image: "/images/maxi1.webp",
     subtitle: "Tu seguridad es nuestra prioridad",
     text: "Nuestra sólida trayectoria y experiencia avalan cada procedimiento. Trabajamos con los más altos estándares de seguridad, brindándote total confianza desde la primera consulta.",
   },
   {
     title: "Simulación",
     number: "2",
-    image: "/images/maxi2.png",
+    image: "/images/maxi2.webp",
     subtitle: "Visualiza tu cambio antes de operar",
     text: "La tecnología Crisalix genera una simulación 3D detallada de tu procedimiento. Visualiza tu aspecto postoperatorio antes de tomar cualquier decisión.",
   },
   {
     title: "Técnologia",
     number: "3",
-    image: "/images/maxi3.png",
+    image: "/images/maxi3.webp",
     subtitle: "Procedimientos de vanguardia",
     text: "Empleamos técnicas de última generación diseñadas a medida para cada paciente. Nuestro enfoque combina precisión técnica con criterio estético para resultados naturales.",
   },
   {
     title: "Recuperación", // imagen placeholder de un video (se reemplazará por <video>)
     number: "4",
-    image: "/images/recupera.png",
+    image: "/images/recupera.webp",
     subtitle: "Cuidado integral post cirugía",
     text: "Contarás con un plan de seguimiento personalizado y asesoría continua. Nuestro equipo te acompaña en cada etapa para una recuperación óptima.",
   },
@@ -129,7 +128,23 @@ export default function CTAhome() {
         }}
       >
         <Box className="shader-frame">
-          <VideoBackground src="/videos/Background.mp4" />
+          {/* Frame fijo del video: mismo look, sin costo de decodificar un segundo video */}
+          <img
+            src="/videos/Background-poster.webp"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              pointerEvents: "none",
+              userSelect: "none",
+            }}
+          />
         </Box>
       </Box>
 
@@ -366,6 +381,8 @@ export default function CTAhome() {
                   component="img"
                   src={card.image}
                   alt={card.title}
+                  loading="lazy"
+                  decoding="async"
                   sx={{
                     width: isPlateCard ? "auto" : "100%",
                     height: isPlateCard ? "100%" : "100%",

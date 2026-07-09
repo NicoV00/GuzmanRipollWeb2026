@@ -25,7 +25,7 @@ export default function MedicalProcedures() {
       id: "01",
       number: "001",
       name: "Cirugía Mamaria",
-      image: "/images/mama.png",
+      image: "/images/mama.webp",
       description: "Procedimientos destinados a mejorar la forma, el volumen y la posición de las mamas mediante técnicas personalizadas.",
       listTitle: "Incluye",
       items: [
@@ -40,7 +40,7 @@ export default function MedicalProcedures() {
       id: "02",
       number: "002",
       name: "Lipoescultura VASER",
-      image: "/images/lipo.png",
+      image: "/images/lipo.webp",
       description: "Remodelación corporal mediante eliminación de grasa localizada utilizando tecnología avanzada.",
       listTitle: "Tecnologías",
       items: [
@@ -61,7 +61,7 @@ export default function MedicalProcedures() {
       id: "01",
       number: "004",
       name: "Aumento Mamario",
-      image: "/images/aumento.png",
+      image: "/images/aumento.webp",
       description: "Utilización de implantes de alta gama o transferencia de grasa propia para mejorar el volumen y proyección de las mamas.",
       listTitle: "Técnicas",
       items: [
@@ -74,7 +74,7 @@ export default function MedicalProcedures() {
       id: "06",
       number: "006",
       name: "Tratamientos Faciales",
-      image: "/images/image.png",
+      image: "/images/image.webp",
       description: "Regeneración y resurfacing facial sin cirugía, combinando la radiofrecuencia INDIBA con el láser DEKA DuoGlide.",
       listTitle: "Tecnologías",
       items: [
@@ -279,6 +279,8 @@ export default function MedicalProcedures() {
                 component="img"
                 src={procedure.image}
                 alt={procedure.name}
+                loading="lazy"
+                decoding="async"
                 sx={{
                   width: "100%",
                   height: "100%",

@@ -9,13 +9,14 @@
     <meta name="theme-color" content="#07111C" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#F2F2F2" media="(prefers-color-scheme: light)" />
     <title>Dr. Guzman Ripoll</title>
-    <!-- Precarga del video de fondo del hero para que aparezca cuanto antes -->
-    <link rel="preload" as="fetch" href="/videos/Background.mp4" type="video/mp4" crossorigin />
-<script type="module" src="https://unpkg.com/media-shader@latest/media-shader.js"></script>    <!-- Geist Mono Font -->
+    <!-- Fuentes del hero: precarga para que el texto LCP pinte de inmediato -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/Poppins/Poppins-Regular.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/Poppins/Poppins-SemiBold.woff2" crossorigin />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Archivo (solo se usa en el footer): carga sin bloquear el render -->
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
   </head>
   <body>
     <div id="root"></div>

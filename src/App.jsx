@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { Box, Typography } from "@mui/material";
 
@@ -6,12 +6,17 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ReactLenis } from 'lenis/dist/lenis-react';
 import Home from "./pages/Home";
-import Clinica from "./pages/Clinica";
-import Resultados from "./pages/Resultados";
-import ProcedimientoDetalle from "./pages/ProcedimientoDetalle";
-import NotFound from "./pages/NotFound";
-import PoliticaPrivacidad from "./pages/PoliticaPrivacidad";
-import ProcesamientoDatos from "./pages/ProcesamientoDatos";
+// Rutas secundarias en chunks separados: solo se descargan al navegar a ellas
+const Clinica = lazy(() => import("./pages/Clinica"));
+const Resultados = lazy(() => import("./pages/Resultados"));
+const ProcedimientoDetalle = lazy(() => import("./pages/ProcedimientoDetalle"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const PoliticaPrivacidad = lazy(() => import("./pages/PoliticaPrivacidad"));
+const ProcesamientoDatos = lazy(() => import("./pages/ProcesamientoDatos"));
+const Procedimientos = lazy(() => import("./pages/Procedimientos"));
+const ContactSection = lazy(() =>
+  import("./components/contact/ContactSection").then((m) => ({ default: m.ContactSection }))
+);
 // import Research from "./pages/Research"; // Research oculto temporalmente
 
 import NavBar from "./components/UI/NavBar";
@@ -20,8 +25,6 @@ import LenisScrollTriggerSetup from "./components/LenisScrollTriggerSetup";
 
 import { ThemeProvider, CssBaseline } from '@mui/material';
 import { lightTheme, darkTheme } from './utils/theme';
-import Procedimientos from "./pages/Procedimientos";
-import { ContactSection } from "./components/contact/ContactSection";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -221,21 +224,23 @@ function AppShell({ toggleTheme }) {
         <ContactFloatingBar />
 
         {/* Carga la vista retrasada (la que decide el temporizador) */}
-        <Routes location={displayLocation}>
-          <Route path="/" element={<Home toggleTheme={toggleTheme} />} />
-          <Route path="/inicio" element={<Home toggleTheme={toggleTheme} />} />
-          <Route path="/clinica" element={<Clinica />} />
-          <Route path="/procedimientos" element={<Procedimientos toggleTheme={toggleTheme} />} />
-          <Route path="/procedimiento/:id" element={<ProcedimientoDetalle />} />
-          <Route path="/resultados" element={<Resultados />} />
-          {/* Research oculto temporalmente
-          <Route path="/research" element={<Research />} /> */}
-          <Route path="/contacto" element={<ContactSection />} />
-          <Route path="/cir-mamaria" element={<ProcedimientoCero />} />
-          <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
-          <Route path="/procesamiento-datos" element={<ProcesamientoDatos />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes location={displayLocation}>
+            <Route path="/" element={<Home toggleTheme={toggleTheme} />} />
+            <Route path="/inicio" element={<Home toggleTheme={toggleTheme} />} />
+            <Route path="/clinica" element={<Clinica />} />
+            <Route path="/procedimientos" element={<Procedimientos toggleTheme={toggleTheme} />} />
+            <Route path="/procedimiento/:id" element={<ProcedimientoDetalle />} />
+            <Route path="/resultados" element={<Resultados />} />
+            {/* Research oculto temporalmente
+            <Route path="/research" element={<Research />} /> */}
+            <Route path="/contacto" element={<ContactSection />} />
+            <Route path="/cir-mamaria" element={<ProcedimientoCero />} />
+            <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
+            <Route path="/procesamiento-datos" element={<ProcesamientoDatos />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
 
         <ConditionalNavButtons />
 

@@ -23,8 +23,8 @@ const procedimientosData = {
     title: "Cirugía Mamaria",
     subtitle: "Aumento, Reducción & Reconstrucción",
     category: "Especialización Principal",
-    imageSrc: "/images/mama.png",
-    secondaryImageSrc: "/images/implantes2.jpg",
+    imageSrc: "/images/mama.webp",
+    secondaryImageSrc: "/images/implantes2.webp",
     catchPhrase: "Procedimientos seguros y personalizados para lograr resultados naturales y armoniosos.",
     description: "La cirugía mamaria es una decisión médica importante. Por eso, requiere información clara y una evaluación responsable.",
     filosofia: "Cada paciente es distinta. La planificación y el criterio médico son parte fundamental del proceso. La información, el acompañamiento y el seguimiento forman parte del tratamiento.",
@@ -49,7 +49,7 @@ const procedimientosData = {
     title: "Lipoescultura VASER",
     subtitle: "BodyTite & Morpheus8",
     category: "Contorno Corporal",
-    imageSrc: "/images/lipo.png",
+    imageSrc: "/images/lipo.webp",
     catchPhrase: "Tecnología de vanguardia para remodelación corporal avanzada con resultados inmediatos.",
     description: "Tecnología avanzada de remodelación corporal que combina BodyTite (radiofrequencia asistida) con Morpheus8 para contornear y definir tu figura ideal con mínima invasión y máximos resultados.",
     objetivo: "Remodelación corporal avanzada, eliminación de grasa localizada y tensado de piel simultáneo.",
@@ -89,7 +89,7 @@ const procedimientosData = {
     title: "Tratamientos Faciales",
     subtitle: "INDIBA & DEKA DuoGlide",
     category: "Medicina Estética Facial",
-    imageSrc: "/images/image.png",
+    imageSrc: "/images/image.webp",
     catchPhrase: "Regeneración y resurfacing facial sin cirugía, combinando lo mejor de INDIBA y DEKA DuoGlide.",
     description: "¿Sabías que también podemos usar DEKA DuoGlide para tratamientos faciales? INDIBA trabaja desde la regeneración, mientras que DuoGlide actúa de forma más intensa sobre la corrección de la piel.",
     specs: {
@@ -324,6 +324,8 @@ export default function ProcedimientoDetalle() {
               component="img"
               src={procedimiento.imageSrc}
               alt={procedimiento.title}
+              fetchPriority="high"
+              decoding="async"
               sx={{
                 width: "100%",
                 height: "100%",
@@ -549,14 +551,17 @@ export default function ProcedimientoDetalle() {
           </Box>
 
           {procedimiento.secondaryImageSrc && (
-            <Box sx={{ width: "100%", borderRadius: "16px", overflow: "hidden" }}>
+            <Box sx={{ width: "100%", height: { xs: "70vh", md: "115vh" }, borderRadius: "16px", overflow: "hidden" }}>
               <Box
                 component="img"
                 src={procedimiento.secondaryImageSrc}
                 alt={`${procedimiento.title} detalle`}
+                loading="lazy"
+                decoding="async"
                 sx={{
                   width: "100%",
-                  height: "auto",
+                  height: "100%",
+                  objectFit: "cover",
                   display: "block"
                 }}
               />

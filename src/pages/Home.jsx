@@ -1,7 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
 import IntroHome from "../components/home/IntroHome";
-import NewHero from "../components/home/NewHero"; // Kept but unused
 import ConoceMasHome from "../components/home/ConoceMasHome";
 import VerMasProcedimientosHome from "../components/home/VerMasProcedimientosHome";
 import CTAhome from "../components/home/CTAhome";

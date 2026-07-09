@@ -263,8 +263,10 @@ export function ContactSection({ id }) {
 
             <div className="contact-image-wrap">
               <img
-                src="/images/cloinica.png"
+                src="/images/cloinica.webp"
                 alt="Clínica Guzmán Ripoll"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           </div>
@@ -288,8 +290,10 @@ export function ContactSection({ id }) {
 
         <div data-reveal className="contact-image-wrap contact-image-wrap-mobile">
           <img
-            src="/images/cloinica.png"
+            src="/images/cloinica.webp"
             alt="Clínica Guzmán Ripoll"
+            loading="lazy"
+            decoding="async"
           />
         </div>
 

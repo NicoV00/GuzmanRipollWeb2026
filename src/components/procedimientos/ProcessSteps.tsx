@@ -1,8 +1,10 @@
 "use client"
 
-import { useRef } from "react"
+import { Suspense, lazy, useRef } from "react"
 import { Box, Typography } from "@mui/material"
-import WebGPUSpinnerComponent from "../animations/WebGPUSpinner"
+
+// three/webgpu es muy pesado: se carga en un chunk aparte solo cuando esta seccion se renderiza
+const WebGPUSpinnerComponent = lazy(() => import("../animations/WebGPUSpinner"))
 
 // ─── Custom Pixel Grid Icon ──────────────────────────────
 const PixelGridIcon = ({ stepIndex, isBlue }: { stepIndex: number, isBlue: boolean }) => {
@@ -167,7 +169,9 @@ function ProcessCard({ step, index }: { step: any, index: number }) {
       <Box sx={{ position: "relative", zIndex: 1, width: "100%", height: "150px", mb: 2, display: "flex", justifyContent: "center", alignItems: "center" }}>
         {/* Expanded bounding box so the canvas doesn't hard crop on the sides */}
         <Box sx={{ width: "140px", height: "140px", position: "relative", zIndex: 2 }}>
-           <WebGPUSpinnerComponent type={step.type} />
+           <Suspense fallback={null}>
+             <WebGPUSpinnerComponent type={step.type} />
+           </Suspense>
         </Box>
 
       </Box>

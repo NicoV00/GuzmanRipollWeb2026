@@ -95,7 +95,11 @@ export default function CTAFinalHome() {
       >
         {/* Shader en movimiento — mismo fondo de video que la home */}
         <Box sx={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          <VideoBackground src="/videos/Background.mp4" />
+          <VideoBackground
+            src="/videos/Background.mp4"
+            webmSrc="/videos/Background.webm"
+            poster="/videos/Background-poster.webp"
+          />
         </Box>
 
         <CornerMark position={{ top: "18px", left: "18px" }} />

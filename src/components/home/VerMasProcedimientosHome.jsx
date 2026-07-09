@@ -19,7 +19,7 @@ const procedures = [
     name: "AUMENTO MAMARIO",
     to: "/procedimiento/01",
     subtitle: "Implantes de gel cohesivo",
-    image: "/images/aumento.png",
+    image: "/images/aumento.webp",
     topBlur: true,
     col: { xs: "auto", md: "9 / 13" },
     row: 2,
@@ -29,7 +29,7 @@ const procedures = [
     name: "TRATAMIENTOS FACIALES",
     to: "/procedimiento/06",
     subtitle: "INDIBA & DEKA DuoGlide",
-    image: "/images/image.png",
+    image: "/images/image.webp",
     col: { xs: "auto", md: "9 / 13" },
     row: 1,
     height: { xs: "240px", sm: "280px", md: "50%" },
@@ -38,7 +38,7 @@ const procedures = [
     name: "MOMMY MAKEOVER",
     to: "/procedimiento/04",
     subtitle: "Abdomen y mamas en un solo proceso",
-    image: "/images/mom.png",
+    image: "/images/mom.webp",
     col: { xs: "auto", md: "1 / 5" },
     row: 2,
     height: { xs: "320px", sm: "360px", md: "80%" },
@@ -57,7 +57,7 @@ const procedures = [
     name: "LIPOESCULTURA VASER",
     to: "/procedimiento/02",
     subtitle: "Definición corporal de alta precisión",
-    image: "/images/lipo2.png",
+    image: "/images/lipo2.webp",
     col: { xs: "auto", md: "5 / 9" },
     row: 1,
     height: { xs: "340px", sm: "380px", md: "80%" },
@@ -250,6 +250,8 @@ export default function VerMasProcedimientosHome() {
                 component="img"
                 src={card.image}
                 alt={card.name}
+                loading="lazy"
+                decoding="async"
                 ref={(el) => addToRefs(el, index)}
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={() => handleMouseLeave(index)}

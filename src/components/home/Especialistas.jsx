@@ -33,7 +33,7 @@ export default function Especialistas() {
         }
       }}>
 
-        <img src={"/images/bias.png"} alt="Cirugía mamaria" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <img src={"/images/bias.webp"} alt="Cirugía mamaria" loading="lazy" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </Box>
 
       {/* Right side - Content */}

@@ -141,7 +141,11 @@ export default function IntroHome() {
         }}
       >
         <Box className="shader-frame">
-          <VideoBackground src="/videos/Background.mp4" />
+          <VideoBackground
+            src="/videos/Background.mp4"
+            webmSrc="/videos/Background.webm"
+            poster="/videos/Background-poster.webp"
+          />
         </Box>
       </Box>
 

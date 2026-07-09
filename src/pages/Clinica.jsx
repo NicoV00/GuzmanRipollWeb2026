@@ -74,7 +74,7 @@ export default function Clinica({ id }) {
   const logos = [
     { src: '/images/logo-apaisado.png', alt: 'FILACP — Federación Ibero Latinoamericana de Cirugía Plástica' },
     { src: '/images/logo-scpreu.png', alt: 'SCPREU — Sociedad de Cirugía Plástica y Reconstructiva del Uruguay' },
-    { src: '/images/alam-logo.png', alt: 'ALAM — Asociación Latinoamericana de Microcirugía', size: 78 },
+    { src: '/images/alam-logo.webp', alt: 'ALAM — Asociación Latinoamericana de Microcirugía', size: 78 },
   ];
 
   const imageGrainSx = {
@@ -228,8 +228,10 @@ export default function Clinica({ id }) {
             position: "relative",
           }}>
             <img
-              src="/images/cloinica.png"
+              src="/images/cloinica.webp"
               alt="Clínica Guzmán Ripoll"
+              loading="lazy"
+              decoding="async"
               style={{
                 width: "100%",
                 height: "100%",
@@ -321,6 +323,8 @@ export default function Clinica({ id }) {
                     <img
                       src={logo.src}
                       alt={logo.alt}
+                      loading="lazy"
+                      decoding="async"
                       style={{
                         maxHeight: `${logo.size || 46}px`,
                         maxWidth: '190px',

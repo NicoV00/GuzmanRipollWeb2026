@@ -186,6 +186,8 @@ export default function About() {
           ref={doctorImageRef}
           src="/images/clinica3.webp"
           alt="Dr. Guzman Ripoll"
+          loading="lazy"
+          decoding="async"
           style={{
             width: "100%",
             height: "auto",

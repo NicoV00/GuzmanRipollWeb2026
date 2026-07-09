@@ -14,6 +14,9 @@ import { useEffect, useRef } from "react";
  */
 export default function VideoBackground({
   src = "/videos/Background.mp4",
+  // WebM (VP9) pesa ~4x menos que el mp4 a igual calidad: el navegador elige
+  // el primer <source> que soporta; el mp4 queda como fallback (iOS viejos).
+  webmSrc,
   poster,
   objectPosition = "center",
   className = "",
@@ -89,7 +92,7 @@ export default function VideoBackground({
     <video
       ref={videoRef}
       className={className}
-      src={src}
+      src={webmSrc ? undefined : src}
       poster={poster}
       autoPlay
       muted
@@ -113,7 +116,14 @@ export default function VideoBackground({
         willChange: "transform",
         ...style,
       }}
-    />
+    >
+      {webmSrc && (
+        <>
+          <source src={webmSrc} type="video/webm" />
+          <source src={src} type="video/mp4" />
+        </>
+      )}
+    </video>
   );
 }
 
