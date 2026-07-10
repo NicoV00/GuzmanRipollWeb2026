@@ -86,12 +86,14 @@ const procedimientosData = {
   },
   "06": {
     number: "06",
-    title: "Tratamientos Faciales",
+    title: "Tratamientos No Invasivos",
     subtitle: "INDIBA & DEKA DuoGlide",
-    category: "Medicina Estética Facial",
-    imageSrc: "/images/image.webp",
-    catchPhrase: "Regeneración y resurfacing facial sin cirugía, combinando lo mejor de INDIBA y DEKA DuoGlide.",
-    description: "¿Sabías que también podemos usar DEKA DuoGlide para tratamientos faciales? INDIBA trabaja desde la regeneración, mientras que DuoGlide actúa de forma más intensa sobre la corrección de la piel.",
+    category: "Contorno Corporal & Facial",
+    imageSrc: "/images/indiba.webp",
+    imagePosition: "center 88%", // mostrar la cara de la paciente (parte inferior de la foto)
+    secondaryImageSrc: "/images/confianza.webp",
+    catchPhrase: "Tonificación corporal y regeneración de la piel del rostro, sin cirugía y sin tiempo de recuperación.",
+    description: "INDIBA es una radiofrecuencia de 448 kHz que estimula la regeneración celular y la producción natural de colágeno: reafirma la piel del rostro y tonifica el contorno corporal, mejorando flacidez, celulitis y calidad de piel. Complementamos con DEKA DuoGlide para la corrección más intensa de la superficie facial.",
     specs: {
       tipo: "Ambulatorio",
       lugar: "Consultorio",
@@ -100,16 +102,16 @@ const procedimientosData = {
     },
     comparativa: {
       indiba: {
-        title: "INDIBA → Regenerar y reafirmar",
-        items: ["Estimula colágeno", "Mejora firmeza y luminosidad", "Desinflama", "Mejora la calidad de piel", "Sin downtime"]
+        title: "INDIBA → Regenerar, reafirmar y tonificar",
+        items: ["Estimula colágeno y elastina", "Reafirma rostro y cuerpo", "Mejora flacidez y celulitis", "Activa la circulación y desinflama", "Sin downtime"]
       },
       duoglide: {
         title: "DUOGlide → Renovar y corregir",
         items: ["Manchas", "Textura", "Poros", "Cicatrices", "Arrugas y resurfacing"]
       }
     },
-    tecnica: "Combinamos INDIBA (radiofrecuencia regenerativa) con el láser DEKA DuoGlide para abordar tanto la regeneración profunda como la corrección de la superficie de la piel, adaptando el protocolo a cada paciente.",
-    recuperacion: "INDIBA no requiere downtime. Con DuoGlide puede haber un enrojecimiento leve y transitorio según la intensidad del resurfacing."
+    tecnica: "La radiofrecuencia INDIBA (sistema Proionic de 448 kHz) trabaja desde el interior del tejido: activa el metabolismo celular y la microcirculación para reafirmar la piel y remodelar el contorno corporal de forma progresiva y natural. En rostro se complementa con el láser DEKA DuoGlide para corregir la superficie de la piel. El protocolo se adapta a cada paciente, en sesiones indoloras con sensación de calor agradable.",
+    recuperacion: "Sin tiempo de recuperación: podés retomar tu actividad normal de inmediato. Con DuoGlide puede haber un enrojecimiento leve y transitorio según la intensidad del resurfacing."
   }
 }
 
@@ -330,7 +332,7 @@ export default function ProcedimientoDetalle() {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                objectPosition: "center 35%",
+                objectPosition: procedimiento.imagePosition || "center 35%",
                 display: "block",
                 clipPath: "inset(25% 20% 25% 20%)",
                 transform: "scale(1.1)"
@@ -391,49 +393,12 @@ export default function ProcedimientoDetalle() {
             </Typography>
           </Box>
 
-          {/* Comparativa INDIBA / DUOGLIDE (solo Tratamientos Faciales) */}
-          {procedimiento.comparativa && (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              {[
-                { c: procedimiento.comparativa.indiba, bg: "#ffffff" },
-                { c: procedimiento.comparativa.duoglide, bg: "#ffffff" },
-              ].map(({ c, bg }, i) => (
-                <Box key={i} sx={{
-                  backgroundColor: bg,
-                  borderRadius: "16px",
-                  p: { xs: 3, md: 3.5 },
-                  border: "1px solid rgba(0,0,0,0.06)",
-                }}>
-                  <Typography sx={{
-                    fontFamily: "Poppins", fontSize: { xs: "16px", md: "18px" }, fontWeight: 600,
-                    color: "#111", mb: 2, textAlign: "left",
-                  }}>
-                    {c.title}
-                  </Typography>
-                  <Box sx={{ display: "flex", flexDirection: "column", gap: 1.2 }}>
-                    {c.items.map((item, j) => (
-                      <Box key={j} sx={{ display: "flex", gap: 1.5, alignItems: "flex-start" }}>
-                        <Check size={16} strokeWidth={2.4} color="#0081C7" style={{ marginTop: "3px", flexShrink: 0 }} />
-                        <Typography sx={{
-                          fontFamily: "Poppins", fontSize: { xs: "14px", md: "15px" },
-                          color: "rgba(0,0,0,0.72)", lineHeight: 1.5, textAlign: "left",
-                        }}>
-                          {item}
-                        </Typography>
-                      </Box>
-                    ))}
-                  </Box>
-                </Box>
-              ))}
-            </Box>
-          )}
-
           {/* Technique */}
           <Box>
             <Typography variant="h3" sx={{
               fontFamily: "Poppins", fontSize: { xs: "16px", md: "18px" }, fontWeight: 600, mb: 1.5, textAlign: "left",
             }}>
-              Técnica Quirúrgica
+              {procedimiento.comparativa ? "Cómo funciona" : "Técnica Quirúrgica"}
             </Typography>
             <Typography sx={{
               fontFamily: "Poppins", fontSize: { xs: "15px", md: "16px" }, lineHeight: 1.8, color: "rgba(0,0,0,0.7)", textAlign: "left",
@@ -570,6 +535,56 @@ export default function ProcedimientoDetalle() {
 
         </Box>
       </Box>
+
+      {/* ─── COMPARATIVA INDIBA / DUOGLIDE (ancho completo, cards lado a lado) ─── */}
+      {procedimiento.comparativa && (
+        <Box sx={{
+          px: { xs: "20px", md: "70px" },
+          pb: { xs: 12, md: 18 },
+          mt: { xs: -8, md: -14 },
+        }}>
+          <Typography variant="h3" sx={{
+            fontFamily: "Poppins", fontSize: { xs: "20px", md: "24px" }, fontWeight: 600,
+            color: "#111", mb: { xs: 3, md: 4 }, textAlign: "left",
+          }}>
+            Dos tecnologías, un mismo objetivo
+          </Typography>
+          <Box sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+            gap: { xs: 2, md: 3 },
+          }}>
+            {[procedimiento.comparativa.indiba, procedimiento.comparativa.duoglide].map((c, i) => (
+              <Box key={i} sx={{
+                backgroundColor: "#ffffff",
+                borderRadius: "16px",
+                p: { xs: 3, md: 4 },
+                border: "1px solid rgba(0,0,0,0.06)",
+              }}>
+                <Typography sx={{
+                  fontFamily: "Poppins", fontSize: { xs: "16px", md: "18px" }, fontWeight: 600,
+                  color: "#111", mb: 2, textAlign: "left",
+                }}>
+                  {c.title}
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1.2 }}>
+                  {c.items.map((item, j) => (
+                    <Box key={j} sx={{ display: "flex", gap: 1.5, alignItems: "flex-start" }}>
+                      <Check size={16} strokeWidth={2.4} color="#0081C7" style={{ marginTop: "3px", flexShrink: 0 }} />
+                      <Typography sx={{
+                        fontFamily: "Poppins", fontSize: { xs: "14px", md: "15px" },
+                        color: "rgba(0,0,0,0.72)", lineHeight: 1.5, textAlign: "left",
+                      }}>
+                        {item}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            ))}
+          </Box>
+        </Box>
+      )}
 
       {/* ─── CRISALIX SECTION (Breast Surgery Only) ─── */}
       {id === "01" && (

@@ -3,7 +3,7 @@
 import React from "react"
 
 interface CarouselItemProps {
-  item: { title: string; subtitle: string }
+  item: { title: string; subtitle: string; antes?: string; despues?: string }
   index: number
   itemWidth: number
   isMobile?: boolean
@@ -12,8 +12,26 @@ interface CarouselItemProps {
 const ITEM_HEIGHT = 525
 const ITEM_HEIGHT_MOBILE = 400
 
+const labelStyle: React.CSSProperties = {
+  position: "absolute",
+  bottom: "10px",
+  left: "10px",
+  padding: "4px 10px",
+  borderRadius: "999px",
+  backgroundColor: "rgba(7, 17, 28, 0.55)",
+  backdropFilter: "blur(6px)",
+  WebkitBackdropFilter: "blur(6px)",
+  color: "#fff",
+  fontSize: "11px",
+  fontWeight: 500,
+  letterSpacing: "0.6px",
+  textTransform: "uppercase",
+  fontFamily: "Poppins, sans-serif",
+  pointerEvents: "none",
+}
+
 export function CarouselItem({ item, index, itemWidth, isMobile = false }: CarouselItemProps) {
-  const { title: itemTitle, subtitle: itemSubtitle } = item
+  const { title: itemTitle, subtitle: itemSubtitle, antes, despues } = item
   const itemHeight = isMobile ? ITEM_HEIGHT_MOBILE : ITEM_HEIGHT
 
   // Si itemWidth es 0, usar 100% (para grid layout)
@@ -28,7 +46,7 @@ export function CarouselItem({ item, index, itemWidth, isMobile = false }: Carou
         alignItems: "flex-start",
       }}
     >
-      {/* Contenedor de imagen */}
+      {/* Contenedor de imagen: antes y después lado a lado */}
       <div
         style={{
           width: "100%",
@@ -37,23 +55,33 @@ export function CarouselItem({ item, index, itemWidth, isMobile = false }: Carou
           overflow: "hidden",
           position: "relative",
           background: "linear-gradient(to bottom, #B8BABB, #B0B2B3, #A9ABAC)",
-          cursor: "pointer",
+          display: "flex",
+          gap: "2px",
         }}
       >
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "rgba(255,255,255,0.3)",
-            fontSize: "12px",
-            fontFamily: "Poppins, sans-serif",
-          }}
-        >
-          {/* Aquí iría tu imagen */}
-          {/* <img src={...} alt={itemTitle} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> */}
+        <div style={{ position: "relative", width: "50%", height: "100%" }}>
+          {antes && (
+            <img
+              src={antes}
+              alt={`${itemTitle} — antes`}
+              loading="lazy"
+              decoding="async"
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
+          )}
+          <span style={labelStyle}>Antes</span>
+        </div>
+        <div style={{ position: "relative", width: "50%", height: "100%" }}>
+          {despues && (
+            <img
+              src={despues}
+              alt={`${itemTitle} — después`}
+              loading="lazy"
+              decoding="async"
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            />
+          )}
+          <span style={labelStyle}>Después</span>
         </div>
       </div>
 

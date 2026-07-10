@@ -1,10 +1,11 @@
-import { Box, Typography } from "@mui/material";
-import { useEffect } from "react";
-import { Play } from "lucide-react";
+import { Box, Typography, useMediaQuery } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Play, X } from "lucide-react";
 
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BeamCTAButton from "../UI/BeamCTAButton";
+import VideoBackground from "../UI/VideoBackground";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,7 +13,7 @@ const cards = [
   {
     title: "Confianza",
     number: "1",
-    image: "/images/maxi1.webp",
+    image: "/images/confianza.webp",
     subtitle: "Tu seguridad es nuestra prioridad",
     text: "Nuestra sólida trayectoria y experiencia avalan cada procedimiento. Trabajamos con los más altos estándares de seguridad, brindándote total confianza desde la primera consulta.",
   },
@@ -40,6 +41,21 @@ const cards = [
 ];
 
 export default function CTAhome() {
+  // Video en movimiento en desktop; frame fijo solo en mobile (ahi si pega en performance)
+  const isMobileViewport = useMediaQuery('(max-width:768px)');
+
+  // Lightbox del video de Recuperacion (deka): se abre al click, con audio y controles
+  const [dekaOpen, setDekaOpen] = useState(false);
+
+  useEffect(() => {
+    if (!dekaOpen) return;
+    const onKey = (e) => {
+      if (e.key === "Escape") setDekaOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [dekaOpen]);
+
   useEffect(() => {
     const leftSection = document.getElementById("left-section");
     if (!leftSection) return;
@@ -108,7 +124,8 @@ export default function CTAhome() {
           display: "block",
           position: "absolute",
           inset: 0,
-          overflow: "hidden",
+          // clip (no hidden): recorta igual pero no rompe el sticky del video
+          overflow: "clip",
           zIndex: 0,
           backgroundColor: "#050816",
           "&::before": {
@@ -128,23 +145,32 @@ export default function CTAhome() {
         }}
       >
         <Box className="shader-frame">
-          {/* Frame fijo del video: mismo look, sin costo de decodificar un segundo video */}
-          <img
-            src="/videos/Background-poster.webp"
-            alt=""
-            aria-hidden="true"
-            loading="lazy"
-            decoding="async"
-            style={{
-              position: "absolute",
-              inset: 0,
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              pointerEvents: "none",
-              userSelect: "none",
-            }}
-          />
+          {isMobileViewport ? (
+            /* Mobile: frame fijo del video — mismo look, sin costo de decodificar un segundo video */
+            <img
+              src="/videos/Background-poster.webp"
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              decoding="async"
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                pointerEvents: "none",
+                userSelect: "none",
+              }}
+            />
+          ) : (
+            /* Desktop: video en movimiento (mismo archivo que el hero, ya cacheado) */
+            <VideoBackground
+              src="/videos/Background.mp4"
+              webmSrc="/videos/Background.webm"
+              poster="/videos/Background-poster.webp"
+            />
+          )}
         </Box>
       </Box>
 
@@ -375,32 +401,73 @@ export default function CTAhome() {
                   overflow: "hidden",
                   backgroundColor: isPlateCard ? "#F4F5F7" : "transparent",
                   p: isPlateCard ? { xs: "26px", md: "36px" } : 0,
+                  cursor: card.title === "Recuperación" ? "pointer" : "default",
                 }}
+                onClick={card.title === "Recuperación" ? () => setDekaOpen(true) : undefined}
               >
-                <Box
-                  component="img"
-                  src={card.image}
-                  alt={card.title}
-                  loading="lazy"
-                  decoding="async"
-                  sx={{
-                    width: isPlateCard ? "auto" : "100%",
-                    height: isPlateCard ? "100%" : "100%",
-                    maxWidth: "100%",
-                    objectFit: isPlateCard ? "contain" : "cover",
-                  }}
-                />
+                {card.title === "Recuperación" ? (
+                  /* Video real (reemplaza la imagen placeholder + play hardcodeado).
+                     Mismo encuadre que la imagen: cover dentro de la card. */
+                  <Box
+                    component="video"
+                    ref={(el) => {
+                      if (el) {
+                        // React no setea el atributo muted de forma confiable;
+                        // sin el, iOS/Android bloquean el autoplay.
+                        el.muted = true;
+                        el.defaultMuted = true;
+                        el.setAttribute("muted", "");
+                      }
+                    }}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    poster={card.image}
+                    disablePictureInPicture
+                    disableRemotePlayback
+                    aria-hidden="true"
+                    sx={{
+                      width: "100%",
+                      height: "100%",
+                      maxWidth: "100%",
+                      objectFit: "cover",
+                      // Apenas mas abajo el encuadre para no cortar la cabeza
+                      objectPosition: "center 40%",
+                      pointerEvents: "none",
+                    }}
+                  >
+                    <source src="/videos/deka.webm" type="video/webm" />
+                    <source src="/videos/deka.mp4" type="video/mp4" />
+                  </Box>
+                ) : (
+                  <Box
+                    component="img"
+                    src={card.image}
+                    alt={card.title}
+                    loading="lazy"
+                    decoding="async"
+                    sx={{
+                      width: isPlateCard ? "auto" : "100%",
+                      height: isPlateCard ? "100%" : "100%",
+                      maxWidth: "100%",
+                      objectFit: isPlateCard ? "contain" : "cover",
+                      // Confianza: encuadre mas abajo para mostrar la parte inferior de la foto
+                      objectPosition: card.title === "Confianza" ? "center 68%" : "center",
+                    }}
+                  />
+                )}
 
-                {/* Botón de play — placeholder de video (hardcoded por ahora) */}
+                {/* Cue de interaccion: tocar para ver con audio */}
                 {card.title === "Recuperación" && (
                   <Box
                     sx={{
                       position: "absolute",
-                      top: "50%",
-                      left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      width: { xs: "46px", md: "54px" },
-                      height: { xs: "46px", md: "54px" },
+                      bottom: 12,
+                      right: 12,
+                      width: { xs: "40px", md: "44px" },
+                      height: { xs: "40px", md: "44px" },
                       borderRadius: "50%",
                       backgroundColor: "rgba(255,255,255,0.18)",
                       backdropFilter: "blur(8px)",
@@ -413,7 +480,7 @@ export default function CTAhome() {
                       pointerEvents: "none",
                     }}
                   >
-                    <Play size={19} color="#fff" fill="#fff" style={{ marginLeft: "2px" }} />
+                    <Play size={17} color="#fff" fill="#fff" style={{ marginLeft: "2px" }} />
                   </Box>
                 )}
               </Box>
@@ -448,6 +515,79 @@ export default function CTAhome() {
           );
         })}
       </Box>
+
+      {/* ── Lightbox del video de Recuperacion: fondo blurred, controles nativos y audio ── */}
+      {dekaOpen && (
+        <Box
+          data-lenis-prevent
+          onClick={() => setDekaOpen(false)}
+          sx={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 30000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "rgba(4, 8, 20, 0.72)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            p: { xs: "16px", md: "40px" },
+          }}
+        >
+          <Box onClick={(e) => e.stopPropagation()} sx={{ position: "relative", lineHeight: 0 }}>
+            <Box
+              component="video"
+              controls
+              autoPlay
+              playsInline
+              sx={{
+                display: "block",
+                maxHeight: { xs: "76vh", md: "82vh" },
+                maxWidth: "92vw",
+                width: "auto",
+                height: "auto",
+                borderRadius: "18px",
+                backgroundColor: "#000",
+                boxShadow: "0 30px 90px rgba(0,0,0,0.55)",
+              }}
+            >
+              <source src="/videos/deka.webm" type="video/webm" />
+              <source src="/videos/deka.mp4" type="video/mp4" />
+            </Box>
+
+            <Box
+              component="button"
+              onClick={() => setDekaOpen(false)}
+              aria-label="Cerrar video"
+              sx={{
+                position: "absolute",
+                top: { xs: "-12px", md: "-16px" },
+                right: { xs: "-8px", md: "-16px" },
+                width: "38px",
+                height: "38px",
+                borderRadius: "50%",
+                border: "1px solid rgba(255,255,255,0.35)",
+                backgroundColor: "rgba(10, 16, 34, 0.85)",
+                backdropFilter: "blur(8px)",
+                WebkitBackdropFilter: "blur(8px)",
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                cursor: "pointer",
+                padding: 0,
+                transition: "transform 0.2s ease, background-color 0.2s ease",
+                "&:hover": {
+                  transform: "scale(1.08)",
+                  backgroundColor: "rgba(20, 30, 58, 0.95)",
+                },
+              }}
+            >
+              <X size={18} />
+            </Box>
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 }

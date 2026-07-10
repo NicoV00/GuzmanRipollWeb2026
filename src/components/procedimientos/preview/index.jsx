@@ -73,9 +73,10 @@ export default function MedicalProcedures() {
     {
       id: "06",
       number: "006",
-      name: "Tratamientos Faciales",
-      image: "/images/image.webp",
-      description: "Regeneración y resurfacing facial sin cirugía, combinando la radiofrecuencia INDIBA con el láser DEKA DuoGlide.",
+      name: "Tratamientos No Invasivos",
+      image: "/images/indiba.webp",
+      imagePosition: "center 88%",
+      description: "Radiofrecuencia INDIBA para tonificar el cuerpo y regenerar la piel del rostro, complementada con el láser DEKA DuoGlide. Sin cirugía y sin downtime.",
       listTitle: "Tecnologías",
       items: [
         "INDIBA",
@@ -285,6 +286,7 @@ export default function MedicalProcedures() {
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
+                  objectPosition: procedure.imagePosition || "center",
                   display: "block",
                   transition: "transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}

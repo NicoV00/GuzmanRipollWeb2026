@@ -43,6 +43,13 @@ const secciones = [
     ],
   },
   {
+    titulo: "Imágenes de resultados de pacientes",
+    parrafos: [
+      "Las fotografías de resultados (antes y después) publicadas en la sección Resultados de este sitio se difunden con el consentimiento informado, expreso y por escrito de cada paciente, otorgado de forma libre y revocable. Las imágenes se publican preservando la identidad de la persona: no incluyen el rostro ni datos que permitan identificarla.",
+      "Cualquier paciente puede revocar su consentimiento en cualquier momento escribiendo a info@guzmanripoll.com, en cuyo caso las imágenes serán retiradas del sitio a la brevedad. Estas fotografías tienen una finalidad exclusivamente informativa sobre los procedimientos realizados y no constituyen una garantía de resultados, que varían según cada paciente.",
+    ],
+  },
+  {
     titulo: "Servicios de terceros",
     parrafos: [
       "Este sitio puede utilizar servicios de terceros para su funcionamiento, como plataformas de mensajería (WhatsApp), herramientas de medición de audiencia y servicios de alojamiento. Estos proveedores procesan datos según sus propias políticas de privacidad y solo en la medida necesaria para prestar el servicio.",

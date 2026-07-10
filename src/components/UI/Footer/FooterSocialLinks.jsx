@@ -40,7 +40,7 @@ export default function FooterSocialLinks() {
 
       {/* LinkedIn Icon */}
       <MuiLink
-        href="https://www.linkedin.com"
+        href="https://www.linkedin.com/in/guzmanripoll/"
         target="_blank"
         rel="noopener noreferrer"
         sx={{

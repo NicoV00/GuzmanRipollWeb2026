@@ -151,7 +151,7 @@ export default function FooterClean() {
                   <InstagramIcon fontSize="small" />
                 </MuiLink>
                 <MuiLink
-                  href="https://www.linkedin.com/"
+                  href="https://www.linkedin.com/in/guzmanripoll/"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{
@@ -163,7 +163,7 @@ export default function FooterClean() {
                   <LinkedInIcon fontSize="small" />
                 </MuiLink>
                 <MuiLink
-                  href="https://www.facebook.com/"
+                  href="https://www.facebook.com/dr.guzmanripoll"
                   target="_blank"
                   rel="noopener noreferrer"
                   sx={{

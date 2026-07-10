@@ -55,8 +55,8 @@ const WhatsAppIcon = ({ size = 18 }) => (
 
 const socials = [
   { href: "https://www.instagram.com/clinicaripoll/", Icon: Instagram, label: "Instagram" },
-  { href: "https://facebook.com/guzmanripoll", Icon: Facebook, label: "Facebook" },
-  { href: "https://linkedin.com", Icon: Linkedin, label: "LinkedIn" },
+  { href: "https://www.facebook.com/dr.guzmanripoll", Icon: Facebook, label: "Facebook" },
+  { href: "https://www.linkedin.com/in/guzmanripoll/", Icon: Linkedin, label: "LinkedIn" },
   { href: "https://wa.me/59899016358", Icon: WhatsAppIcon, label: "WhatsApp" },
 ];
 

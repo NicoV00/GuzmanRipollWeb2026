@@ -6,18 +6,54 @@ import { CarouselItem } from "./carousel-item"
 import Footer from "../UI/Footer.jsx"
 
 const originalItems = [
-  { title: "LIPOASPIRACIÓN", subtitle: "(BodyTite, Morpheus8)" },
-  { title: "MASTOPEXIA EN T", subtitle: "(Cirugía Mamaria)" },
-  { title: "LIPOASPIRACIÓN", subtitle: "(BodyTite)" },
-  { title: "LIPOASPIRACIÓN 2024", subtitle: "(BodyTite)" },
-  { title: "LIPOESCULTURA", subtitle: "(BodyTite)" },
-  { title: "ABDOMINOPLASTIA", subtitle: "(Cirugía Abdominal)" },
-  { title: "REDUCCIÓN MAMARIA", subtitle: "(Cirugía Mamaria)" },
-  { title: "MODELACIÓN CORPORAL", subtitle: "(BodyTite)" },
-  { title: "AUMENTO MAMARIO", subtitle: "(Cirugía Mamaria)" },
-  { title: "MORPHEUS8", subtitle: "(Radiofrecuencia Facial)" },
-  { title: "GINECOMASTIA", subtitle: "(Reducción Mamaria)" },
-  { title: "LIFTING FACIAL", subtitle: "(Rejuvenecimiento)" },
+  {
+    title: "AUMENTO MAMARIO",
+    subtitle: "(Cirugía Mamaria)",
+    antes: "/images/resultados/pares/aumento1-antes.webp",
+    despues: "/images/resultados/pares/aumento1-despues.webp",
+  },
+  {
+    title: "REDUCCIÓN MAMARIA",
+    subtitle: "(Cirugía Mamaria)",
+    antes: "/images/resultados/pares/reduccion1-antes.webp",
+    despues: "/images/resultados/pares/reduccion1-despues.webp",
+  },
+  {
+    title: "LIPOSUCCIÓN",
+    subtitle: "(Contorno Corporal)",
+    antes: "/images/resultados/pares/lipo-antes.webp",
+    despues: "/images/resultados/pares/lipo-despues.webp",
+  },
+  {
+    title: "AUMENTO MAMARIO",
+    subtitle: "(Cirugía Mamaria)",
+    antes: "/images/resultados/pares/aumento3-antes.webp",
+    despues: "/images/resultados/pares/aumento3-despues.webp",
+  },
+  {
+    title: "REDUCCIÓN MAMARIA",
+    subtitle: "(Cirugía Mamaria)",
+    antes: "/images/resultados/pares/reduccion4-antes.webp",
+    despues: "/images/resultados/pares/reduccion4-despues.webp",
+  },
+  {
+    title: "AUMENTO MAMARIO",
+    subtitle: "(Cirugía Mamaria)",
+    antes: "/images/resultados/pares/aumento2-antes.webp",
+    despues: "/images/resultados/pares/aumento2-despues.webp",
+  },
+  {
+    title: "REDUCCIÓN MAMARIA",
+    subtitle: "(Cirugía Mamaria)",
+    antes: "/images/resultados/pares/reduccion3-antes.webp",
+    despues: "/images/resultados/pares/reduccion3-despues.webp",
+  },
+  {
+    title: "REDUCCIÓN MAMARIA",
+    subtitle: "(Cirugía Mamaria)",
+    antes: "/images/resultados/pares/reduccion2-antes.webp",
+    despues: "/images/resultados/pares/reduccion2-despues.webp",
+  },
 ]
 
 export function ResultsCarousel() {
