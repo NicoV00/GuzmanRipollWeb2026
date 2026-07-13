@@ -5,6 +5,7 @@ import { Box, Grid, Typography, IconButton } from "@mui/material"
 import { useLocation } from "react-router-dom"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
+import useSEO from "../hooks/useSEO"
 
 import { BlurText } from "../components/animations/BlurScrollEffect"
 import "../components/animations/blur-scroll-effect.css"
@@ -22,9 +23,15 @@ export default function Clinica({ id }) {
   const imageRef = useRef(null)
   const headlineRef = useRef(null)
 
+  useSEO({
+    title: 'Nuestra Clínica',
+    description: 'Conocé la clínica del Dr. Guzmán Ripoll en Punta del Este, Uruguay. Un espacio diseñado para rehumanizar la medicina estética combinando calidez humana con tecnología de punta.',
+  });
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
+
 
   useEffect(() => {
     if (!heroContainerRef.current || !stickyTextRef.current || !imageRef.current) return;
@@ -228,7 +235,7 @@ export default function Clinica({ id }) {
             position: "relative",
           }}>
             <img
-              src="/images/cloinica.webp"
+              src="/images/grande.webp"
               alt="Clínica Guzmán Ripoll"
               loading="lazy"
               decoding="async"
@@ -236,7 +243,7 @@ export default function Clinica({ id }) {
                 width: "100%",
                 height: "100%",
                 objectFit: "cover",
-                objectPosition: "center 75%",
+                objectPosition: "center center",
                 display: "block",
               }}
             />

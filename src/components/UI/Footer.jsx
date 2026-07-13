@@ -92,7 +92,7 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
   const currentYear = new Date().getFullYear();
 
   return (
-    // Contenedor alineado EXACTO al GridDebugger: maxWidth 1920, px 70, 12 cols, gap 20
+    // Contenedor alineado al sistema global: maxWidth 1920, px 70, 12 cols, gap 20
     <Box sx={{
       maxWidth: "1920px",
       mx: "auto",

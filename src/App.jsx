@@ -44,101 +44,6 @@ const NavButtons = () => (
 );
 
 // 🎛️ GRID DEBUGGER COMPONENT
-function GridDebugger({
-  columns = 12,
-  maxWidth = "1920px",
-  paddingX = "70px",
-  gap = "20px",
-  columnColor = "rgba(239, 68, 68, 0.1)",
-  toggleKey = "g",
-  requireShift = true,
-  zIndex = 9999,
-} = {}) {
-  const [showGrid, setShowGrid] = useState(false);
-  const [isMobile, setIsMobile] = useState(() => {
-    if (typeof window !== "undefined") {
-      return window.matchMedia("(max-width: 767px)").matches;
-    }
-    return false;
-  });
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
-    const checkMobile = (e) => {
-      const matches = e ? e.matches : mediaQuery.matches;
-      setIsMobile(matches);
-    };
-
-    checkMobile();
-    mediaQuery.addEventListener("change", checkMobile);
-    return () => mediaQuery.removeEventListener("change", checkMobile);
-  }, []);
-
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      const keyMatch = e.key.toLowerCase() === toggleKey.toLowerCase();
-      const modifierMatch = requireShift ? e.shiftKey : true;
-
-      if (keyMatch && modifierMatch) {
-        e.preventDefault();
-        setShowGrid((prev) => !prev);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [toggleKey, requireShift, isMobile]);
-
-  if (!showGrid) return null;
-
-  const mobileColumns = 4;
-  const mobilePadding = "20px";
-  const mobileGap = "16px";
-
-  const currentColumns = isMobile ? mobileColumns : columns;
-  const currentPadding = isMobile ? mobilePadding : paddingX;
-  const currentGap = isMobile ? mobileGap : gap;
-  const currentMaxWidth = isMobile ? "100%" : maxWidth;
-
-  const containerStyle = {
-    maxWidth: currentMaxWidth,
-    paddingLeft: currentPadding,
-    paddingRight: currentPadding,
-    gap: currentGap,
-    display: 'grid',
-    gridTemplateColumns: `repeat(${currentColumns}, 1fr)`,
-    zIndex,
-    height: '100%',
-    margin: '0 auto',
-    pointerEvents: 'none'
-  };
-
-  const columnStyle = {
-    height: '100%',
-    width: '100%',
-    backgroundColor: columnColor,
-    border: '1px solid rgba(239, 68, 68, 0.2)'
-  };
-
-  return (
-    <>
-      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex, pointerEvents: 'none' }}>
-        <div style={containerStyle}>
-          {Array.from({ length: currentColumns }).map((_, i) => (
-            <div key={i} style={columnStyle} />
-          ))}
-        </div>
-      </div>
-      <div style={{
-        position: 'fixed', top: '16px', left: '16px', backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        color: 'white', padding: '8px 12px', borderRadius: '4px', fontSize: '14px',
-        fontFamily: 'monospace', zIndex: zIndex + 1, pointerEvents: 'none'
-      }}>
-        Grid: {isMobile ? `${mobileColumns} cols (móvil)` : `${columns} cols (desktop)`}
-      </div>
-    </>
-  );
-}
 
 // 🎯 COMPONENTE PRINCIPAL
 const App = () => {
@@ -248,10 +153,6 @@ function AppShell({ toggleTheme }) {
 
         <ConditionalNavButtons />
 
-        <GridDebugger
-          columns={12} maxWidth="1920px" paddingX="70px" gap="20px"
-          columnColor="rgba(239, 68, 68, 0.1)" toggleKey="g" requireShift={true} zIndex={9999}
-        />
       </Box>
 
       <RouteTransitionOverlay phase={transitionPhase} />

@@ -53,8 +53,8 @@ export default function CTAFinalHome() {
         maxWidth: "1920px",
         mx: "auto",
         px: { xs: "10px", md: "70px" },
-        pb: { xs: "28px", md: "40px" },
-        pt: { xs: "8px", md: "16px" },
+        pb: { xs: "40px", md: "64px" },
+        pt: { xs: "20px", md: "40px" },
       }}
     >
       <Box

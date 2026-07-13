@@ -1,5 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { useState } from "react";
+import useSEO from "../hooks/useSEO";
 import IntroHome from "../components/home/IntroHome";
 import ConoceMasHome from "../components/home/ConoceMasHome";
 import VerMasProcedimientosHome from "../components/home/VerMasProcedimientosHome";
@@ -12,6 +13,36 @@ import Footer from "../components/UI/Footer";
 
 export default function Home({ toggleTheme }) {
   const [isPinned, setIsPinned] = useState(true)
+
+  useSEO({
+    title: 'Cirugía Plástica y Estética en Uruguay',
+    description: 'Sitio oficial del Dr. Guzmán Ripoll, especialista en Cirugía Plástica, Estética y Reconstructiva en Punta del Este, Uruguay. Lipoescultura VASER, Cirugía Mamaria, Abdominoplastia y tratamientos avanzados no invasivos.',
+    structuredData: {
+      "@context": "https://schema.org",
+      "@type": "Physician",
+      "name": "Dr. Guzmán Ripoll",
+      "image": "https://www.guzmanripoll.com/images/GR_9_Isologo.png",
+      "medicalSpecialty": "PlasticSurgery",
+      "telephone": "+59899016358",
+      "email": "info@guzmanripoll.com",
+      "url": "https://www.guzmanripoll.com/",
+      "logo": "https://www.guzmanripoll.com/images/GR_9_Isologo.png",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Punta del Este",
+        "addressLocality": "Punta del Este",
+        "addressRegion": "Maldonado",
+        "postalCode": "20100",
+        "addressCountry": "UY"
+      },
+      "sameAs": [
+        "https://www.instagram.com/clinicaripoll/",
+        "https://www.facebook.com/dr.guzmanripoll",
+        "https://www.linkedin.com/in/guzmanripoll/"
+      ]
+    }
+  });
+
 
   return (
     <Box

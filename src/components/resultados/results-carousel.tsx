@@ -54,6 +54,12 @@ const originalItems = [
     antes: "/images/resultados/pares/reduccion2-antes.webp",
     despues: "/images/resultados/pares/reduccion2-despues.webp",
   },
+  {
+    title: "AUMENTO MAMARIO",
+    subtitle: "(Cirugía Mamaria)",
+    antes: "/images/resultados/pares/aumento4-antes.webp",
+    despues: "/images/resultados/pares/aumento4-despues.webp",
+  },
 ]
 
 export function ResultsCarousel() {

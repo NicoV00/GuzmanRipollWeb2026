@@ -74,8 +74,8 @@ export default function MedicalProcedures() {
       id: "06",
       number: "006",
       name: "Tratamientos No Invasivos",
-      image: "/images/indiba.webp",
-      imagePosition: "center 88%",
+      image: "/images/indibaa.webp",
+      imagePosition: "center 40%",
       description: "Radiofrecuencia INDIBA para tonificar el cuerpo y regenerar la piel del rostro, complementada con el láser DEKA DuoGlide. Sin cirugía y sin downtime.",
       listTitle: "Tecnologías",
       items: [

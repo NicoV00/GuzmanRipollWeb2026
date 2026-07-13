@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { Send } from 'lucide-react';
 import { TurnstileWidget } from './TurnstileWidget.jsx';
+import useSEO from '../../hooks/useSEO.js';
 
 const LABEL = {
   fontFamily: "'Poppins', sans-serif",
@@ -26,6 +27,12 @@ const VALUE = {
 
 export function ContactSection({ id }) {
   const rootRef = useRef(null);
+
+  useSEO({
+    title: 'Contacto y Consultas',
+    description: 'Ponte en contacto con el Dr. Guzmán Ripoll para coordinar una cita o realizar consultas sobre cirugías estéticas y reconstructivas en Punta del Este, Uruguay.',
+  });
+
   const [formData, setFormData] = useState({
     firstName: '',
     email: '',
@@ -263,7 +270,7 @@ export function ContactSection({ id }) {
 
             <div className="contact-image-wrap">
               <img
-                src="/images/cloinica.webp"
+                src="/images/contacto.webp"
                 alt="Clínica Guzmán Ripoll"
                 loading="lazy"
                 decoding="async"
@@ -290,7 +297,7 @@ export function ContactSection({ id }) {
 
         <div data-reveal className="contact-image-wrap contact-image-wrap-mobile">
           <img
-            src="/images/cloinica.webp"
+            src="/images/contacto.webp"
             alt="Clínica Guzmán Ripoll"
             loading="lazy"
             decoding="async"

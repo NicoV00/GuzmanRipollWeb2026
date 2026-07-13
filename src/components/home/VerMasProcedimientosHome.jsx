@@ -29,8 +29,8 @@ const procedures = [
     name: "TRATAMIENTOS NO INVASIVOS",
     to: "/procedimiento/06",
     subtitle: "INDIBA & DEKA DuoGlide",
-    image: "/images/indiba.webp",
-    objectPosition: "center 88%", // encuadre en la cara de la paciente, no en la maquina
+    image: "/images/indibaa.webp",
+    objectPosition: "center 40%", // protagonismo del cabezal INDIBA sobre la piel
     col: { xs: "auto", md: "9 / 13" },
     row: 1,
     height: { xs: "240px", sm: "280px", md: "50%" },

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import Footer from "../components/UI/Footer";
+import useSEO from "../hooks/useSEO";
 
 // Acuerdo mínimo de procesamiento de datos del formulario de contacto
 const secciones = [
@@ -40,9 +41,15 @@ const secciones = [
 ];
 
 export default function ProcesamientoDatos() {
+  useSEO({
+    title: 'Procesamiento de Datos',
+    description: 'Acuerdo de procesamiento de datos personales de la clínica del Dr. Guzmán Ripoll. Información transparente sobre el manejo de consultas y confidencialidad médica conforme a la Ley N° 18.331.',
+  });
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
 
   return (
     <Box sx={{ backgroundColor: "#FAFFFF", minHeight: "100vh" }}>

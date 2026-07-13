@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Box, Typography } from "@mui/material";
 import Footer from "../components/UI/Footer";
+import useSEO from "../hooks/useSEO";
 
 // Contenido básico de privacidad (Ley N° 18.331 de Protección de Datos Personales, Uruguay)
 const secciones = [
@@ -83,9 +84,15 @@ const secciones = [
 ];
 
 export default function PoliticaPrivacidad() {
+  useSEO({
+    title: 'Política de Privacidad',
+    description: 'Política de Privacidad de la clínica del Dr. Guzmán Ripoll. Información sobre el tratamiento de datos personales de conformidad con la Ley N° 18.331 (Uruguay).',
+  });
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
 
   return (
     <Box sx={{ backgroundColor: "#FAFFFF", minHeight: "100vh" }}>

@@ -13,7 +13,7 @@ const cards = [
   {
     title: "Confianza",
     number: "1",
-    image: "/images/confianza.webp",
+    image: "/images/clinic1.png",
     subtitle: "Tu seguridad es nuestra prioridad",
     text: "Nuestra sólida trayectoria y experiencia avalan cada procedimiento. Trabajamos con los más altos estándares de seguridad, brindándote total confianza desde la primera consulta.",
   },
@@ -27,7 +27,7 @@ const cards = [
   {
     title: "Técnologia",
     number: "3",
-    image: "/images/maxi3.webp",
+    image: "/images/confianza.webp",
     subtitle: "Procedimientos de vanguardia",
     text: "Empleamos técnicas de última generación diseñadas a medida para cada paciente. Nuestro enfoque combina precisión técnica con criterio estético para resultados naturales.",
   },
@@ -323,7 +323,7 @@ export default function CTAhome() {
         {cards.map((card, index) => {
           // Gráficas (Crisalix, BodyTite/Morpheus8) van sobre un campo claro;
           // las fotos/video (Confianza, Recuperación) van a sangre completa.
-          const isPlateCard = card.title === "Técnologia" || card.title === "Simulación";
+          const isPlateCard = card.title === "Simulación";
           return (
           <Box
             key={index}
@@ -400,7 +400,7 @@ export default function CTAhome() {
                   borderRadius: "16px",
                   overflow: "hidden",
                   backgroundColor: isPlateCard ? "#F4F5F7" : "transparent",
-                  p: isPlateCard ? { xs: "26px", md: "36px" } : 0,
+                  p: isPlateCard ? { xs: "20px", md: "28px" } : 0,
                   cursor: card.title === "Recuperación" ? "pointer" : "default",
                 }}
                 onClick={card.title === "Recuperación" ? () => setDekaOpen(true) : undefined}
@@ -438,8 +438,8 @@ export default function CTAhome() {
                       pointerEvents: "none",
                     }}
                   >
-                    <source src="/videos/deka.webm" type="video/webm" />
-                    <source src="/videos/deka.mp4" type="video/mp4" />
+                    <source src="/videos/recupera.webm" type="video/webm" />
+                    <source src="/videos/recupera.mp4" type="video/mp4" />
                   </Box>
                 ) : (
                   <Box
@@ -453,8 +453,7 @@ export default function CTAhome() {
                       height: isPlateCard ? "100%" : "100%",
                       maxWidth: "100%",
                       objectFit: isPlateCard ? "contain" : "cover",
-                      // Confianza: encuadre mas abajo para mostrar la parte inferior de la foto
-                      objectPosition: card.title === "Confianza" ? "center 68%" : "center",
+                      objectPosition: card.number === "3" ? "center 38%" : "center",
                     }}
                   />
                 )}
@@ -551,8 +550,8 @@ export default function CTAhome() {
                 boxShadow: "0 30px 90px rgba(0,0,0,0.55)",
               }}
             >
-              <source src="/videos/deka.webm" type="video/webm" />
-              <source src="/videos/deka.mp4" type="video/mp4" />
+              <source src="/videos/recupera.webm" type="video/webm" />
+              <source src="/videos/recupera.mp4" type="video/mp4" />
             </Box>
 
             <Box
