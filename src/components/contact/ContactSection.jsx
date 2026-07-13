@@ -4,6 +4,26 @@ import { Send } from 'lucide-react';
 import { TurnstileWidget } from './TurnstileWidget.jsx';
 import useSEO from '../../hooks/useSEO.js';
 
+// Renderizar solo la variante (desktop o mobile) que corresponde al viewport:
+// evita duplicar el form + widget Turnstile (dos iframes) y reduce el costo
+// de cada re-render a la mitad (mejora INP).
+const MOBILE_QUERY = '(max-width: 1100px)';
+
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia(MOBILE_QUERY).matches : false
+  );
+
+  useEffect(() => {
+    const mql = window.matchMedia(MOBILE_QUERY);
+    const onChange = (e) => setIsMobile(e.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+
+  return isMobile;
+}
+
 const LABEL = {
   fontFamily: "'Poppins', sans-serif",
   fontSize: '18px',
@@ -27,6 +47,7 @@ const VALUE = {
 
 export function ContactSection({ id }) {
   const rootRef = useRef(null);
+  const isMobile = useIsMobile();
 
   useSEO({
     title: 'Contacto y Consultas',
@@ -144,7 +165,7 @@ export function ContactSection({ id }) {
     }, root);
 
     return () => ctx.revert();
-  }, []);
+  }, [isMobile]);
 
   const renderFormCard = (suffix = '', extraClass = '') => (
     <div data-reveal className={`contact-form-wrapper ${extraClass}`}>
@@ -233,6 +254,7 @@ export function ContactSection({ id }) {
   return (
     <section id={id} ref={rootRef} className="contact-section">
       {/* DESKTOP */}
+      {!isMobile && (
       <div className="contact-desktop">
         <div className="contact-left">
           {renderFormCard('')}
@@ -279,8 +301,10 @@ export function ContactSection({ id }) {
           </div>
         </div>
       </div>
+      )}
 
       {/* MOBILE */}
+      {isMobile && (
       <div className="contact-mobile">
         <h2
           className="contact-title contact-title-mobile"
@@ -337,8 +361,14 @@ export function ContactSection({ id }) {
           <a href="#">LinkedIn</a>
         </div>
       </div>
+      )}
 
-      <style>{`
+      <style>{CONTACT_CSS}</style>
+    </section>
+  );
+}
+
+const CONTACT_CSS = `
         .contact-section {
           width: 100%;
           min-height: 100dvh;
@@ -891,7 +921,4 @@ export function ContactSection({ id }) {
             font-size: 13px !important;
           }
         }
-      `}</style>
-    </section>
-  );
-}
+      `;
