@@ -13,7 +13,7 @@ const cards = [
   {
     title: "Confianza",
     number: "1",
-    image: "/images/clinic1.png",
+    image: "/images/clinic1.webp",
     subtitle: "Tu seguridad es nuestra prioridad",
     text: "Nuestra sólida trayectoria y experiencia avalan cada procedimiento. Trabajamos con los más altos estándares de seguridad, brindándote total confianza desde la primera consulta.",
   },
