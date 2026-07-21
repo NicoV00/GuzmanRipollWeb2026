@@ -26,7 +26,7 @@ export async function onRequestPost({ request, env }) {
     return json({ error: 'Solicitud invalida.' }, 400);
   }
 
-  const { firstName, email, phone, message, token } = body;
+  const { firstName, email, phone, message, token, trafficSource } = body;
 
   if (!firstName || !email || !phone || !message || !token) {
     return json({ error: 'Faltan campos obligatorios.' }, 400);
@@ -76,6 +76,7 @@ export async function onRequestPost({ request, env }) {
             message: String(message).trim(),
             createdAt,
             source: 'web',
+            trafficSource: trafficSource ? String(trafficSource).trim().slice(0, 120) : 'directo',
           },
         },
       ],

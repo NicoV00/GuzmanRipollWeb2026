@@ -21,7 +21,7 @@ const procedimientosLinks = [
   { to: "/procedimiento/02", text: "Lipoescultura VASER" },
   { to: "/procedimiento/04", text: "Abdominoplastia" },
   { to: "/procedimiento/01", text: "Aumento Mamario" },
-  { to: "/procedimiento/06", text: "Tratamientos Faciales" },
+  { to: "/procedimiento/06", text: "Tratamientos No Invasivos" },
 ];
 
 const colHeadingStyles = {
@@ -54,7 +54,7 @@ const WhatsAppIcon = ({ size = 18 }) => (
 );
 
 const socials = [
-  { href: "https://www.instagram.com/clinicaripoll/", Icon: Instagram, label: "Instagram" },
+  { href: "https://www.instagram.com/dr.guzmanripoll/", Icon: Instagram, label: "Instagram" },
   { href: "https://www.facebook.com/dr.guzmanripoll", Icon: Facebook, label: "Facebook" },
   { href: "https://www.linkedin.com/in/guzmanripoll/", Icon: Linkedin, label: "LinkedIn" },
   { href: "https://wa.me/59899016358", Icon: WhatsAppIcon, label: "WhatsApp" },

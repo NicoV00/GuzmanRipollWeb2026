@@ -89,13 +89,13 @@ const procedimientosData = {
   "06": {
     number: "06",
     title: "Tratamientos No Invasivos",
-    subtitle: "INDIBA & DEKA DuoGlide",
+    subtitle: "INDIBA, DEKA DuoGlide & Morpheus8",
     category: "Contorno Corporal & Facial",
     imageSrc: "/images/indibaa.webp",
     imagePosition: "center 40%", // protagonismo del cabezal INDIBA sobre la piel
     secondaryImageSrc: "/images/confianza.webp",
-    catchPhrase: "Una piel más luminosa, firme y revitalizada, y un cuerpo más tonificado — sin agujas, sin cirugía y sin tiempo de recuperación.",
-    description: "INDIBA es una radiofrecuencia de 448 kHz que estimula la regeneración celular desde el interior de la piel: más luminosidad, firmeza e hidratación en el rostro, y tonificación del contorno corporal, mejorando flacidez y celulitis. Complementamos con DEKA DuoGlide para la corrección más intensa de la superficie de la piel.",
+    catchPhrase: "Una piel más luminosa, firme y revitalizada, y un cuerpo más tonificado — sin agujas invasivas, sin cirugía y con mínimo tiempo de recuperación.",
+    description: "INDIBA es una radiofrecuencia de 448 kHz que estimula la regeneración celular desde el interior de la piel: más luminosidad, firmeza e hidratación en el rostro, y tonificación del contorno corporal, mejorando flacidez y celulitis. Complementamos con DEKA DuoGlide para la corrección más intensa de la superficie de la piel, y con Morpheus8 para el remodelado profundo del colágeno cuando la flacidez requiere mayor tensado.",
     specs: {
       tipo: "Ambulatorio",
       lugar: "Consultorio",
@@ -112,10 +112,15 @@ const procedimientosData = {
         title: "DUOGlide → Renovar y corregir",
         description: "Combina dos tecnologías en un solo procedimiento: reducción de medidas, mejora de la firmeza y estimulación del colágeno de forma rápida y eficaz.",
         items: ["Resultados visibles y duraderos", "No invasivo, sin tiempo de recuperación", "Ideal para modelar el cuerpo y mejorar la textura de la piel", "Manchas, poros y cicatrices", "Arrugas y resurfacing"]
+      },
+      morpheus: {
+        title: "Morpheus8 → Remodelar y tensar en profundidad",
+        description: "Microagujas de radiofrecuencia fraccionada que remodelan el colágeno en las capas profundas de la piel, indicado cuando la flacidez requiere mayor tensado que el que ofrece la radiofrecuencia de superficie.",
+        items: ["Tensa y remodela la piel en profundidad", "Mejora la flacidez moderada de rostro y cuerpo", "Reduce cicatrices y estrías", "Uniforma la textura de la piel", "Resultados progresivos que continúan mejorando con las semanas", "Downtime mínimo (1 a 3 días de enrojecimiento)"]
       }
     },
-    tecnica: "La radiofrecuencia INDIBA (sistema Proionic de 448 kHz) trabaja desde el interior del tejido: activa el metabolismo celular y la microcirculación para reafirmar la piel y remodelar el contorno corporal de forma progresiva y natural. En rostro se complementa con el láser DEKA DuoGlide para corregir la superficie de la piel. El protocolo se adapta a cada paciente, en sesiones indoloras con sensación de calor agradable.",
-    recuperacion: "Sin tiempo de recuperación: podés retomar tu actividad normal de inmediato. Con DuoGlide puede haber un enrojecimiento leve y transitorio según la intensidad del resurfacing."
+    tecnica: "La radiofrecuencia INDIBA (sistema Proionic de 448 kHz) trabaja desde el interior del tejido: activa el metabolismo celular y la microcirculación para reafirmar la piel y remodelar el contorno corporal de forma progresiva y natural. En rostro se complementa con el láser DEKA DuoGlide para corregir la superficie de la piel, y con Morpheus8 —microagujas que liberan radiofrecuencia fraccionada en profundidad— cuando el objetivo es un mayor tensado y remodelado del colágeno. El protocolo se adapta a cada paciente combinando las tecnologías según su necesidad.",
+    recuperacion: "INDIBA y DuoGlide no requieren downtime, aunque con DuoGlide puede haber un enrojecimiento leve y transitorio según la intensidad del resurfacing. Con Morpheus8 el downtime es mínimo: entre 1 y 3 días de enrojecimiento o sensibilidad leve en la zona tratada."
   }
 }
 
@@ -133,10 +138,13 @@ export default function ProcedimientoDetalle() {
   const { id } = useParams()
   const containerRef = useRef(null)
   const heroImageRef = useRef(null)
+  const leftColumnRef = useRef(null)
+  const secondaryImageWrapRef = useRef(null)
 
   const fallback = procedimientosData[id] || procedimientosData["01"]
   const [procedimiento, setProcedimiento] = useState(fallback)
   const [procedimientos, setProcedimientos] = useState(allProcedures)
+  const [secondaryImageHeight, setSecondaryImageHeight] = useState(null)
 
   useSEO({
     title: procedimiento?.title || 'Procedimiento de Cirugía Estética',
@@ -179,6 +187,35 @@ export default function ProcedimientoDetalle() {
     })
     return () => { active = false }
   }, [])
+
+  // Iguala la altura de la imagen secundaria a la de la columna izquierda (imagen + cards),
+  // asi ambas columnas terminan exactamente en el mismo punto en desktop.
+  useEffect(() => {
+    if (!procedimiento?.secondaryImageSrc) return
+    const leftEl = leftColumnRef.current
+    const imgWrapEl = secondaryImageWrapRef.current
+    if (!leftEl || !imgWrapEl) return
+
+    const syncHeight = () => {
+      if (window.innerWidth < 900) {
+        setSecondaryImageHeight(null)
+        return
+      }
+      const leftBottom = leftEl.getBoundingClientRect().bottom
+      const imgTop = imgWrapEl.getBoundingClientRect().top
+      const height = leftBottom - imgTop
+      if (height > 100) setSecondaryImageHeight(height)
+    }
+
+    syncHeight()
+    const observer = new ResizeObserver(syncHeight)
+    observer.observe(leftEl)
+    window.addEventListener("resize", syncHeight)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener("resize", syncHeight)
+    }
+  }, [procedimiento])
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0)
@@ -330,7 +367,7 @@ export default function ProcedimientoDetalle() {
       }}>
         {/* Left Column: Image (Sticky + Reveal Animation). Si hay comparativa,
             la columna deja de ser sticky y las cards van debajo de la imagen. */}
-        <Box sx={{
+        <Box ref={leftColumnRef} sx={{
           gridColumn: { xs: "1 / -1", md: "1 / 7" },
           position: { md: procedimiento.comparativa ? "static" : "sticky" },
           top: "120px",
@@ -366,15 +403,16 @@ export default function ProcedimientoDetalle() {
             />
           </Box>
 
-          {/* Comparativa INDIBA / DUOGlide debajo de la imagen */}
+          {/* Comparativa de tecnologías (INDIBA / DUOGlide / Morpheus8) debajo de la imagen */}
           {procedimiento.comparativa && (
             <>
-              {[procedimiento.comparativa.indiba, procedimiento.comparativa.duoglide].map((c, i) => (
+              {Object.values(procedimiento.comparativa).map((c, i) => (
                 <Box key={i} sx={{
                   backgroundColor: "#ffffff",
                   borderRadius: "16px",
                   p: { xs: 3, md: 3.5 },
-                  border: "1px solid rgba(0,0,0,0.06)",
+                  border: "1px solid rgba(0,0,0,0.04)",
+                  boxShadow: "0 8px 24px rgba(0,0,0,0.035)",
                 }}>
                   <Typography sx={{
                     fontFamily: "Poppins", fontSize: { xs: "16px", md: "18px" }, fontWeight: 600,
@@ -584,8 +622,12 @@ export default function ProcedimientoDetalle() {
           </Box>
 
           {procedimiento.secondaryImageSrc && (
-            <Box sx={{ width: "100%", borderRadius: "16px", overflow: "hidden" }}>
-              {/* height auto: la imagen es panoramica (2.24:1); con altura fija + cover queda zoomeada/rota */}
+            <Box ref={secondaryImageWrapRef} sx={{
+              width: "100%",
+              borderRadius: "16px",
+              overflow: "hidden",
+              height: secondaryImageHeight ? `${secondaryImageHeight}px` : { xs: "260px", md: "360px" },
+            }}>
               <Box
                 component="img"
                 src={procedimiento.secondaryImageSrc}
@@ -594,7 +636,8 @@ export default function ProcedimientoDetalle() {
                 decoding="async"
                 sx={{
                   width: "100%",
-                  height: "auto",
+                  height: "100%",
+                  objectFit: "cover",
                   display: "block"
                 }}
               />

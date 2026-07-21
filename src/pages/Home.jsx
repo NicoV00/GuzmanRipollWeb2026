@@ -36,7 +36,7 @@ export default function Home({ toggleTheme }) {
         "addressCountry": "UY"
       },
       "sameAs": [
-        "https://www.instagram.com/clinicaripoll/",
+        "https://www.instagram.com/dr.guzmanripoll/",
         "https://www.facebook.com/dr.guzmanripoll",
         "https://www.linkedin.com/in/guzmanripoll/"
       ]

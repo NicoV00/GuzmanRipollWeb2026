@@ -8,7 +8,7 @@ const csvEscape = (value) => {
 };
 
 const toCsv = (rows) => {
-  const headers = ['Fecha', 'Nombre', 'Telefono', 'Email', 'Mensaje', 'Origen'];
+  const headers = ['Fecha', 'Nombre', 'Telefono', 'Email', 'Mensaje', 'Origen', 'De donde vino'];
   const lines = rows.map((row) =>
     [
       row.createdAt,
@@ -17,6 +17,7 @@ const toCsv = (rows) => {
       row.email,
       row.message,
       row.source,
+      row.trafficSource,
     ].map(csvEscape).join(',')
   );
 
@@ -68,7 +69,8 @@ export default async function handler(req, res) {
     phone,
     email,
     message,
-    source
+    source,
+    trafficSource
   }`;
 
   const queryUrl = new URL(`https://${projectId}.api.sanity.io/v${apiVersion}/data/query/${dataset}`);

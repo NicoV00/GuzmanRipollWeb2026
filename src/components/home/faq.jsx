@@ -179,6 +179,8 @@ export default function Faq() {
                 </Box>
                 <IconButton
                   onClick={() => toggleItem(item.id)}
+                  aria-label={expandedItem === item.id ? `Cerrar respuesta: ${item.question}` : `Ver respuesta: ${item.question}`}
+                  aria-expanded={expandedItem === item.id}
                   size="small"
                   sx={{
                     ml: 1,

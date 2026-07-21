@@ -33,7 +33,7 @@ export default async function handler(req, res) {
     return json(res, { error: 'Solicitud invalida.' }, 400);
   }
 
-  const { firstName, email, phone, message, token } = body;
+  const { firstName, email, phone, message, token, trafficSource } = body;
 
   if (!firstName || !email || !phone || !message || !token) {
     return json(res, { error: 'Faltan campos obligatorios.' }, 400);
@@ -83,6 +83,7 @@ export default async function handler(req, res) {
             message: String(message).trim(),
             createdAt,
             source: 'web',
+            trafficSource: trafficSource ? String(trafficSource).trim().slice(0, 120) : 'directo',
           },
         },
       ],

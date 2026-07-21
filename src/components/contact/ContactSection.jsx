@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { Send } from 'lucide-react';
 import { TurnstileWidget } from './TurnstileWidget.jsx';
 import useSEO from '../../hooks/useSEO.js';
+import { getTrafficSource } from '../../utils/trafficSource.js';
 
 // Renderizar solo la variante (desktop o mobile) que corresponde al viewport:
 // evita duplicar el form + widget Turnstile (dos iframes) y reduce el costo
@@ -89,7 +90,7 @@ export function ContactSection({ id }) {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, token }),
+        body: JSON.stringify({ ...formData, token, trafficSource: getTrafficSource() }),
       });
 
       if (!res.ok) {
@@ -356,7 +357,7 @@ export function ContactSection({ id }) {
         </div>
 
         <div data-reveal className="contact-socials contact-socials-mobile">
-          <a href="https://www.instagram.com/clinicaripoll/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://www.instagram.com/dr.guzmanripoll/" target="_blank" rel="noopener noreferrer">Instagram</a>
           <a href="#">Facebook</a>
           <a href="#">LinkedIn</a>
         </div>

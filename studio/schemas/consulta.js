@@ -42,6 +42,12 @@ export default defineType({
       type: 'string',
       readOnly: true,
     }),
+    defineField({
+      name: 'trafficSource',
+      title: 'De donde vino',
+      type: 'string',
+      readOnly: true,
+    }),
   ],
   orderings: [
     { title: 'Mas recientes', name: 'createdAtDesc', by: [{ field: 'createdAt', direction: 'desc' }] },
