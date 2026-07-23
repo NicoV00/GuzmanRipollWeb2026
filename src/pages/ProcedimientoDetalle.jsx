@@ -798,7 +798,7 @@ export default function ProcedimientoDetalle() {
                 textAlign: "left",
                 mb: 4
               }}>
-                Mirá tus resultados <span style={{ color: '#0081C7' }}>antes de la cirugía.</span>
+                Mirá tus resultados<br /><span style={{ color: '#0081C7' }}>antes de la cirugía.</span>
               </Typography>
               <Typography sx={{
                 fontFamily: "Poppins", fontSize: "18px", lineHeight: 1.6, color: "rgba(0,0,0,0.6)", textAlign: "left",
