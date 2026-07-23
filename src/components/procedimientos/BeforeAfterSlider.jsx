@@ -125,7 +125,7 @@ export default function BeforeAfterSlider({
         cursor: "ew-resize",
         userSelect: "none",
         touchAction: "none",
-        backgroundColor: "#e9e6e1",
+        backgroundColor: "#E5E5E7",
         boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
       }}
     >

@@ -39,6 +39,11 @@ const procedimientosData = {
     },
     tecnica: "Es variable según la paciente y las expectativas de la misma. Existen diferentes vías de abordaje (submamario, periareolar), y diferentes planos donde se coloca el implante (retroglandular, submuscular, subfascial, dual plane). Puede asociarse a levantamiento o pexia mamaria de ser necesario. Contamos con tecnología Crisalix para previsualización 3D, permitiéndote ver los posibles resultados antes de la cirugía.",
     recuperacion: "Reposo laboral por 7 días con retorno progresivo a las actividades, pudiendo realizar deporte al mes de la cirugía.",
+    // Mención del protocolo tal cual lo comunica la clínica (sin especificaciones médicas)
+    protocolo: {
+      label: "Protocolo de rápida recuperación",
+      hashtag: "#earlybreastrecoveryexperience",
+    },
     subprocedimientos: [
       { name: "Pexia Mamaria", description: "Levantamiento del tejido mamario descendido." },
       { name: "Reducción Mamaria", description: "Disminución del volumen excesivo para aliviar molestias." },
@@ -530,6 +535,22 @@ export default function ProcedimientoDetalle() {
             }}>
               {procedimiento.recuperacion}
             </Typography>
+            {procedimiento.protocolo && (
+              <Box sx={{ mt: 2.5, pt: 2.5, borderTop: "1px solid rgba(0,0,0,0.08)" }}>
+                <Typography sx={{
+                  fontFamily: "Poppins", fontSize: { xs: "14px", md: "15px" }, fontWeight: 600,
+                  color: "#111", textAlign: "left",
+                }}>
+                  {procedimiento.protocolo.label}
+                </Typography>
+                <Typography sx={{
+                  fontFamily: "Poppins", fontSize: { xs: "11px", md: "12px" }, fontWeight: 600,
+                  color: "#0081C7", letterSpacing: "0.04em", textAlign: "left", mt: 0.5,
+                }}>
+                  {procedimiento.protocolo.hashtag}
+                </Typography>
+              </Box>
+            )}
           </Box>
 
           {/* CTA WhatsApp — consulta directa por este procedimiento */}
@@ -737,7 +758,7 @@ export default function ProcedimientoDetalle() {
                     beforeAlt="Simulación Crisalix: torso antes del aumento mamario"
                     afterAlt="Simulación Crisalix: torso después del aumento mamario"
                     aspectRatio="1 / 1"
-                    fit="contain"
+                    fit="cover"
                   />
                 </Box>
                 <Box sx={{
