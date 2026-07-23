@@ -535,7 +535,7 @@ export default function ProcedimientoDetalle() {
           {/* CTA WhatsApp — consulta directa por este procedimiento */}
           <Box
             component="a"
-            href={`https://wa.me/59899016358?text=${encodeURIComponent(
+            href={`https://wa.me/59892566656?text=${encodeURIComponent(
               `Hola! Quiero hacer una consulta por ${procedimiento.title}.`
             )}`}
             target="_blank"

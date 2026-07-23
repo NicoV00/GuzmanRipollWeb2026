@@ -23,7 +23,7 @@ export default function Home({ toggleTheme }) {
       "name": "Dr. Guzmán Ripoll",
       "image": "https://www.guzmanripoll.com/images/GR_9_Isologo.png",
       "medicalSpecialty": "PlasticSurgery",
-      "telephone": "+59899016358",
+      "telephone": "+59892566656",
       "email": "info@guzmanripoll.com",
       "url": "https://www.guzmanripoll.com/",
       "logo": "https://www.guzmanripoll.com/images/GR_9_Isologo.png",

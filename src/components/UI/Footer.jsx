@@ -57,7 +57,7 @@ const socials = [
   { href: "https://www.instagram.com/dr.guzmanripoll/", Icon: Instagram, label: "Instagram" },
   { href: "https://www.facebook.com/dr.guzmanripoll", Icon: Facebook, label: "Facebook" },
   { href: "https://www.linkedin.com/in/guzmanripoll/", Icon: Linkedin, label: "LinkedIn" },
-  { href: "https://wa.me/59899016358", Icon: WhatsAppIcon, label: "WhatsApp" },
+  { href: "https://wa.me/59892566656", Icon: WhatsAppIcon, label: "WhatsApp" },
 ];
 
 const socialCircleStyles = {
@@ -159,8 +159,8 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
               <MuiLink href="https://maps.google.com/?q=Punta+del+Este,+Uruguay" target="_blank" rel="noopener noreferrer" underline="none" sx={colLinkStyles}>
                 Punta del Este, Uruguay
               </MuiLink>
-              <MuiLink href="tel:+59899016358" underline="none" sx={colLinkStyles}>
-                +598 99 016 358
+              <MuiLink href="tel:+59892566656" underline="none" sx={colLinkStyles}>
+                +598 92 566 656
               </MuiLink>
               <MuiLink href="mailto:info@guzmanripoll.com" underline="none" sx={colLinkStyles}>
                 info@guzmanripoll.com
@@ -202,7 +202,7 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
             color: "#111",
             textAlign: "left",
           }}>
-            Cirugía inteligente, conexión humana.
+            Conexión humana, innovación tecnológica.
           </Typography>
 
           <Box sx={{ display: "flex", gap: "20px", alignItems: "center", flexWrap: "wrap" }}>

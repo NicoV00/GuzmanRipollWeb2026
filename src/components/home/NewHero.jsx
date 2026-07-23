@@ -133,7 +133,7 @@ export default function NewHero() {
               textAlign: "left",
             }}
           >
-            Cirugía mamaria{" "}
+            Conexión{" "}
             <Box
               component="span"
               sx={{
@@ -141,9 +141,8 @@ export default function NewHero() {
                 fontWeight: 500,
               }}
             >
-              inteligente
-            </Box>
-            ,
+              humana
+            </Box>,
           </Typography>
           <Typography
             sx={{
@@ -156,7 +155,7 @@ export default function NewHero() {
               textAlign: "left",
             }}
           >
-            conexión humana
+            innovación tecnológica
           </Typography>
         </Box>
 

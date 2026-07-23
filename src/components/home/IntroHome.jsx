@@ -192,7 +192,7 @@ export default function IntroHome() {
             gap: { xs: '4px', sm: '5px', md: '6px', lg: '7px', xl: '8px' },
           }}
         >
-          Cirugía mamaria{' '}
+          Conexión{' '}
           <Typography
             ref={inteligenteTextRef}
             component="span"
@@ -206,18 +206,7 @@ export default function IntroHome() {
               whiteSpace: 'normal',
             }}
           >
-            inteligente
-          </Typography>
-          <Typography
-            component="span"
-            sx={{
-              fontSize: 'inherit',
-              color: 'textAccent',
-              letterSpacing: 'inherit',
-              fontWeight: 'inherit'
-            }}
-          >
-            ,
+            humana,
           </Typography>
         </Typography>
 
@@ -237,7 +226,7 @@ export default function IntroHome() {
             lineHeight: 1.1,
           }}
         >
-          conexión humana
+          innovación tecnológica
         </Typography>
       </Box>
 

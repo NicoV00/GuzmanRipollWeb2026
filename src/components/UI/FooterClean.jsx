@@ -123,7 +123,7 @@ export default function FooterClean() {
                 info@guzmanripoll.com
               </MuiLink>
               <MuiLink
-                href="tel:+59899016358"
+                href="tel:+59892566656"
                 underline="none"
                 sx={{
                   color: "rgba(255, 255, 255, 0.7)",
@@ -133,7 +133,7 @@ export default function FooterClean() {
                   "&:hover": { color: "#fff" },
                 }}
               >
-                +598 99 016 358
+                +598 92 566 656
               </MuiLink>
 
               {/* Social Icons */}

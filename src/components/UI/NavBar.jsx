@@ -217,8 +217,8 @@ export default function NavBar() {
               <img
                 src={
                   isMobile
-                    ? (isMenuEffectiveOpen ? "/images/GR_9_Isologo.png" : (isDarkBackground ? "/images/GR_9_Isologo_Blanco.png" : "/images/GR_9_Isologo.png"))
-                    : (isDarkBackground ? "/images/GR_6_Iso+Nombre_Blanco.png" : "/images/GR_6_Iso+Nombre.png")
+                    ? (isMenuEffectiveOpen ? "/images/GR_9_Isologo.png" : ((isDarkBackground || isInHero) ? "/images/GR_9_Isologo_Blanco.png" : "/images/GR_9_Isologo.png"))
+                    : ((isDarkBackground || isInHero) ? "/images/GR_6_Iso+Nombre_Blanco.png" : "/images/GR_6_Iso+Nombre.png")
                 }
                 alt="Guzmán Ripoll Logo"
                 style={{
