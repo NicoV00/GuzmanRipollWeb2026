@@ -16,6 +16,92 @@
 const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
+const emailTemplate = (consulta) => {
+  const name = esc(consulta.firstName);
+  const email = esc(consulta.email);
+  const phone = esc(consulta.phone);
+  const message = esc(consulta.message).replace(/\n/g, '<br>');
+  const source = esc(consulta.trafficSource);
+  const replyHref = `mailto:${encodeURIComponent(consulta.email)}?subject=${encodeURIComponent(`Re: Consulta web de ${consulta.firstName}`)}`;
+  const phoneHref = `tel:${String(consulta.phone).replace(/[^\d+]/g, '')}`;
+  const submittedAt = new Intl.DateTimeFormat('es-UY', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'America/Montevideo',
+  }).format(new Date(consulta.createdAt));
+
+  return `<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nueva consulta web</title>
+  </head>
+  <body style="margin:0;padding:0;background:#fafafa;color:#171717;font-family:Geist,Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">Nueva consulta de ${name}: ${email}</div>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;background:#fafafa;">
+      <tr>
+        <td align="center" style="padding:40px 16px;">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;max-width:600px;background:#ffffff;border:1px solid #ebebeb;border-radius:12px;box-shadow:0 1px 1px rgba(0,0,0,.02),0 8px 16px rgba(0,0,0,.04);overflow:hidden;">
+            <tr>
+              <td style="padding:28px 32px;background:#171717;color:#ffffff;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td style="font-size:15px;font-weight:600;letter-spacing:-.2px;">Guzmán Ripoll</td>
+                    <td align="right" style="font-family:'SFMono-Regular',Consolas,'Liberation Mono',monospace;font-size:11px;color:#a1a1a1;">CONSULTAS / WEB</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:32px 32px 24px;">
+                <span style="display:inline-block;padding:5px 9px;border:1px solid #ebebeb;border-radius:999px;background:#fafafa;color:#4d4d4d;font-family:'SFMono-Regular',Consolas,'Liberation Mono',monospace;font-size:11px;line-height:14px;">NUEVA CONSULTA</span>
+                <h1 style="margin:18px 0 8px;font-size:26px;line-height:32px;font-weight:600;letter-spacing:-.8px;color:#171717;">${name} quiere contactarse.</h1>
+                <p style="margin:0;color:#888888;font-size:13px;line-height:20px;">Recibida el ${esc(submittedAt)} · Origen: ${source}</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 32px 24px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse:separate;border-spacing:0;border:1px solid #ebebeb;border-radius:8px;overflow:hidden;">
+                  <tr>
+                    <td style="width:88px;padding:15px 16px;border-bottom:1px solid #ebebeb;background:#fafafa;color:#888888;font-family:'SFMono-Regular',Consolas,'Liberation Mono',monospace;font-size:11px;vertical-align:top;">EMAIL</td>
+                    <td style="padding:15px 16px;border-bottom:1px solid #ebebeb;font-size:14px;line-height:20px;word-break:break-word;"><a href="${replyHref}" style="color:#0070f3;text-decoration:none;">${email}</a></td>
+                  </tr>
+                  <tr>
+                    <td style="width:88px;padding:15px 16px;background:#fafafa;color:#888888;font-family:'SFMono-Regular',Consolas,'Liberation Mono',monospace;font-size:11px;vertical-align:top;">TELÉFONO</td>
+                    <td style="padding:15px 16px;font-size:14px;line-height:20px;"><a href="${phoneHref}" style="color:#171717;text-decoration:none;">${phone}</a></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 32px 28px;">
+                <p style="margin:0 0 8px;color:#888888;font-family:'SFMono-Regular',Consolas,'Liberation Mono',monospace;font-size:11px;line-height:16px;">MENSAJE</p>
+                <div style="padding:20px 22px;border-radius:8px;background:#f5f5f5;color:#171717;font-size:15px;line-height:24px;">${message}</div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:0 32px 32px;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                  <tr>
+                    <td style="border-radius:100px;background:#171717;"><a href="${replyHref}" style="display:inline-block;padding:12px 18px;color:#ffffff;font-size:14px;font-weight:500;line-height:20px;text-decoration:none;">Responder consulta</a></td>
+                    <td style="width:10px;"></td>
+                    <td style="border:1px solid #ebebeb;border-radius:100px;background:#ffffff;"><a href="${phoneHref}" style="display:inline-block;padding:11px 18px;color:#171717;font-size:14px;font-weight:500;line-height:20px;text-decoration:none;">Llamar</a></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:18px 32px;border-top:1px solid #ebebeb;background:#fafafa;color:#888888;font-size:12px;line-height:18px;">Esta consulta también quedó respaldada en Sanity.</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+};
+
 // Envia el aviso por mail via Brevo. Nunca lanza: si falla, la consulta ya quedo en Sanity.
 async function sendNotificationEmail(env, consulta) {
   if (!env.BREVO_API_KEY) {
@@ -42,15 +128,8 @@ async function sendNotificationEmail(env, consulta) {
         to,
         replyTo: { email: consulta.email, name: consulta.firstName },
         subject: `Nueva consulta web: ${consulta.firstName}`,
-        htmlContent: `
-          <h2>Nueva consulta desde guzmanripoll.com</h2>
-          <p><strong>Nombre:</strong> ${esc(consulta.firstName)}</p>
-          <p><strong>Email:</strong> ${esc(consulta.email)}</p>
-          <p><strong>Telefono:</strong> ${esc(consulta.phone)}</p>
-          <p><strong>Mensaje:</strong><br>${esc(consulta.message).replace(/\n/g, '<br>')}</p>
-          <p><strong>Origen:</strong> ${esc(consulta.trafficSource)}</p>
-          <p style="color:#888">Tambien quedo guardada en Sanity (dataset consultas).</p>
-        `,
+        htmlContent: emailTemplate(consulta),
+        textContent: `Nueva consulta web\n\nNombre: ${consulta.firstName}\nEmail: ${consulta.email}\nTeléfono: ${consulta.phone}\nMensaje: ${consulta.message}\nOrigen: ${consulta.trafficSource}\n\nTambién quedó respaldada en Sanity.`,
       }),
     });
     if (!emailRes.ok) {
@@ -152,6 +231,7 @@ export async function onRequestPost({ request, env }) {
     phone: String(phone).trim(),
     message: String(message).trim(),
     trafficSource: trafficSource ? String(trafficSource).trim().slice(0, 120) : 'directo',
+    createdAt,
   });
 
   return json({ ok: true });
