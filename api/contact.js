@@ -19,14 +19,17 @@ const esc = (s) =>
 
 // Envia el aviso por mail via Brevo. Nunca lanza: si falla, la consulta ya quedo en Sanity.
 async function sendNotificationEmail(consulta) {
-  if (!process.env.BREVO_API_KEY) return;
-  const to = (process.env.CONTACT_NOTIFY_TO || 'info@guzmanripoll.com, nicovalles1900@gmail.com')
+  if (!process.env.BREVO_API_KEY) {
+    console.warn('[contact] Consulta guardada en Sanity, pero BREVO_API_KEY no esta configurada.');
+    return false;
+  }
+  const to = (process.env.CONTACT_NOTIFY_TO || 'info@guzmanripoll.com')
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean)
     .map((email) => ({ email }));
   try {
-    await fetch('https://api.brevo.com/v3/smtp/email', {
+    const emailRes = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
         'api-key': process.env.BREVO_API_KEY,
@@ -35,7 +38,7 @@ async function sendNotificationEmail(consulta) {
       body: JSON.stringify({
         sender: {
           name: 'Consultas Web',
-          email: process.env.CONTACT_FROM_EMAIL || 'consultas@guzmanripoll.com',
+          email: process.env.CONTACT_FROM_EMAIL || 'info@guzmanripoll.com',
         },
         to,
         replyTo: { email: consulta.email, name: consulta.firstName },
@@ -51,8 +54,15 @@ async function sendNotificationEmail(consulta) {
         `,
       }),
     });
-  } catch {
-    // el guardado en Sanity ya se hizo; el mail es best-effort
+    if (!emailRes.ok) {
+      const detail = await emailRes.text();
+      console.error(`[contact] Brevo rechazo el aviso (${emailRes.status}): ${detail.slice(0, 500)}`);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error('[contact] No se pudo enviar el aviso por Brevo:', error);
+    return false;
   }
 }
 

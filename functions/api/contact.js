@@ -9,23 +9,26 @@
 //                            un mail de aviso con la consulta (via Brevo, TXT-only DNS,
 //                            compatible con dominios cuyo DNS esta en Wix)
 //   CONTACT_NOTIFY_TO     -> destinatarios separados por coma
-//                            (default: info@guzmanripoll.com, nicovalles1900@gmail.com)
+//                            (default: info@guzmanripoll.com)
 //   CONTACT_FROM_EMAIL    -> remitente del dominio verificado en Brevo
-//                            (default: consultas@guzmanripoll.com)
+//                            (default: info@guzmanripoll.com)
 
 const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 // Envia el aviso por mail via Brevo. Nunca lanza: si falla, la consulta ya quedo en Sanity.
 async function sendNotificationEmail(env, consulta) {
-  if (!env.BREVO_API_KEY) return;
-  const to = (env.CONTACT_NOTIFY_TO || 'info@guzmanripoll.com, nicovalles1900@gmail.com')
+  if (!env.BREVO_API_KEY) {
+    console.warn('[contact] Consulta guardada en Sanity, pero BREVO_API_KEY no esta configurada.');
+    return false;
+  }
+  const to = (env.CONTACT_NOTIFY_TO || 'info@guzmanripoll.com')
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean)
     .map((email) => ({ email }));
   try {
-    await fetch('https://api.brevo.com/v3/smtp/email', {
+    const emailRes = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
         'api-key': env.BREVO_API_KEY,
@@ -34,7 +37,7 @@ async function sendNotificationEmail(env, consulta) {
       body: JSON.stringify({
         sender: {
           name: 'Consultas Web',
-          email: env.CONTACT_FROM_EMAIL || 'consultas@guzmanripoll.com',
+          email: env.CONTACT_FROM_EMAIL || 'info@guzmanripoll.com',
         },
         to,
         replyTo: { email: consulta.email, name: consulta.firstName },
@@ -50,8 +53,15 @@ async function sendNotificationEmail(env, consulta) {
         `,
       }),
     });
-  } catch {
-    // el guardado en Sanity ya se hizo; el mail es best-effort
+    if (!emailRes.ok) {
+      const detail = await emailRes.text();
+      console.error(`[contact] Brevo rechazo el aviso (${emailRes.status}): ${detail.slice(0, 500)}`);
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error('[contact] No se pudo enviar el aviso por Brevo:', error);
+    return false;
   }
 }
 
