@@ -1,7 +1,7 @@
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { Box } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import { ChevronUp, MessageCircle, Sparkles, X } from 'lucide-react';
+import { MessageCircle, Sparkles, X } from 'lucide-react';
 import './ContactFloatingBar.css';
 
 const navItems = [
@@ -153,9 +153,12 @@ export default function ContactFloatingBar() {
         <defs>
           <filter id={`mobile-liquid-glass-${filterId}`} colorInterpolationFilters="sRGB" x="-8%" y="-8%" width="116%" height="116%">
             <feImage href={glassMap} x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="glassMap" />
-            <feDisplacementMap in="SourceGraphic" in2="glassMap" scale="38" xChannelSelector="R" yChannelSelector="G" result="glassGreen" />
-            <feDisplacementMap in="SourceGraphic" in2="glassMap" scale="41" xChannelSelector="R" yChannelSelector="G" result="glassRed" />
-            <feDisplacementMap in="SourceGraphic" in2="glassMap" scale="34" xChannelSelector="R" yChannelSelector="G" result="glassBlue" />
+            {/* scale acotado: por encima de ~16px sobre una barra de 60 el canto
+                se emborrona y deja de leerse como vidrio. La separación R/G/B
+                da la aberración cromática del borde. */}
+            <feDisplacementMap in="SourceGraphic" in2="glassMap" scale="13" xChannelSelector="R" yChannelSelector="G" result="glassGreen" />
+            <feDisplacementMap in="SourceGraphic" in2="glassMap" scale="15" xChannelSelector="R" yChannelSelector="G" result="glassRed" />
+            <feDisplacementMap in="SourceGraphic" in2="glassMap" scale="11" xChannelSelector="R" yChannelSelector="G" result="glassBlue" />
             <feColorMatrix in="glassRed" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="red" />
             <feColorMatrix in="glassGreen" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="green" />
             <feColorMatrix in="glassBlue" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="blue" />
@@ -205,17 +208,6 @@ export default function ContactFloatingBar() {
         </div>
 
         <div className="mobile-glass-expanded" aria-hidden={!isPanelOpen}>
-          <button
-            className="mobile-glass-heading"
-            type="button"
-            onClick={() => setIsPanelOpen(false)}
-            aria-label="Cerrar menu rapido"
-            tabIndex={isPanelOpen ? 0 : -1}
-          >
-            <span>Menu</span>
-            <ChevronUp size={16} strokeWidth={2.2} />
-          </button>
-
           <div className="mobile-glass-list">
             <RouterLink className="mobile-glass-row mobile-glass-row-main" to={primaryLink} tabIndex={isPanelOpen ? 0 : -1}>
               {primaryLabel}

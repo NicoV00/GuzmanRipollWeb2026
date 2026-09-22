@@ -5,9 +5,25 @@
   pointer-events: none;
 }
 
+/* ==========================================================================
+   Liquid Glass · iOS 27 — barra flotante mobile
+   Tres señales ópticas, en este orden de pintado:
+     z0  backdrop + cuerpo (charco de luz inferior)
+     z1  canto OSCURECIDO lateral  (::before, border-only)
+     z2  ESPECULAR vertical        (::after,  border-only, sin blur)
+     z3  contenido
+   `--lg-c` = radio de esquina vigente; de ahí se deriva el reparto del
+   especular, por eso el canto se mantiene proporcional al morphear.
+   ========================================================================== */
 .mobile-glass-nav {
   --glass-ease: cubic-bezier(0.32, 0.72, 0, 1);
   --glass-pop: cubic-bezier(0.23, 1, 0.32, 1);
+  --lg-c: 30px;
+  --lg-edge-w: 1px;
+  --lg-edge-a: 0.5;
+  --lg-spec-w: 1.6px;
+  --lg-spec-a: 0.92;
+
   position: fixed;
   left: 50%;
   bottom: calc(20px + env(safe-area-inset-bottom));
@@ -16,38 +32,42 @@
   height: 60px;
   padding: 7px;
   display: none;
-  overflow: hidden;
   isolation: isolate;
   border-radius: 999px;
-  border: 1px solid rgba(238, 246, 255, 0.32);
+  border: 0;
   color: #fff;
+
+  /* Cuerpo: cáustica inferior + tinte oscuro mínimo (texto blanco legible) */
   background:
-    radial-gradient(130% 90% at 12% 0%, rgba(255, 255, 255, 0.14), transparent 44%),
-    radial-gradient(100% 80% at 70% 110%, rgba(0, 0, 0, 0.2), transparent 58%),
-    linear-gradient(180deg, rgba(45, 52, 68, 0.34), rgba(12, 18, 30, 0.46));
+    radial-gradient(92% 74% at 50% 80%, rgba(255, 255, 255, 0.17), transparent 100%),
+    radial-gradient(130% 92% at 14% -6%, rgba(255, 255, 255, 0.1), transparent 46%),
+    linear-gradient(180deg, rgba(26, 34, 48, 0.26), rgba(10, 16, 28, 0.38));
+
   box-shadow:
-    0 24px 54px rgba(6, 14, 30, 0.24),
-    0 7px 18px rgba(6, 14, 30, 0.16),
-    inset 0 1px 0 rgba(255, 255, 255, 0.54),
-    inset 0 -1px 0 rgba(4, 8, 16, 0.36),
-    inset 10px 0 18px rgba(255, 255, 255, 0.035),
-    inset -12px 0 22px rgba(0, 8, 20, 0.18);
-  backdrop-filter: var(--mobile-glass-filter) blur(9px) saturate(162%) contrast(1.2) brightness(0.84);
-  -webkit-backdrop-filter: var(--mobile-glass-filter) blur(9px) saturate(162%) contrast(1.2) brightness(0.84);
+    0 22px 48px rgba(6, 14, 30, 0.26),
+    0 6px 16px rgba(6, 14, 30, 0.16),
+    inset 0 3px 4px -1px rgba(255, 255, 255, 0.34),
+    inset 0 -4px 7px -1px rgba(255, 255, 255, 0.22);
+
+  backdrop-filter: var(--mobile-glass-filter) blur(11px) saturate(178%) contrast(1.06) brightness(0.96);
+  -webkit-backdrop-filter: var(--mobile-glass-filter) blur(11px) saturate(178%) contrast(1.06) brightness(0.96);
+
   opacity: 0;
   pointer-events: none;
-  transform: translate3d(-50%, calc(100% + 42px), 0) scale(0.985);
-  transform-origin: 50% 100%;
+  transform: translate3d(-50%, calc(100% + 42px), 0) scale(0.94);
+  transform-origin: 50% 120%;
   transition:
-    width 360ms var(--glass-ease),
-    height 360ms var(--glass-ease),
-    border-radius 360ms var(--glass-ease),
-    padding 360ms var(--glass-ease),
+    width 460ms var(--glass-ease),
+    height 460ms var(--glass-ease),
+    border-radius 460ms var(--glass-ease),
+    padding 460ms var(--glass-ease),
     opacity 220ms ease-out,
-    transform 430ms var(--glass-ease),
-    box-shadow 360ms var(--glass-pop),
-    background 360ms var(--glass-pop);
+    transform 560ms var(--glass-ease),
+    box-shadow 460ms var(--glass-pop),
+    background 460ms var(--glass-pop);
   will-change: transform, opacity, width, height, border-radius;
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 .mobile-glass-nav[data-visible="true"] {
@@ -57,70 +77,95 @@
 }
 
 .mobile-glass-nav[data-open="true"] {
+  --lg-c: 26px;
   width: min(368px, calc(100vw - 32px));
-  height: 252px;
+  /* 18 (padding) + 158 (4 filas de 38 + gaps + padding) + 38 (acciones) + 8 */
+  height: 222px;
   padding: 9px;
   border-radius: 26px;
   background:
-    radial-gradient(120% 72% at 12% 0%, rgba(255, 255, 255, 0.18), transparent 43%),
-    radial-gradient(120% 90% at 70% 112%, rgba(0, 0, 0, 0.28), transparent 62%),
-    linear-gradient(180deg, rgba(55, 61, 76, 0.4), rgba(9, 13, 22, 0.54));
+    radial-gradient(92% 40% at 50% 104%, rgba(255, 255, 255, 0.16), transparent 100%),
+    radial-gradient(120% 74% at 14% -4%, rgba(255, 255, 255, 0.12), transparent 44%),
+    linear-gradient(180deg, rgba(30, 38, 54, 0.32), rgba(8, 13, 24, 0.46));
   box-shadow:
-    0 26px 64px rgba(5, 13, 30, 0.28),
-    0 8px 22px rgba(5, 13, 30, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.56),
-    inset 0 -1px 0 rgba(4, 8, 16, 0.42),
-    inset 14px 0 24px rgba(255, 255, 255, 0.035),
-    inset -16px 0 26px rgba(0, 8, 20, 0.22);
+    0 26px 62px rgba(5, 13, 30, 0.3),
+    0 8px 20px rgba(5, 13, 30, 0.18),
+    inset 0 3px 5px -1px rgba(255, 255, 255, 0.32),
+    inset 0 -5px 9px -1px rgba(255, 255, 255, 0.2);
+  backdrop-filter: var(--mobile-glass-filter) blur(13px) saturate(182%) contrast(1.08) brightness(0.94);
+  -webkit-backdrop-filter: var(--mobile-glass-filter) blur(13px) saturate(182%) contrast(1.08) brightness(0.94);
 }
 
-.mobile-glass-nav[data-open="true"] {
-  backdrop-filter: var(--mobile-glass-filter) blur(8px) saturate(166%) contrast(1.22) brightness(0.82);
-  -webkit-backdrop-filter: var(--mobile-glass-filter) blur(8px) saturate(166%) contrast(1.22) brightness(0.82);
-}
-
+/* --- Los dos aros: border-only con mask-composite (nada de washes) ------- */
 .mobile-glass-nav::before,
 .mobile-glass-nav::after,
-.mobile-glass-rim {
+.mobile-glass-primary::before,
+.mobile-glass-primary::after,
+.mobile-glass-icon::before,
+.mobile-glass-icon::after {
   content: "";
   position: absolute;
-  inset: 0;
   border-radius: inherit;
   pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
 }
 
+/* Canto OSCURECIDO — máximo donde la normal es horizontal (izquierda/derecha) */
 .mobile-glass-nav::before {
-  z-index: -1;
-  background:
-    linear-gradient(115deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.04) 30%, transparent 54%),
-    radial-gradient(90% 42% at 50% -10%, rgba(255, 255, 255, 0.24), transparent 64%);
-  opacity: 0.78;
+  z-index: 1;
+  inset: 0;
+  padding: var(--lg-edge-w);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, var(--lg-edge-a)) 0,
+    rgba(0, 0, 0, 0) var(--lg-c),
+    rgba(0, 0, 0, 0) calc(100% - var(--lg-c)),
+    rgba(0, 0, 0, var(--lg-edge-a)) 100%
+  );
 }
 
+/* ESPECULAR — máximo donde la normal es vertical (arriba/abajo). Sin blur. */
 .mobile-glass-nav::after {
-  z-index: -1;
-  inset: 1px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow:
-    inset 0 0 22px rgba(255, 255, 255, 0.055),
-    inset 0 0 2px rgba(255, 255, 255, 0.48);
-  mix-blend-mode: screen;
+  z-index: 2;
+  inset: var(--lg-edge-w);
+  padding: var(--lg-spec-w);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, var(--lg-spec-a)) 0,
+    rgba(255, 255, 255, var(--lg-spec-a)) calc(var(--lg-c) * 0.1),
+    rgba(255, 255, 255, calc(var(--lg-spec-a) * 0.6)) calc(var(--lg-c) * 0.35),
+    rgba(255, 255, 255, calc(var(--lg-spec-a) * 0.26)) calc(var(--lg-c) * 0.5),
+    rgba(255, 255, 255, 0) calc(var(--lg-c) * 0.72),
+    rgba(255, 255, 255, 0) calc(100% - var(--lg-c) * 0.72),
+    rgba(255, 255, 255, calc(var(--lg-spec-a) * 0.26)) calc(100% - var(--lg-c) * 0.5),
+    rgba(255, 255, 255, calc(var(--lg-spec-a) * 0.6)) calc(100% - var(--lg-c) * 0.35),
+    rgba(255, 255, 255, var(--lg-spec-a)) calc(100% - var(--lg-c) * 0.1),
+    rgba(255, 255, 255, var(--lg-spec-a)) 100%
+  );
 }
 
+/* Refracción interior del canto: comprime el fondo justo dentro del borde */
 .mobile-glass-rim {
-  z-index: -1;
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
   background:
-    linear-gradient(90deg, rgba(255, 255, 255, 0.68), transparent 10%, transparent 88%, rgba(255, 255, 255, 0.34)),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.62), transparent 16%, transparent 76%, rgba(0, 0, 0, 0.32));
-  opacity: 0.5;
-  filter: blur(0.12px);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 22%, transparent 74%, rgba(255, 255, 255, 0.12)),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.16), transparent 9%, transparent 91%, rgba(0, 0, 0, 0.16));
+  opacity: 0.9;
 }
 
 .mobile-glass-compact,
 .mobile-glass-expanded {
   position: absolute;
   inset: 7px;
-  z-index: 1;
+  z-index: 3;
 }
 
 .mobile-glass-compact {
@@ -132,44 +177,82 @@
   filter: blur(0);
   transition:
     opacity 150ms ease-out,
-    transform 230ms var(--glass-pop),
+    transform 300ms var(--glass-pop),
     filter 180ms ease-out;
 }
 
 .mobile-glass-nav[data-open="true"] .mobile-glass-compact {
   opacity: 0;
   pointer-events: none;
-  transform: translate3d(0, -7px, 0) scale(0.97);
-  filter: blur(5px);
+  transform: translate3d(0, -8px, 0) scale(0.94);
+  filter: blur(6px);
 }
 
 .mobile-glass-primary,
 .mobile-glass-icon,
-.mobile-glass-heading,
 .mobile-glass-row,
 .mobile-glass-actions a,
 .mobile-glass-actions button {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* --- Píldoras internas: mismo material, --lg-c propio (46/2 = 23px) ------ */
 .mobile-glass-primary,
 .mobile-glass-icon {
+  --lg-c: 23px;
+  --lg-edge-a: 0.34;
+  --lg-spec-a: 0.8;
+  --lg-spec-w: 1.2px;
+  position: relative;
+  isolation: isolate;
   min-height: 46px;
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  border: 0;
   color: #fff;
   text-decoration: none;
   background:
-    radial-gradient(120% 120% at 20% 0%, rgba(255, 255, 255, 0.16), transparent 48%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.11), rgba(0, 0, 0, 0.08));
+    radial-gradient(92% 76% at 50% 82%, rgba(255, 255, 255, 0.16), transparent 100%),
+    rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(4px) saturate(140%);
+  -webkit-backdrop-filter: blur(4px) saturate(140%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.34),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.24),
-    0 5px 14px rgba(4, 12, 28, 0.2);
+    inset 0 2px 3px -1px rgba(255, 255, 255, 0.3),
+    inset 0 -3px 5px -1px rgba(255, 255, 255, 0.18),
+    0 4px 12px rgba(4, 12, 28, 0.22);
   transition:
-    transform 150ms var(--glass-pop),
+    transform 200ms var(--glass-pop),
     background 220ms ease-out,
-    border-color 220ms ease-out;
+    box-shadow 220ms ease-out;
+}
+
+.mobile-glass-primary::before,
+.mobile-glass-icon::before {
+  z-index: 1;
+  inset: 0;
+  padding: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, var(--lg-edge-a)) 0,
+    rgba(0, 0, 0, 0) var(--lg-c),
+    rgba(0, 0, 0, 0) calc(100% - var(--lg-c)),
+    rgba(0, 0, 0, var(--lg-edge-a)) 100%
+  );
+}
+
+.mobile-glass-primary::after,
+.mobile-glass-icon::after {
+  z-index: 2;
+  inset: 1px;
+  padding: var(--lg-spec-w);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, var(--lg-spec-a)) 0,
+    rgba(255, 255, 255, calc(var(--lg-spec-a) * 0.6)) calc(var(--lg-c) * 0.35),
+    rgba(255, 255, 255, 0) calc(var(--lg-c) * 0.72),
+    rgba(255, 255, 255, 0) calc(100% - var(--lg-c) * 0.72),
+    rgba(255, 255, 255, calc(var(--lg-spec-a) * 0.6)) calc(100% - var(--lg-c) * 0.35),
+    rgba(255, 255, 255, var(--lg-spec-a)) 100%
+  );
 }
 
 .mobile-glass-primary {
@@ -177,6 +260,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  height: 46px;
+  align-self: center;
   padding: 0 20px;
   font-family: "Poppins", sans-serif;
   font-size: 13px;
@@ -184,12 +269,19 @@
   line-height: 1;
   letter-spacing: -0.01em;
   white-space: nowrap;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.38);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.42);
+  z-index: 0;
 }
 
+/* Círculo exacto: alto fijo + aspect-ratio, sin depender de la línea flex.
+   50% en vez de 999px para que el radio siga el box aunque cambie de tamaño. */
 .mobile-glass-icon {
   flex: 0 0 46px;
   width: 46px;
+  height: 46px;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  align-self: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -197,9 +289,15 @@
   cursor: pointer;
 }
 
+.mobile-glass-icon svg,
+.mobile-glass-primary > * {
+  position: relative;
+  z-index: 3;
+}
+
 .mobile-glass-icon svg {
   color: #fff;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.38));
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
 }
 
 .mobile-glass-toggle {
@@ -207,8 +305,16 @@
   font: inherit;
 }
 
+/* Morph de presión: se hunde el domo además de escalar */
 .mobile-glass-primary:active,
-.mobile-glass-icon:active,
+.mobile-glass-icon:active {
+  transform: scale(0.955);
+  box-shadow:
+    inset 0 1px 2px -1px rgba(255, 255, 255, 0.18),
+    inset 0 -2px 4px -1px rgba(255, 255, 255, 0.1),
+    0 2px 6px rgba(4, 12, 28, 0.2);
+}
+
 .mobile-glass-row:active,
 .mobile-glass-actions a:active,
 .mobile-glass-actions button:active {
@@ -221,11 +327,11 @@
   flex-direction: column;
   opacity: 0;
   pointer-events: none;
-  transform: translate3d(0, 12px, 0) scale(0.975);
-  filter: blur(7px);
+  transform: translate3d(0, 14px, 0) scale(0.96);
+  filter: blur(8px);
   transition:
     opacity 180ms ease-out,
-    transform 260ms var(--glass-pop),
+    transform 320ms var(--glass-pop),
     filter 210ms ease-out;
 }
 
@@ -234,35 +340,13 @@
   pointer-events: auto;
   transform: translate3d(0, 0, 0) scale(1);
   filter: blur(0);
-  transition-delay: 80ms;
-}
-
-.mobile-glass-heading {
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 15px 0 18px;
-  border: 0;
-  border-radius: 18px;
-  color: #fff;
-  background:
-    radial-gradient(120% 100% at 10% 0%, rgba(255, 255, 255, 0.15), transparent 50%),
-    rgba(0, 0, 0, 0.08);
-  font-family: "Poppins", sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1;
-  text-align: left;
-  cursor: pointer;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.34);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.26);
+  transition-delay: 90ms;
 }
 
 .mobile-glass-list {
   display: grid;
   gap: 2px;
-  padding: 7px 3px 3px;
+  padding: 3px 3px 3px;
 }
 
 .mobile-glass-row {
@@ -281,22 +365,22 @@
   text-align: left;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.42);
   opacity: 0;
-  transform: translate3d(0, 10px, 0);
+  transform: translate3d(0, 12px, 0) scale(0.97);
   transition:
     opacity 180ms ease-out,
-    transform 260ms var(--glass-pop),
+    transform 300ms var(--glass-pop),
     background 180ms ease-out;
-  transition-delay: calc(110ms + (var(--item-index, 0) * 38ms));
+  transition-delay: calc(120ms + (var(--item-index, 0) * 42ms));
 }
 
 .mobile-glass-row-main {
   background: rgba(255, 255, 255, 0.075);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.13);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
 }
 
 .mobile-glass-nav[data-open="true"] .mobile-glass-row {
   opacity: 1;
-  transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 .mobile-glass-row:hover,
@@ -311,20 +395,97 @@
   align-items: center;
   gap: 8px;
   padding: 0 3px;
+  flex: 0 0 auto;
 }
 
+/* WhatsApp + cerrar: mismo vidrio que las píldoras, --lg-c = radio real (14px) */
 .mobile-glass-actions a,
 .mobile-glass-actions button {
+  --lg-c: 14px;
+  --lg-edge-a: 0.34;
+  --lg-spec-a: 0.85;
+  --lg-spec-w: 1.2px;
+  position: relative;
+  isolation: isolate;
   height: 38px;
   border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 0;
   color: #fff;
-  background: rgba(0, 0, 0, 0.08);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  background:
+    radial-gradient(94% 78% at 50% 84%, rgba(255, 255, 255, 0.15), transparent 100%),
+    rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(4px) saturate(140%);
+  -webkit-backdrop-filter: blur(4px) saturate(140%);
+  box-shadow:
+    inset 0 2px 3px -1px rgba(255, 255, 255, 0.3),
+    inset 0 -3px 5px -1px rgba(255, 255, 255, 0.18),
+    0 3px 10px rgba(4, 12, 28, 0.2);
   text-decoration: none;
   transition:
-    transform 150ms var(--glass-pop),
-    background 180ms ease-out;
+    transform 200ms var(--glass-pop),
+    background 180ms ease-out,
+    box-shadow 200ms ease-out;
+}
+
+.mobile-glass-actions a::before,
+.mobile-glass-actions a::after,
+.mobile-glass-actions button::before,
+.mobile-glass-actions button::after {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+/* Canto oscurecido lateral */
+.mobile-glass-actions a::before,
+.mobile-glass-actions button::before {
+  z-index: 1;
+  inset: 0;
+  padding: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, var(--lg-edge-a)) 0,
+    rgba(0, 0, 0, 0) var(--lg-c),
+    rgba(0, 0, 0, 0) calc(100% - var(--lg-c)),
+    rgba(0, 0, 0, var(--lg-edge-a)) 100%
+  );
+}
+
+/* Especular vertical ultra sharp */
+.mobile-glass-actions a::after,
+.mobile-glass-actions button::after {
+  z-index: 2;
+  inset: 1px;
+  padding: var(--lg-spec-w);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, var(--lg-spec-a)) 0,
+    rgba(255, 255, 255, calc(var(--lg-spec-a) * 0.6)) calc(var(--lg-c) * 0.35),
+    rgba(255, 255, 255, 0) calc(var(--lg-c) * 0.72),
+    rgba(255, 255, 255, 0) calc(100% - var(--lg-c) * 0.72),
+    rgba(255, 255, 255, calc(var(--lg-spec-a) * 0.6)) calc(100% - var(--lg-c) * 0.35),
+    rgba(255, 255, 255, var(--lg-spec-a)) 100%
+  );
+}
+
+.mobile-glass-actions a > *,
+.mobile-glass-actions button > * {
+  position: relative;
+  z-index: 3;
+}
+
+.mobile-glass-actions a:active,
+.mobile-glass-actions button:active {
+  box-shadow:
+    inset 0 1px 2px -1px rgba(255, 255, 255, 0.18),
+    inset 0 -2px 4px -1px rgba(255, 255, 255, 0.1),
+    0 2px 5px rgba(4, 12, 28, 0.18);
 }
 
 .mobile-glass-actions a {
@@ -347,6 +508,15 @@
   cursor: pointer;
 }
 
+.mobile-glass-primary:focus-visible,
+.mobile-glass-icon:focus-visible,
+.mobile-glass-row:focus-visible,
+.mobile-glass-actions a:focus-visible,
+.mobile-glass-actions button:focus-visible {
+  outline: 2px solid #0a84ff;
+  outline-offset: 2px;
+}
+
 @media (max-width: 1199px) {
   .mobile-glass-nav {
     display: block;
@@ -365,6 +535,21 @@
   .mobile-glass-primary {
     padding: 0 15px;
     font-size: 12.5px;
+  }
+}
+
+/* Canto más marcado en pantallas de alta densidad (evita el medio píxel gris) */
+@media (min-resolution: 2dppx) {
+  .mobile-glass-nav {
+    --lg-edge-w: 0.75px;
+    --lg-spec-w: 1.25px;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .mobile-glass-nav {
+    --lg-edge-a: 0.72;
+    --lg-spec-a: 1;
   }
 }
 

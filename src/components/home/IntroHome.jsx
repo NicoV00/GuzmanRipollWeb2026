@@ -175,7 +175,7 @@ export default function IntroHome() {
           fontFamily={'Poppins'}
           sx={{
             fontSize: {
-              xs: 'clamp(38px, 10vw, 44px)',
+              xs: 'clamp(24px, 8vw, 31px)',
               sm: 'clamp(40px, 7vw, 50px)',
               md: 'clamp(48px, 6vw, 60px)',
               lg: 'clamp(55px, 5vw, 65px)',
@@ -214,7 +214,7 @@ export default function IntroHome() {
           fontFamily={'Poppins'}
           sx={{
             fontSize: {
-              xs: 'clamp(38px, 10vw, 44px)',
+              xs: 'clamp(24px, 8vw, 31px)',
               sm: 'clamp(40px, 7vw, 50px)',
               md: 'clamp(48px, 6vw, 60px)',
               lg: 'clamp(55px, 5vw, 65px)',
