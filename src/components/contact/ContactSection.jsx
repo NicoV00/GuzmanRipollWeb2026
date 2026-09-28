@@ -536,6 +536,7 @@ const CONTACT_CSS = `
           height: calc(100% - 70px);
           margin-top: 70px;  /* Baja la imagen */
           overflow: hidden;
+          border-radius: 4px;
           background: #bdbdb9;
           align-self: stretch;
         }

@@ -105,7 +105,8 @@ export default function Clinica({ id }) {
       <Box sx={{
         width: "100%",
         maxWidth: "100vw",
-        overflowX: "hidden",
+        // Clip horizontal overflow without creating a nested vertical scroller.
+        overflowX: "clip",
         zIndex: 0,
       }}>
 

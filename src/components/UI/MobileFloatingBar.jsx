@@ -3,6 +3,109 @@ import { Box } from '@mui/material';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
+/* ──────────────────────────────────────────────────────────────────────────
+   Liquid Glass · iOS 27 — Tier 1 (CSS puro, cross-browser)
+   Tres señales ópticas: especular vertical (arriba/abajo), canto oscurecido
+   horizontal (izq/der) y difusión del backdrop. Todo derivado de --lg-ref,
+   que SIEMPRE es la dimensión MENOR del elemento.
+   ────────────────────────────────────────────────────────────────────────── */
+const SPRING = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
+function liquidGlass({
+  ref,                 // px — dimensión menor real del elemento
+  corner = ref / 2,    // px — radio (píldora = alto/2)
+  blur = ref * 0.09,
+  saturate = 1.8,
+  brightness = 1.04,
+  edgeA = 0.45,        // canto oscuro lateral
+  specA = 1,           // especular arriba/abajo
+  specW = ref * 0.032,
+  glowTop = 0.55,
+  glowBottom = 0.45,
+  pool = 0.2,          // charco de luz inferior (cáustica)
+  tint = 0.04,
+  shadow = true,
+  body,                // background alternativo (píldora de color)
+} = {}) {
+  const edgeW = `max(.5px, ${(ref * 0.014).toFixed(2)}px)`;
+  const c = `calc(${corner}px - ${edgeW})`;
+  const bd = `blur(${blur.toFixed(2)}px) saturate(${saturate}) brightness(${brightness})`;
+
+  return {
+    position: 'relative',
+    isolation: 'isolate',
+    boxSizing: 'border-box',
+    border: 0,
+    borderRadius: `${corner}px`,
+
+    background:
+      body ||
+      `radial-gradient(90% 70% at 50% 78%, rgb(255 255 255 / ${pool}), rgb(255 255 255 / 0) 100%), rgb(255 255 255 / ${tint})`,
+
+    backdropFilter: bd,
+    WebkitBackdropFilter: bd,
+
+    boxShadow: [
+      ...(shadow
+        ? [
+            `0 ${(ref * 0.13).toFixed(1)}px ${(ref * 0.34).toFixed(1)}px rgb(0 0 0 / .13)`,
+            `0 ${(ref * 0.03).toFixed(1)}px ${(ref * 0.12).toFixed(1)}px rgb(0 0 0 / .07)`,
+          ]
+        : []),
+      `inset 0 ${(ref * 0.05).toFixed(2)}px ${(ref * 0.07).toFixed(2)}px ${(ref * -0.02).toFixed(2)}px rgb(255 255 255 / ${glowTop})`,
+      `inset 0 ${(ref * -0.06).toFixed(2)}px ${(ref * 0.1).toFixed(2)}px ${(ref * -0.02).toFixed(2)}px rgb(255 255 255 / ${glowBottom})`,
+    ].join(', '),
+
+    // Aros border-only (mask-composite): pintamos y recortamos el interior.
+    '&::before, &::after': {
+      content: '""',
+      position: 'absolute',
+      borderRadius: 'inherit',
+      pointerEvents: 'none',
+      zIndex: 0,
+      WebkitMask: 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
+      WebkitMaskComposite: 'xor',
+      mask: 'linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0)',
+    },
+    // Canto OSCURECIDO — máximo donde la normal es horizontal (los lados)
+    '&::before': {
+      inset: 0,
+      padding: edgeW,
+      background: `linear-gradient(90deg, rgb(0 0 0 / ${edgeA}) 0, rgb(0 0 0 / 0) ${corner}px, rgb(0 0 0 / 0) calc(100% - ${corner}px), rgb(0 0 0 / ${edgeA}) 100%)`,
+    },
+    // ESPECULAR — máximo donde la normal es vertical (arriba y abajo)
+    '&::after': {
+      inset: edgeW,
+      padding: `${specW.toFixed(2)}px`,
+      background: `linear-gradient(180deg,
+        rgb(255 255 255 / ${specA}) 0,
+        rgb(255 255 255 / ${specA}) calc(${c} * .10),
+        rgb(255 255 255 / ${specA * 0.6}) calc(${c} * .35),
+        rgb(255 255 255 / ${specA * 0.26}) calc(${c} * .50),
+        rgb(255 255 255 / 0) calc(${c} * .70),
+        rgb(255 255 255 / 0) calc(100% - ${c} * .70),
+        rgb(255 255 255 / ${specA * 0.26}) calc(100% - ${c} * .50),
+        rgb(255 255 255 / ${specA * 0.6}) calc(100% - ${c} * .35),
+        rgb(255 255 255 / ${specA}) calc(100% - ${c} * .10),
+        rgb(255 255 255 / ${specA}) 100%)`,
+      // canto ultra sharp: apenas un sub-píxel de difusión
+      filter: `blur(${Math.max(0.15, ref * 0.004).toFixed(2)}px)`,
+    },
+
+    // El contenido siempre por encima de los aros
+    '& > *': { position: 'relative', zIndex: 1 },
+
+    '@media (prefers-reduced-transparency: reduce)': {
+      backdropFilter: 'none',
+      WebkitBackdropFilter: 'none',
+      background: 'rgb(245 245 247 / .96)',
+    },
+  };
+}
+
+const BAR_H = 60;
+const PILL_H = 44;
+
 export default function MobileFloatingBar() {
   const location = useLocation();
   const [isVisible, setIsVisible] = useState(false);
@@ -10,7 +113,6 @@ export default function MobileFloatingBar() {
 
   // Detectar en qué página estamos
   const isHome = location.pathname === '/' || location.pathname === '/inicio';
-  const isProcedimientos = location.pathname.startsWith('/procedimientos') || location.pathname.startsWith('/procedimiento');
   const isContacto = location.pathname === '/contacto';
 
   useEffect(() => {
@@ -24,23 +126,15 @@ export default function MobileFloatingBar() {
         if (procedimientosSection) {
           const rect = procedimientosSection.getBoundingClientRect();
           const windowHeight = window.innerHeight;
-
-          // Mostrar solo cuando la sección de procedimientos está visible
-          // Consideramos que está visible cuando al menos el 10% de la sección está en pantalla
-          // Y nos aseguramos de no mostrarlo si estamos muy arriba (en el Hero)
           const visibilityThreshold = windowHeight * 0.1;
 
-          if (rect.top < windowHeight - visibilityThreshold && rect.bottom > visibilityThreshold) {
-            setIsVisible(true);
-          } else {
-            setIsVisible(false);
-          }
-          return; // Salir temprano para Home
-        } else {
-          // Si no encuentra la sección, no mostrar en Home
-          setIsVisible(false);
+          setIsVisible(
+            rect.top < windowHeight - visibilityThreshold && rect.bottom > visibilityThreshold
+          );
           return;
         }
+        setIsVisible(false);
+        return;
       }
 
       // Para otras páginas (incluido Procedimientos)
@@ -48,132 +142,128 @@ export default function MobileFloatingBar() {
         const footerRect = footerElement.getBoundingClientRect();
         const windowHeight = window.innerHeight;
 
-        // Ocultar cuando el footer es visible
         if (footerRect.top < windowHeight) {
           setIsVisible(false);
         } else {
-          // Mostrar/ocultar basado en dirección del scroll
-          if (currentScrollY > lastScrollY && currentScrollY > 100) {
-            // Scrolling down - ocultar
-            setIsVisible(false);
-          } else {
-            // Scrolling up - mostrar
-            setIsVisible(true);
-          }
+          setIsVisible(!(currentScrollY > lastScrollY && currentScrollY > 100));
         }
       } else {
-        // Para páginas sin footer (landing de procedimientos, etc)
-        if (currentScrollY > 100) {
-          setIsVisible(true);
-        } else {
-          setIsVisible(false);
-        }
+        setIsVisible(currentScrollY > 100);
       }
 
       setLastScrollY(currentScrollY);
     };
 
-    // Activar listeners
-    const checkVisibility = () => {
-      handleScroll(); // Chequeo inicial
-      window.addEventListener('scroll', handleScroll);
-    };
-
-    checkVisibility();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY, isHome, location.pathname]);
 
   // Don't show on contacto page (has its own floating bar)
   if (isContacto) return null;
 
+  const pillBase = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: `${PILL_H}px`,
+    textDecoration: 'none',
+    fontFamily: 'Poppins, sans-serif',
+    fontSize: '13px',
+    whiteSpace: 'nowrap',
+    // Morph de presión: escala + hundido del glow, sin reflow
+    transition: `transform .28s ${SPRING}, box-shadow .28s ${SPRING}, filter .28s ${SPRING}`,
+    willChange: 'transform',
+    '&:active': { transform: 'scale(.955)', filter: 'brightness(.97)' },
+    '&:focus-visible': { outline: '2px solid #0a84ff', outlineOffset: '3px' },
+  };
+
   return (
     <Box
       sx={{
+        ...liquidGlass({
+          ref: BAR_H,
+          corner: BAR_H / 2,
+          blur: 18,
+          saturate: 1.85,
+          brightness: 1.045,
+          edgeA: 0.5,
+          specA: 1,
+          specW: BAR_H * 0.034,
+          pool: 0.22,
+        }),
+
         position: 'fixed',
-        bottom: isVisible ? '34px' : '-100px',
+        bottom: '34px',
         left: '50%',
-        transform: 'translateX(-50%)',
         display: { xs: 'flex', md: 'none' },
         zIndex: 1000,
-        transition: 'bottom 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
         width: 'auto',
         minWidth: '340px',
         maxWidth: '96%',
+        height: `${BAR_H}px`,
         px: '8px',
-        py: '8px',
-        borderRadius: '100px',
-        overflow: 'hidden',
-        isolation: 'isolate',
-        // ── Liquid glass claro (estilo Outpace) ──────────────
-        // Sin base oscura: el vidrio toma el fondo real vía blur + saturación.
-        background: 'linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.08) 100%)',
-        backdropFilter: 'blur(28px) saturate(190%)',
-        WebkitBackdropFilter: 'blur(28px) saturate(190%)',
-        border: '1px solid rgba(255, 255, 255, 0.45)',
-        // Elevación externa + highlights internos (rim de luz arriba)
-        boxShadow: [
-          '0 20px 44px rgba(0, 0, 0, 0.18)',
-          '0 2px 8px rgba(0, 0, 0, 0.10)',
-          'inset 0 1px 0 rgba(255, 255, 255, 0.6)',
-          'inset 0 -1px 1px rgba(255, 255, 255, 0.14)',
-        ].join(', '),
         gap: '10px',
         alignItems: 'center',
         justifyContent: 'center',
-        // Reflejo especular en la mitad superior (la "luz" del vidrio)
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '52%',
-          borderRadius: '100px 100px 50% 50% / 100px 100px 34px 34px',
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.05) 55%, transparent 100%)',
-          pointerEvents: 'none',
-          zIndex: 0,
+
+        // ── Morph de entrada/salida: translate + scale + fade, un solo spring.
+        // Animamos transform/opacity (compositor), nunca `bottom`.
+        transform: isVisible
+          ? 'translate3d(-50%, 0, 0) scale(1)'
+          : 'translate3d(-50%, 140%, 0) scale(.86)',
+        opacity: isVisible ? 1 : 0,
+        pointerEvents: isVisible ? 'auto' : 'none',
+        transformOrigin: '50% 120%',
+        willChange: 'transform, opacity',
+        backfaceVisibility: 'hidden',
+        transition: `transform .62s ${SPRING}, opacity .34s ease`,
+
+        // Stagger de los hijos al aparecer (morph escalonado)
+        '& > *': {
+          position: 'relative',
+          zIndex: 1,
+          transform: isVisible ? 'translateY(0) scale(1)' : 'translateY(10px) scale(.92)',
+          opacity: isVisible ? 1 : 0,
+          transition: `transform .55s ${SPRING}, opacity .3s ease`,
         },
-        // Sheen de refracción suave desde la esquina superior izquierda
-        '&::after': {
-          content: '""',
-          position: 'absolute',
-          inset: 0,
-          borderRadius: 'inherit',
-          background: 'radial-gradient(130% 90% at 0% 0%, rgba(255,255,255,0.12), transparent 52%)',
-          pointerEvents: 'none',
-          zIndex: 0,
+        '& > *:nth-of-type(1)': { transitionDelay: isVisible ? '.06s' : '0s' },
+        '& > *:nth-of-type(2)': { transitionDelay: isVisible ? '.12s' : '0s' },
+
+        '@media (prefers-contrast: more)': {
+          '&::before': { background: 'linear-gradient(90deg, rgb(0 0 0 / .7) 0, rgb(0 0 0 / 0) 30px, rgb(0 0 0 / 0) calc(100% - 30px), rgb(0 0 0 / .7) 100%)' },
         },
-        // El contenido (botones) por encima de los reflejos
-        '& > *': { position: 'relative', zIndex: 1 },
+        '@media (prefers-reduced-motion: reduce)': {
+          transition: 'opacity .2s linear',
+          transform: 'translate3d(-50%, 0, 0)',
+          '& > *': { transform: 'none', transition: 'opacity .2s linear' },
+        },
       }}
     >
       <Box
         component={RouterLink}
         to="/contacto"
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          ...liquidGlass({
+            ref: PILL_H,
+            corner: PILL_H / 2,
+            blur: 10,
+            saturate: 1.6,
+            brightness: 1,
+            edgeA: 0.4,
+            specA: 0.85,
+            glowTop: 0.4,
+            glowBottom: 0.22,
+            shadow: false,
+            body: 'linear-gradient(180deg, rgba(44,104,232,.94), rgba(18,58,158,.94))',
+          }),
+          ...pillBase,
           gap: '8px',
           px: '22px',
-          py: '12px',
-          borderRadius: '100px',
-          background: 'linear-gradient(180deg, rgba(38, 96, 224, 0.92), rgba(18, 58, 158, 0.92))',
-          backdropFilter: 'blur(10px) saturate(160%)',
-          WebkitBackdropFilter: 'blur(10px) saturate(160%)',
           color: '#fff',
-          textDecoration: 'none',
-          fontFamily: 'Poppins, sans-serif',
-          fontSize: '13px',
           fontWeight: 600,
-          whiteSpace: 'nowrap',
-          transition: `all 0.25s ${'cubic-bezier(0.22, 1, 0.36, 1)'}`,
-          border: '1px solid rgba(255, 255, 255, 0.28)',
-          boxShadow: 'inset 0 1.5px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(0,0,0,0.22), 0 6px 16px rgba(20,60,160,0.38)',
-          '&:active': { transform: 'scale(0.97)' },
+          boxShadow:
+            'inset 0 1.5px 1px -.5px rgba(255,255,255,.55), inset 0 -1.5px 2px -1px rgba(0,0,0,.3), 0 6px 16px rgba(20,60,160,.34)',
         }}
       >
         Agendar consulta
@@ -184,25 +274,24 @@ export default function MobileFloatingBar() {
         component={RouterLink}
         to="/procedimientos"
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          ...liquidGlass({
+            ref: PILL_H,
+            corner: PILL_H / 2,
+            blur: 12,
+            saturate: 1.7,
+            brightness: 1.03,
+            edgeA: 0.34,
+            specA: 1,
+            glowTop: 0.6,
+            glowBottom: 0.42,
+            pool: 0.26,
+            tint: 0.16,
+            shadow: false,
+          }),
+          ...pillBase,
           px: '18px',
-          py: '12px',
-          borderRadius: '100px',
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.07))',
-          backdropFilter: 'blur(14px) saturate(160%)',
-          WebkitBackdropFilter: 'blur(14px) saturate(160%)',
-          color: '#fff',
-          textDecoration: 'none',
-          fontFamily: 'Poppins, sans-serif',
-          fontSize: '13px',
+          color: '#111',
           fontWeight: 500,
-          whiteSpace: 'nowrap',
-          transition: `all 0.25s ${'cubic-bezier(0.22, 1, 0.36, 1)'}`,
-          border: '1px solid rgba(255, 255, 255, 0.18)',
-          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.30), inset 0 -1px 0 rgba(0,0,0,0.18), 0 2px 8px rgba(0,0,0,0.18)',
-          '&:active': { transform: 'scale(0.97)' },
         }}
       >
         Ver más

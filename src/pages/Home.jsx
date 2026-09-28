@@ -55,8 +55,8 @@ export default function Home({ toggleTheme }) {
         maxWidth: '100vw',
       }}
     >
-      {/* Hero Section pinned to bottom */}
-      <Box sx={{ position: 'sticky', top: 0, zIndex: 0 }}>
+      {/* Hero flows naturally so the framed video stays accessible on small screens. */}
+      <Box sx={{ position: 'relative', zIndex: 0 }}>
         <IntroHome />
       </Box>
 

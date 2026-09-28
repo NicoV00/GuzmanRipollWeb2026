@@ -146,29 +146,6 @@ export default function ConoceMasHome() {
     };
   }, []);
 
-  useEffect(() => {
-    // Pin de la imagen hasta el párrafo con sangría
-    const imageBox = document.getElementById("sticky-image");
-    const targetParagraph = document.getElementById("main-paragraph");
-
-    if (imageBox && targetParagraph && window.innerWidth > 768) {
-      const scrollTriggerInstance = ScrollTrigger.create({
-        trigger: imageBox,
-        start: "top 120px",
-        endTrigger: targetParagraph,
-        end: "top 375px",
-        pin: true,
-        pinSpacing: false,
-        markers: false,
-        invalidateOnRefresh: true,
-      });
-
-      return () => {
-        if (scrollTriggerInstance) scrollTriggerInstance.kill();
-      };
-    }
-  }, []);
-
   return (
     <Box
       ref={rootRef}
@@ -195,7 +172,12 @@ export default function ConoceMasHome() {
           display: { xs: "none", md: "flex" },
           alignItems: "start",
           justifyContent: "start",
-          position: "relative",
+          // Sticky nativo: acompaña el scroll dentro de su propia celda de grid.
+          // (Antes era un pin de ScrollTrigger que se desincronizaba con el hero
+          //  al dejar de ser sticky y dejaba la imagen flotando sobre el video.)
+          position: "sticky",
+          top: "120px",
+          alignSelf: "start",
           borderRadius: "8px",
           overflow: "hidden",
           backdropFilter: "blur(10px)",

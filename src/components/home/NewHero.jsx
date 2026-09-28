@@ -125,7 +125,7 @@ export default function NewHero() {
           <Typography
             sx={{
               fontFamily: "'Poppins', sans-serif",
-              fontSize: { xs: "38px", md: "42px", lg: "48px" },
+              fontSize: { xs: "clamp(28px, 8.6vw, 37px)", md: "42px", lg: "48px" },
               color: "white",
               fontWeight: 400,
               lineHeight: { xs: 1.1, md: 0.95 },
@@ -147,12 +147,13 @@ export default function NewHero() {
           <Typography
             sx={{
               fontFamily: "'Poppins', sans-serif",
-              fontSize: { xs: "38px", md: "42px", lg: "48px" },
+              fontSize: { xs: "clamp(28px, 8.6vw, 37px)", md: "42px", lg: "48px" },
               color: "white",
               fontWeight: 400,
               lineHeight: { xs: 1.1, md: 0.95 },
               letterSpacing: "-1.5px",
               textAlign: "left",
+              whiteSpace: { xs: "nowrap", md: "normal" },
             }}
           >
             innovación tecnológica

@@ -247,14 +247,12 @@ export default function CTAhome() {
             >
               Diseñados para
               <Box component="span" sx={{ display: "block" }}>
-                <Typography
+                <Box
                   component="span"
-                  fontFamily="Poppins"
-                  fontSize="inherit"
-                  sx={{ color: "#5C9DFF", letterSpacing: "inherit" }}
+                  sx={{ color: "#5C9DFF" }}
                 >
                   maximizar
-                </Typography>
+                </Box>
                 {" "}tus
                 <Box component="span" sx={{ display: "block" }}>
                   resultados

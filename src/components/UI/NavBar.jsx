@@ -153,7 +153,7 @@ export default function NavBar() {
     zIndex: 9999,
     width: '100%',
     backgroundColor: 'transparent',
-    mixBlendMode: (isMenuOpen && isMobile) || isInHero ? 'normal' : 'difference',
+    mixBlendMode: (isMenuOpen && isMobile) ? 'normal' : 'difference',
     color: 'white'
   }
 

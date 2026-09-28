@@ -12,6 +12,7 @@ import useSEO from "../hooks/useSEO"
 import Footer from "../components/UI/Footer"
 import ProcessSteps from "../components/procedimientos/ProcessSteps.tsx"
 import BeforeAfterSlider from "../components/procedimientos/BeforeAfterSlider"
+import HowWeEvaluate from "../components/procedimientos/HowWeEvaluate"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
@@ -408,6 +409,44 @@ export default function ProcedimientoDetalle() {
             />
           </Box>
 
+          {id === "01" && (
+            <Box sx={{ display: { xs: "none", md: "block" } }}>
+          <Box sx={{
+            backgroundColor: "#F0F0F1",
+            border: "1px solid rgba(0,0,0,0.04)",
+            p: 4,
+            borderRadius: "16px",
+          }}>
+            <Typography variant="h3" sx={{
+              fontFamily: "Poppins", fontSize: { xs: "20px", md: "22px" }, fontWeight: 500, mb: 2, textAlign: "left",
+            }}>
+              Recuperación
+            </Typography>
+            <Typography sx={{
+              fontFamily: "Poppins", fontSize: { xs: "14px", md: "15px" }, lineHeight: 1.7, color: "rgba(0,0,0,0.7)", textAlign: "left",
+            }}>
+              {procedimiento.recuperacion}
+            </Typography>
+            {procedimiento.protocolo && (
+              <Box sx={{ mt: 2.5, pt: 2.5, borderTop: "1px solid rgba(0,0,0,0.08)" }}>
+                <Typography sx={{
+                  fontFamily: "Poppins", fontSize: { xs: "14px", md: "15px" }, fontWeight: 600,
+                  color: "#111", textAlign: "left",
+                }}>
+                  {procedimiento.protocolo.label}
+                </Typography>
+                <Typography sx={{
+                  fontFamily: "Poppins", fontSize: { xs: "11px", md: "12px" }, fontWeight: 600,
+                  color: "#0081C7", letterSpacing: "0.04em", textAlign: "left", mt: 0.5,
+                }}>
+                  {procedimiento.protocolo.hashtag}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+            </Box>
+          )}
+
           {/* Comparativa de tecnologías (INDIBA / DUOGlide / Morpheus8) debajo de la imagen */}
           {procedimiento.comparativa && (
             <>
@@ -518,7 +557,50 @@ export default function ProcedimientoDetalle() {
             </Typography>
           </Box>
 
-          {/* Recovery */}
+          {/* Cómo evaluamos tu caso + Consultar — misma línea, mismo estilo de pill */}
+          <Box sx={{ mt: -2, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "flex-start", gap: "8px", textAlign: "left" }}>
+            <HowWeEvaluate
+              label="Cómo evaluamos tu caso"
+              text={`Analizamos tus proporciones, simetría y calidad de piel con planificación digital y simulación 3D para diseñar un plan quirúrgico a medida de ${procedimiento.title.toLowerCase()}.`}
+            />
+            <Box
+              component="a"
+              href={`https://wa.me/59892566656?text=${encodeURIComponent(
+                `Hola! Quiero hacer una consulta por ${procedimiento.title}.`
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                height: 46,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                px: "20px",
+                borderRadius: "100px",
+                backgroundColor: "rgba(0,0,0,0.045)",
+                fontFamily: "Poppins, sans-serif",
+                fontSize: { xs: "14px", md: "15px" },
+                fontWeight: 400,
+                color: "rgba(0,0,0,0.55)",
+                letterSpacing: "-0.01em",
+                whiteSpace: "nowrap",
+                textDecoration: "none",
+                WebkitTapHighlightColor: "transparent",
+                transition: "background-color .25s cubic-bezier(.22,1,.36,1), transform .25s cubic-bezier(.22,1,.36,1)",
+                "&:hover": { backgroundColor: "rgba(0,0,0,0.075)" },
+                "&:active": { transform: "scale(0.975)" },
+                "&:focus-visible": { outline: "2px solid #0081C7", outlineOffset: "3px" },
+              }}
+            >
+              <Box component="svg" viewBox="0 0 24 24" sx={{ width: 18, height: 18, flexShrink: 0 }} fill="rgba(0,0,0,0.5)" aria-hidden>
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              </Box>
+              Consultar
+            </Box>
+          </Box>
+
+          {/* Recovery — en Cirugía Mamaria (id "01") va bajo la imagen en desktop */}
+          <Box sx={{ display: { xs: "block", md: id === "01" ? "none" : "block" } }}>
           <Box sx={{
             backgroundColor: "#F0F0F1",
             border: "1px solid rgba(0,0,0,0.04)",
@@ -552,94 +634,6 @@ export default function ProcedimientoDetalle() {
               </Box>
             )}
           </Box>
-
-          {/* CTA WhatsApp — consulta directa por este procedimiento */}
-          <Box
-            component="a"
-            href={`https://wa.me/59892566656?text=${encodeURIComponent(
-              `Hola! Quiero hacer una consulta por ${procedimiento.title}.`
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            sx={{
-              position: "relative",
-              overflow: "hidden",
-              isolation: "isolate",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 1.5,
-              alignSelf: "flex-start",
-              px: 3,
-              py: 1.6,
-              borderRadius: "999px",
-              background: "linear-gradient(180deg, rgba(48,48,52,0.86) 0%, rgba(16,16,18,0.94) 100%)",
-              backdropFilter: "blur(22px) saturate(180%)",
-              WebkitBackdropFilter: "blur(22px) saturate(180%)",
-              border: "1px solid rgba(255,255,255,0.16)",
-              textDecoration: "none",
-              transition:
-                "transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease, border-color 0.35s ease",
-              boxShadow: [
-                "inset 0 1px 0 rgba(255,255,255,0.22)",
-                "inset 0 -1px 1px rgba(255,255,255,0.05)",
-                "0 1px 2px rgba(0,0,0,0.2)",
-                "0 12px 30px rgba(0,0,0,0.18)",
-              ].join(", "),
-              // Sheen superior: la luz "apoyada" sobre el vidrio
-              "&::before": {
-                content: '""',
-                position: "absolute",
-                inset: 0,
-                borderRadius: "inherit",
-                background:
-                  "linear-gradient(180deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.05) 40%, rgba(255,255,255,0) 58%)",
-                pointerEvents: "none",
-              },
-              // Reflejo especular que barre la pill en hover
-              "&::after": {
-                content: '""',
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                left: "-70%",
-                width: "55%",
-                background:
-                  "linear-gradient(105deg, transparent 0%, rgba(255,255,255,0.2) 50%, transparent 100%)",
-                transform: "skewX(-18deg)",
-                transition: "left 0.65s cubic-bezier(0.22,1,0.36,1)",
-                pointerEvents: "none",
-              },
-              "&:hover": {
-                transform: "translateY(-2px) scale(1.015)",
-                borderColor: "rgba(255,255,255,0.24)",
-                boxShadow: [
-                  "inset 0 1px 0 rgba(255,255,255,0.3)",
-                  "inset 0 -1px 1px rgba(255,255,255,0.07)",
-                  "0 2px 4px rgba(0,0,0,0.2)",
-                  "0 18px 42px rgba(0,0,0,0.24)",
-                ].join(", "),
-              },
-              "&:hover::after": {
-                left: "120%",
-              },
-              "&:active": {
-                transform: "translateY(0) scale(0.98)",
-              },
-            }}
-          >
-            <Box component="svg" viewBox="0 0 24 24" sx={{ width: 18, height: 18, flexShrink: 0 }} fill="#25D366" aria-hidden>
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-            </Box>
-            <Typography sx={{
-              fontFamily: "Poppins, sans-serif",
-              fontSize: { xs: "13px", md: "14px" },
-              fontWeight: 500,
-              color: "#fff",
-              lineHeight: 1,
-              whiteSpace: "nowrap",
-            }}>
-              Consultar por este procedimiento
-            </Typography>
           </Box>
 
           {procedimiento.secondaryImageSrc && (
