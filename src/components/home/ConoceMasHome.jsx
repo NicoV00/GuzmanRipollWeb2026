@@ -46,6 +46,27 @@ const AnimatedBorderBox = styled(Box)(({ theme }) => ({
 
 export default function ConoceMasHome() {
   const rootRef = useRef(null);
+  const stickyTrackRef = useRef(null);
+
+  // El sticky de la imagen termina cuando su borde inferior alcanza el final
+  // de la primera línea del párrafo grande (no al final de la sección).
+  useEffect(() => {
+    const track = stickyTrackRef.current;
+    const paragraph = rootRef.current?.querySelector("#main-paragraph");
+    if (!track || !paragraph) return;
+
+    const measure = () => {
+      const lineHeight = parseFloat(window.getComputedStyle(paragraph).lineHeight);
+      const firstLineBottom = paragraph.getBoundingClientRect().top + lineHeight;
+      track.style.height = `${Math.max(0, firstLineBottom - track.getBoundingClientRect().top)}px`;
+    };
+
+    measure();
+    document.fonts?.ready.then(measure);
+    const ro = new ResizeObserver(measure);
+    ro.observe(rootRef.current);
+    return () => ro.disconnect();
+  }, []);
 
   // Texto para desktop - párrafo continuo
   const textDesktop = "El Dr. Guzmán Ripoll es cirujano plástico, especializado en cirugía mamaria estética y reconstructiva, con sede en Punta del Este.";
@@ -162,14 +183,22 @@ export default function ConoceMasHome() {
       }}
     >
 
-      {/* Imagen izquierda pegada al margen - SOLO DESKTOP */}
+      {/* Imagen izquierda pegada al margen - SOLO DESKTOP.
+          El track termina en la primera línea del párrafo grande: ahí se detiene el sticky. */}
+      <Box
+        ref={stickyTrackRef}
+        sx={{
+          gridColumn: { xs: "3 / 7", md: "1 / 3" },
+          gridRow: "1 / 3",
+          alignSelf: "start",
+          display: { xs: "none", md: "block" },
+        }}
+      >
       <Box
         id="sticky-image"
         sx={{
           mt: "20px",
-          gridColumn: { xs: "3 / 7", md: "1 / 3" },
-          gridRow: "1 / 3",
-          display: { xs: "none", md: "flex" },
+          display: "flex",
           alignItems: "start",
           justifyContent: "start",
           // Sticky nativo: acompaña el scroll dentro de su propia celda de grid.
@@ -195,6 +224,7 @@ export default function ConoceMasHome() {
           decoding="async"
           style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "8px" }}
         />
+      </Box>
       </Box>
 
       {/* 01 CLÍNICA + Párrafo - columna 7 - SOLO DESKTOP */}

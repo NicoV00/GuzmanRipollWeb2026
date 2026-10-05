@@ -49,7 +49,7 @@ export default function Home({ toggleTheme }) {
       sx={{
         minHeight: '100vh',
         backgroundColor: '#07111C', // Navy continuity for Safari
-        overflowX: 'hidden',
+        overflowX: 'clip',
         position: 'relative',
         width: '100%',
         maxWidth: '100vw',
