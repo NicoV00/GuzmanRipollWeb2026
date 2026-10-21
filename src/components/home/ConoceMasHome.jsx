@@ -188,7 +188,7 @@ export default function ConoceMasHome() {
       <Box
         ref={stickyTrackRef}
         sx={{
-          gridColumn: { xs: "3 / 7", md: "1 / 3" },
+          gridColumn: { xs: "3 / 7", md: "1 / 4", lg: "1 / 3" },
           gridRow: "1 / 3",
           alignSelf: "start",
           display: { xs: "none", md: "block" },
@@ -231,7 +231,7 @@ export default function ConoceMasHome() {
       <Box
         sx={{
           mt: "20px",
-          gridColumn: "7 / 11",
+          gridColumn: { md: "6 / 12", lg: "7 / 11" },
           gridRow: "1 / 2",
           display: { xs: "none", md: "block" }
         }}
@@ -280,11 +280,11 @@ export default function ConoceMasHome() {
         </Typography>
 
         <Box sx={{ mt: 16, display: "grid", gridTemplateColumns: "repeat(12, 1fr)", columnGap: "20px", width: "100%", alignItems: "start" }}>
-          <Box sx={{ gridColumn: "4 / 6", fontFamily: "Poppins", fontSize: "22px", fontWeight: 600, color: "#000", textAlign: "left", alignSelf: "start", pt: 0.5 }}>
+          <Box sx={{ gridColumn: { md: "3 / 6", lg: "4 / 6" }, fontFamily: "Poppins", fontSize: "22px", fontWeight: 600, color: "#000", textAlign: "left", alignSelf: "start", pt: 0.5 }}>
             <Typography data-line-reveal sx={{ fontFamily: "inherit", fontSize: "inherit", fontWeight: "inherit", color: "inherit", lineHeight: 1.2 }}>Cirugía plástica</Typography>
             <Typography data-line-reveal sx={{ fontFamily: "inherit", fontSize: "inherit", fontWeight: "inherit", color: "inherit", lineHeight: 1.2 }}>y estética</Typography>
           </Box>
-          <Typography data-line-reveal sx={{ gridColumn: "7 / 11", fontFamily: "Poppins", fontSize: "18px", fontWeight: 600, color: "#000", lineHeight: 1.2, textAlign: "left", alignSelf: "start" }}>
+          <Typography data-line-reveal sx={{ gridColumn: { md: "7 / 12", lg: "7 / 11" }, fontFamily: "Poppins", fontSize: "18px", fontWeight: 600, color: "#000", lineHeight: 1.2, textAlign: "left", alignSelf: "start" }}>
             Nuestra práctica abarca un amplio rango de procedimientos, desde intervenciones no quirúrgicas hasta procesos altamente especializados. Lo que nos distingue es nuestro enfoque humano: priorizamos el acompañamiento cercano y el cuidado integral durante todo el proceso.
           </Typography>
         </Box>

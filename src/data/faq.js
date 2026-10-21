@@ -46,6 +46,6 @@ export const faqItems = [
     id: 8,
     question: "¿Dónde se realizan las consultas y las cirugías?",
     answer:
-      "Las consultas se realizan en Clínica Select, sobre Av. Roosevelt, en Punta del Este (Maldonado, Uruguay), y las cirugías en block quirúrgico habilitado. Podés coordinar tu consulta por WhatsApp al +598 92 566 656.",
+      "Las consultas se realizan en Clínica Select, sobre Av. Franklin Delano Roosevelt esquina Mónaco, en Punta del Este (Maldonado, Uruguay), y las cirugías en block quirúrgico habilitado. Podés coordinar tu consulta por WhatsApp al +598 92 566 656.",
   },
 ];

@@ -55,8 +55,13 @@ export default function MedicalProcedures() {
       name: "Abdominoplastia",
       image: "/images/abdomino.webp",
       description: "Procedimiento quirúrgico que permite remodelar el abdomen eliminando exceso de piel y grasa.",
-      listTitle: null,
-      items: []
+      listTitle: "Incluye",
+      // Mismos conceptos que la página de abdominoplastia (objetivo y técnica) y la card de la home
+      items: [
+        "Corrección de diástasis",
+        "Reparación muscular",
+        "Mommy makeover"
+      ]
     },
     {
       id: "01",

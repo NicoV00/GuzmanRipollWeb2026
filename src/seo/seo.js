@@ -40,7 +40,7 @@ const clinicEntity = {
   isAcceptingNewPatients: true,
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Clínica Select, Av. Roosevelt",
+    streetAddress: "Av. Franklin Delano Roosevelt esq. Mónaco, Clínica Select",
     addressLocality: "Punta del Este",
     addressRegion: "Maldonado",
     postalCode: "20100",
@@ -57,6 +57,7 @@ const clinicEntity = {
     name: p.title,
     url: abs(procedimientoPath(p.number)),
   })),
+  hasMap: "https://www.google.com/maps/search/?api=1&query=Dr.+Guzm%C3%A1n+Ripoll+Punta+del+Este",
   founder: { "@id": ID.doctor },
   sameAs: SAME_AS,
 }
@@ -91,6 +92,7 @@ const websiteEntity = {
   "@id": ID.website,
   url: `${SITE_URL}/`,
   name: DOCTOR_NAME,
+  alternateName: ["Guzmán Ripoll", "Dr. Guzmán Ripoll · Cirugía Plástica"],
   inLanguage: "es-UY",
   publisher: { "@id": ID.clinic },
 }
@@ -145,6 +147,42 @@ export const PROCEDIMIENTO_SEO = {
       "Tratamientos no invasivos en Punta del Este: radiofrecuencia INDIBA, Morpheus8 y láser DEKA DuoGlide para reafirmar la piel, mejorar flacidez y celulitis, sin cirugía.",
     bodyLocation: "Rostro y cuerpo",
   },
+  "01a": {
+    title: "Aumento Mamario en Punta del Este, Uruguay | Dr. Guzmán Ripoll",
+    description:
+      "Aumento mamario con implantes en Punta del Este: simulación 3D Crisalix, protocolo de rápida recuperación y 7 días de reposo laboral. Dr. Guzmán Ripoll, máster en Cirugía Mamaria.",
+    bodyLocation: "Mamas",
+  },
+  "01b": {
+    title: "Mastopexia (Levantamiento de Mamas) en Punta del Este | Dr. Guzmán Ripoll",
+    description:
+      "Mastopexia en Punta del Este, Uruguay: corrige la caída de las mamas después del embarazo, la lactancia o la pérdida de peso. Con o sin implantes. Dr. Guzmán Ripoll.",
+    bodyLocation: "Mamas",
+  },
+  "01c": {
+    title: "Reducción Mamaria en Punta del Este, Uruguay | Dr. Guzmán Ripoll",
+    description:
+      "Reducción mamaria en Punta del Este: menos volumen y peso, alivio del dolor de espalda y cuello, y una mama proporcionada. Dr. Guzmán Ripoll, especialista en cirugía mamaria.",
+    bodyLocation: "Mamas",
+  },
+  "01d": {
+    title: "Reconstrucción Mamaria en Uruguay · Punta del Este | Dr. Guzmán Ripoll",
+    description:
+      "Reconstrucción mamaria inmediata o diferida después de la mastectomía, con implantes o tejido propio. Dr. Guzmán Ripoll, máster en Cirugía Mamaria Reconstructiva.",
+    bodyLocation: "Mamas",
+  },
+  "01e": {
+    title: "Ginecomastia: Cirugía en Punta del Este, Uruguay | Dr. Guzmán Ripoll",
+    description:
+      "Cirugía de ginecomastia en Punta del Este: liposucción y resección glandular para un tórax plano y masculino, con una cicatriz mínima en la areola. Dr. Guzmán Ripoll.",
+    bodyLocation: "Tórax",
+  },
+  "04a": {
+    title: "Mommy Makeover en Punta del Este, Uruguay | Dr. Guzmán Ripoll",
+    description:
+      "Mommy makeover en Punta del Este: abdominoplastia con reparación de diástasis más aumento mamario o mastopexia, en un plan integral después de la maternidad.",
+    bodyLocation: "Abdomen y mamas",
+  },
 }
 
 export function procedimientoSEO(number, proc = procedimientosData[number]) {
@@ -152,6 +190,21 @@ export function procedimientoSEO(number, proc = procedimientosData[number]) {
   if (!proc || !seo) return null
   const path = procedimientoPath(number)
   const isSurgery = number !== "06"
+  const parent = proc.parent && procedimientosData[proc.parent]
+  const crumbs = [["Inicio", "/"], ["Procedimientos", "/procedimientos"]]
+  if (parent) crumbs.push([parent.title, procedimientoPath(proc.parent)])
+  crumbs.push([proc.title, path])
+  const faqNode = proc.faq?.length
+    ? [{
+        "@type": "FAQPage",
+        "@id": `${abs(path)}#faq`,
+        mainEntity: proc.faq.map((f) => ({
+          "@type": "Question",
+          name: f.question,
+          acceptedAnswer: { "@type": "Answer", text: f.answer },
+        })),
+      }]
+    : []
   return {
     path,
     title: seo.title,
@@ -181,9 +234,10 @@ export function procedimientoSEO(number, proc = procedimientosData[number]) {
         provider: { "@id": ID.clinic },
       },
       {
-        ...breadcrumbs([["Inicio", "/"], ["Procedimientos", "/procedimientos"], [proc.title, path]]),
+        ...breadcrumbs(crumbs),
         "@id": `${abs(path)}#breadcrumb`,
-      }
+      },
+      ...faqNode
     ),
   }
 }
@@ -244,7 +298,7 @@ export const PAGE_SEO = {
   "/contacto": page(
     "/contacto",
     "Consulta con Cirujano Plástico en Punta del Este | Dr. Guzmán Ripoll",
-    "Agendá tu consulta de cirugía plástica en Punta del Este, Maldonado. Clínica Select, Av. Roosevelt. WhatsApp +598 92 566 656 o escribinos desde el formulario.",
+    "Agendá tu consulta de cirugía plástica en Punta del Este, Maldonado. Clínica Select, Av. Roosevelt esq. Mónaco. WhatsApp +598 92 566 656 o escribinos desde el formulario.",
     {
       pageType: "ContactPage",
       nodes: [breadcrumbs([["Inicio", "/"], ["Contacto", "/contacto"]])],

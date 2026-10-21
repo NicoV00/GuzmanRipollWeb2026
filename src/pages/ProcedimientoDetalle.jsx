@@ -9,12 +9,13 @@ import { Box, Typography } from "@mui/material"
 import { Sparkles, ShieldCheck, HeartPulse, Users, Cpu, Check } from "lucide-react"
 import useSEO from "../hooks/useSEO"
 import { procedimientoSEO } from "../seo/seo"
-import { procedimientosData, procedimientoPath, numberFromParam } from "../data/procedimientos"
+import { procedimientosData, procedimientosPrincipales, procedimientoPath, numberFromParam } from "../data/procedimientos"
 
 import Footer from "../components/UI/Footer"
 import ProcessSteps from "../components/procedimientos/ProcessSteps.tsx"
 import BeforeAfterSlider from "../components/procedimientos/BeforeAfterSlider"
 import HowWeEvaluate from "../components/procedimientos/HowWeEvaluate"
+import Faq from "../components/home/faq"
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger)
@@ -22,7 +23,7 @@ if (typeof window !== "undefined") {
 
 
 
-const allProcedures = Object.values(procedimientosData)
+const allProcedures = procedimientosPrincipales
 
 const benefitsData = [
   { title: "Resultados Naturales", description: "Utilizamos técnicas quirúrgicas avanzadas orientadas a lograr resultados armoniosos y proporcionados. Cada procedimiento se planifica con precisión para respetar la anatomía y las expectativas del paciente." },
@@ -35,6 +36,10 @@ const benefitsData = [
 export default function ProcedimientoDetalle() {
   const { slug } = useParams()
   const id = numberFromParam(slug) || "01"
+  // Las páginas por cirugía (ej. aumento mamario) heredan pill activa y pasos del proceso de su madre.
+  const parentId = procedimientosData[id]?.parent || id
+  // Crisalix (simulación 3D) solo aplica a aumento mamario y a la página general de cirugía mamaria.
+  const usaCrisalix = id === "01" || id === "01a"
   const containerRef = useRef(null)
   const heroImageRef = useRef(null)
   const leftColumnRef = useRef(null)
@@ -134,6 +139,49 @@ export default function ProcedimientoDetalle() {
 
   if (!procedimiento) return <Box>No encontrado</Box>
 
+  // Procedimientos relacionados — links internos (mismo estilo de pill que "Consultar").
+  // En la página general de Cirugía Mamaria van arriba de todo; en el resto, al final de la columna.
+  const relacionadosBlock = procedimiento.relacionados?.some((n) => procedimientosData[n]) ? (
+    <Box>
+              <Typography variant="h3" sx={{
+                fontFamily: "Poppins", fontSize: { xs: "16px", md: "18px" }, fontWeight: 600, mb: 1.5, textAlign: "left",
+              }}>
+                {procedimiento.relacionadosTitulo || "Procedimientos relacionados"}
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "flex-start" }}>
+                {procedimiento.relacionados.filter((n) => procedimientosData[n]).map((n) => (
+                  <Box
+                    key={n}
+                    component={RouterLink}
+                    to={procedimientoPath(n)}
+                    sx={{
+                      height: 42,
+                      display: "inline-flex",
+                      alignItems: "center",
+                      px: "18px",
+                      borderRadius: "100px",
+                      backgroundColor: "rgba(0,0,0,0.045)",
+                      fontFamily: "Poppins, sans-serif",
+                      fontSize: { xs: "14px", md: "15px" },
+                      fontWeight: 400,
+                      color: "rgba(0,0,0,0.7)",
+                      letterSpacing: "-0.01em",
+                      whiteSpace: "nowrap",
+                      textDecoration: "none",
+                      WebkitTapHighlightColor: "transparent",
+                      transition: "background-color .25s cubic-bezier(.22,1,.36,1), transform .25s cubic-bezier(.22,1,.36,1)",
+                      "&:hover": { backgroundColor: "rgba(0,0,0,0.075)" },
+                      "&:active": { transform: "scale(0.975)" },
+                      "&:focus-visible": { outline: "2px solid #0081C7", outlineOffset: "3px" },
+                    }}
+                  >
+                    {procedimientosData[n].title}
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+  ) : null
+
   return (
     <Box ref={containerRef} sx={{ backgroundColor: "#FAFFFF", minHeight: "100vh" }}>
 
@@ -168,24 +216,24 @@ export default function ProcedimientoDetalle() {
                 backdropFilter: "blur(22px) saturate(105%)",
                 WebkitBackdropFilter: "blur(22px) saturate(105%)",
                 border: "1px solid",
-                borderColor: proc.number === id ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.75)",
-                background: proc.number === id
+                borderColor: proc.number === parentId ? "rgba(255,255,255,0.14)" : "rgba(255,255,255,0.75)",
+                background: proc.number === parentId
                   ? "linear-gradient(135deg, rgba(26,28,32,0.92) 0%, rgba(38,40,46,0.82) 100%)"
                   : "linear-gradient(135deg, rgba(238,240,243,0.88) 0%, rgba(226,229,233,0.62) 100%)",
                 // Rim-light: highlight blanco arriba-izq, sombra sutil abajo-der = grosor de vidrio + drop shadow sólido.
-                boxShadow: proc.number === id
+                boxShadow: proc.number === parentId
                   ? "inset 1.5px 1.5px 1.5px rgba(255,255,255,0.28), inset -1.5px -1.5px 2px rgba(0,0,0,0.4), 0 8px 22px rgba(0,0,0,0.22)"
                   : "inset 1.5px 1.5px 1.5px rgba(255,255,255,0.95), inset -1.5px -1.5px 2px rgba(0,0,0,0.05), 0 8px 22px rgba(0,0,0,0.10)",
                 textDecoration: "none",
                 fontFamily: "Poppins, sans-serif",
                 fontSize: { xs: "12px", md: "13px" },
-                fontWeight: proc.number === id ? 600 : 500,
-                color: proc.number === id ? "#fff" : "#111",
+                fontWeight: proc.number === parentId ? 600 : 500,
+                color: proc.number === parentId ? "#fff" : "#111",
                 letterSpacing: "-0.01em",
                 transition: "transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease, background 0.25s ease",
                 "&:hover": {
                   transform: "translateY(-1.5px)",
-                  boxShadow: proc.number === id
+                  boxShadow: proc.number === parentId
                     ? "inset 1.5px 1.5px 1.5px rgba(255,255,255,0.35), inset -1.5px -1.5px 2px rgba(0,0,0,0.4), 0 12px 28px rgba(0,0,0,0.26)"
                     : "inset 1.5px 1.5px 1.5px rgba(255,255,255,1), inset -1.5px -1.5px 2px rgba(0,0,0,0.06), 0 12px 28px rgba(0,0,0,0.14)"
                 },
@@ -204,7 +252,7 @@ export default function ProcedimientoDetalle() {
           <Typography sx={{
             fontFamily: "Poppins", fontSize: "16px", fontWeight: 600, color: "rgba(0,0,0,0.4)"
           }}>
-            ({procedimiento.number})
+            ({procedimiento.parent || procedimiento.number})
           </Typography>
           <Typography sx={{
             fontFamily: "Poppins", fontSize: "16px", fontWeight: 600, color: "#111", textTransform: "uppercase", letterSpacing: "0.05em"
@@ -379,6 +427,8 @@ export default function ProcedimientoDetalle() {
           pt: { md: 4 }
         }}>
 
+          {procedimiento.relacionadosTitulo && relacionadosBlock}
+
           {/* Specs Grid — oculto en Cirugía Mamaria (id "01") porque agrupa todos los procesos */}
           {id !== "01" && (
             <Box sx={{
@@ -440,7 +490,7 @@ export default function ProcedimientoDetalle() {
           <Box sx={{ mt: -2, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "flex-start", gap: "8px", textAlign: "left" }}>
             <HowWeEvaluate
               label="Cómo evaluamos tu caso"
-              text={`Analizamos tus proporciones, simetría y calidad de piel con planificación digital y simulación 3D para diseñar un plan quirúrgico a medida de ${procedimiento.title.toLowerCase()}.`}
+              text={`Analizamos tus proporciones, simetría y calidad de piel con planificación digital${usaCrisalix ? " y simulación 3D" : ""} para diseñar un plan quirúrgico a medida de ${procedimiento.title.toLowerCase()}.`}
             />
             <Box
               component="a"
@@ -477,6 +527,21 @@ export default function ProcedimientoDetalle() {
               Consultar
             </Box>
           </Box>
+
+          {procedimiento.candidatos && (
+            <Box>
+              <Typography variant="h3" sx={{
+                fontFamily: "Poppins", fontSize: { xs: "16px", md: "18px" }, fontWeight: 600, mb: 1.5, textAlign: "left",
+              }}>
+                ¿Para quién es?
+              </Typography>
+              <Typography sx={{
+                fontFamily: "Poppins", fontSize: { xs: "15px", md: "16px" }, lineHeight: 1.8, color: "rgba(0,0,0,0.7)", textAlign: "left",
+              }}>
+                {procedimiento.candidatos}
+              </Typography>
+            </Box>
+          )}
 
           {/* Recovery — en Cirugía Mamaria (id "01") va bajo la imagen en desktop */}
           <Box sx={{ display: { xs: "block", md: id === "01" ? "none" : "block" } }}>
@@ -515,6 +580,23 @@ export default function ProcedimientoDetalle() {
           </Box>
           </Box>
 
+          {procedimiento.riesgos && (
+            <Box>
+              <Typography variant="h3" sx={{
+                fontFamily: "Poppins", fontSize: { xs: "16px", md: "18px" }, fontWeight: 600, mb: 1.5, textAlign: "left",
+              }}>
+                Riesgos y cuidados
+              </Typography>
+              <Typography sx={{
+                fontFamily: "Poppins", fontSize: { xs: "15px", md: "16px" }, lineHeight: 1.8, color: "rgba(0,0,0,0.7)", textAlign: "left",
+              }}>
+                {procedimiento.riesgos}
+              </Typography>
+            </Box>
+          )}
+
+          {!procedimiento.relacionadosTitulo && relacionadosBlock}
+
           {procedimiento.secondaryImageSrc && (
             <Box ref={secondaryImageWrapRef} sx={{
               width: "100%",
@@ -542,7 +624,7 @@ export default function ProcedimientoDetalle() {
       </Box>
 
       {/* ─── CRISALIX SECTION (Breast Surgery Only) ─── */}
-      {id === "01" && (
+      {usaCrisalix && (
         <Box sx={{
           backgroundColor: "#FAFFFF",
           py: { xs: 10, md: 15 },
@@ -826,7 +908,19 @@ export default function ProcedimientoDetalle() {
       </Box>
 
       {/* ─── PROCESS STEPS ─────────────────────── */}
-      <ProcessSteps procedureId={id} />
+      {/* El paso "Planificación 3D" (Crisalix) solo aplica a aumento mamario */}
+      <ProcessSteps procedureId={usaCrisalix ? "01" : parentId === "01" ? id : parentId} />
+
+      {/* ─── FAQ propio de cada cirugía (mismo componente que la home) ─── */}
+      {procedimiento.faq?.length > 0 && (
+        <Faq
+          items={procedimiento.faq.map((f, i) => ({ id: i + 1, ...f }))}
+          number={null}
+          title="Preguntas frecuentes"
+          subtitle={`sobre ${procedimiento.title.toLowerCase()}`}
+          compact
+        />
+      )}
 
       <Footer backgroundColor="#FAFFFF" cardBackgroundColor="#EBEDEF" />
     </Box>

@@ -21,7 +21,7 @@ const procedimientosLinks = [
   { to: procedimientoPath("01"), text: "Cirugía Mamaria" },
   { to: procedimientoPath("02"), text: "Lipoescultura VASER" },
   { to: procedimientoPath("04"), text: "Abdominoplastia" },
-  { to: procedimientoPath("01"), text: "Aumento Mamario" },
+  { to: procedimientoPath("01a"), text: "Aumento Mamario" },
   { to: procedimientoPath("06"), text: "Tratamientos No Invasivos" },
 ];
 
@@ -82,7 +82,8 @@ const brandBaseStyles = {
   lineHeight: 1.0,
   letterSpacing: { xs: "-2px", lg: "-4px" },
   textTransform: "uppercase",
-  fontSize: { xs: "9.7vw", lg: "clamp(48px, 6.2vw, 100px)" },
+  // sm/md (tablet y laptops chicas): el wordmark ocupa todo el ancho en vez de 3/4
+  fontSize: { xs: "9.7vw", sm: "12.2vw", lg: "clamp(48px, 6.2vw, 100px)" },
   textAlign: { xs: "left", lg: "right" },
   whiteSpace: "nowrap",
   width: { xs: "100%", lg: "auto" },

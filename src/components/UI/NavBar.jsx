@@ -290,9 +290,10 @@ export default function NavBar() {
 
           {/* Hora y Ubicación */}
           <Box sx={{
-            gridColumn: '10 / 12',
+            gridColumn: '9 / 12',
             display: { xs: 'none', lg: 'flex' },
-            justifyContent: 'flex-start',
+            justifyContent: 'flex-end',
+            whiteSpace: 'nowrap',
             alignItems: 'center',
             gap: '12px',
             paddingRight: '0px',

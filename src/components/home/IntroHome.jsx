@@ -352,6 +352,8 @@ export default function IntroHome() {
               py: { xs: 1, md: 1.1 },
               fontSize: { xs: '13px', md: '14px' },
               fontWeight: 500,
+              whiteSpace: 'nowrap',
+              flex: '0 0 auto',
               color: '#F4FAFF',
               background: 'linear-gradient(180deg, rgba(24, 38, 89, 0.32) 0%, rgba(17, 29, 72, 0.46) 100%)',
               border: '1px solid rgba(167, 207, 255, 0.15)',

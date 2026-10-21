@@ -11,7 +11,8 @@ import {
 } from "@mui/material";
 import { faqItems } from "../../data/faq";
 
-export default function Faq() {
+// Por defecto muestra el FAQ de la home; las páginas de procedimiento pasan sus propias preguntas.
+export default function Faq({ items = faqItems, number = "05", title = "Tenes dudas?", subtitle = "Tenemos respuestas", compact = false }) {
   const [expandedItem, setExpandedItem] = useState(1);
 
 
@@ -26,27 +27,31 @@ export default function Faq() {
       gridTemplateColumns: 'repeat(12, 1fr)',
       mx: 'auto',
       p: 3,
-      pt: { xs: '64px', md: '120px' },
+      pt: compact ? { xs: '40px', md: '64px' } : { xs: '64px', md: '120px' },
+      // compacto: mismos márgenes laterales que el resto de la página de procedimiento
+      ...(compact && { px: { xs: '20px', md: '70px' } }),
       bgcolor: '#FAFFFF'
     }}>
       <Box sx={{
         gridColumn: '1 / 13',
         gridRow: '1 / 1',
-        mx: { xs: 1, md: 4 },
+        mx: compact ? 0 : { xs: 1, md: 4 },
       }}>
 
         <Box sx={{
-          mb: "80px",
+          mb: compact ? { xs: "32px", md: "48px" } : "80px",
           textAlign: 'start',
         }}>
           {/* Eyebrow numerado — consistente con el resto de la home */}
           <Box sx={{ display: 'flex', alignItems: 'baseline', gap: '10px', mb: { xs: '20px', md: '24px' } }}>
+            {number && (
             <Typography component="span" sx={{
               fontFamily: "Poppins, sans-serif", fontSize: { xs: "16px", md: "18px" },
               fontWeight: 600, color: "rgba(0,0,0,0.42)", lineHeight: 1,
             }}>
-              05
+              {number}
             </Typography>
+            )}
             <Typography component="span" sx={{
               fontFamily: "Poppins, sans-serif", fontSize: { xs: "16px", md: "18px" }, fontWeight: 500,
               textTransform: "uppercase", color: "#000000", letterSpacing: "0.03em", lineHeight: 1,
@@ -61,11 +66,11 @@ export default function Faq() {
               fontWeight: 400,
               fontFamily: 'Poppins, sans-serif',
               color: 'text.primary',
-              fontSize: { xs: 'clamp(28px, 8vw, 38px)', md: '45px', xl: '70px' },
+              fontSize: compact ? { xs: '26px', md: '34px', xl: '40px' } : { xs: 'clamp(28px, 8vw, 38px)', md: '45px', xl: '70px' },
               mb: 1
             }}
           >
-            Tenes dudas?
+            {title}
           </Typography>
           <Typography
             variant="h2"
@@ -74,11 +79,11 @@ export default function Faq() {
               fontWeight: 400,
               fontFamily: 'Poppins, sans-serif',
               color: 'textAccent',
-              fontSize: { xs: 'clamp(28px, 8vw, 38px)', md: '45px', xl: '70px' },
+              fontSize: compact ? { xs: '26px', md: '34px', xl: '40px' } : { xs: 'clamp(28px, 8vw, 38px)', md: '45px', xl: '70px' },
               mb: 2
             }}
           >
-            Tenemos respuestas
+            {subtitle}
           </Typography>
           <Typography variant="body" color="background" sx={{}}>
             En cualquier caso, te sugerimos comunicarte con nosotros si tienes alguna consulta.
@@ -90,11 +95,11 @@ export default function Faq() {
       <Box sx={{
         gridColumn: '1 / 13',
         gridRow: '2 / 2',
-        mx: { xs: 1, md: 4 },
+        mx: compact ? 0 : { xs: 1, md: 4 },
         mb: { xs: 4, md: 6 },
       }}>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          {faqItems.map((item) => (
+          {items.map((item) => (
             <Box key={item.id}>
               <Divider />
               <Box sx={{
@@ -127,7 +132,9 @@ export default function Faq() {
                           fontSize: { xs: '16px', md: '20px' },
                           lineHeight: 1.75,
                           pb: 2,
-                          maxWidth: { xs: '100%', md: 'calc(100% - 280px)' }
+                          // Ancho de lectura cómodo (~60 caracteres por línea) en pantallas grandes
+                          maxWidth: { xs: '100%', md: 'min(calc(100% - 280px), 620px)' },
+                          textWrap: 'pretty',
                         }}
                       >
                         {item.answer}

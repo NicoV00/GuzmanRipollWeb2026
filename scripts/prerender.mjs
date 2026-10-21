@@ -66,7 +66,7 @@ const nav = `<nav aria-label="Principal"><ul>
 
 const footer = `<footer>
   <p><strong>${DOCTOR_NAME}</strong> · Cirugía Plástica, Estética y Reconstructiva</p>
-  <address>Clínica Select, Av. Roosevelt, Punta del Este, Maldonado 20100, Uruguay ·
+  <address>Clínica Select, Av. Franklin Delano Roosevelt esq. Mónaco, Punta del Este, Maldonado 20100, Uruguay ·
   Tel/WhatsApp: <a href="tel:+59892566656">+598 92 566 656</a> ·
   <a href="mailto:info@guzmanripoll.com">info@guzmanripoll.com</a></address>
   <p><a href="/politica-privacidad">Política de privacidad</a> · <a href="/procesamiento-datos">Procesamiento de datos</a></p>
@@ -98,7 +98,15 @@ function procedimientoBody(p) {
         .map((c) => `<h3>${esc(c.title)}</h3><p>${esc(c.description)}</p><ul>${c.items.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>`)
         .join("")}`
     : ""
-  return `<nav aria-label="Ruta"><a href="/">Inicio</a> › <a href="/procedimientos">Procedimientos</a> › ${esc(p.title)}</nav>
+  const parent = p.parent && procedimientosData[p.parent]
+  const parentCrumb = parent ? ` › <a href="${procedimientoPath(p.parent)}">${esc(parent.title)}</a>` : ""
+  const faq = p.faq?.length
+    ? `<h2>Preguntas frecuentes sobre ${esc(p.title.toLowerCase())}</h2>${p.faq.map((f) => `<h3>${esc(f.question)}</h3><p>${esc(f.answer)}</p>`).join("")}`
+    : ""
+  const rel = p.relacionados?.length
+    ? `<h2>${esc(p.relacionadosTitulo || "Procedimientos relacionados")}</h2><ul>${p.relacionados.filter((n) => procedimientosData[n]).map((n) => `<li><a href="${procedimientoPath(n)}">${esc(procedimientosData[n].title)}</a></li>`).join("")}</ul>`
+    : ""
+  return `<nav aria-label="Ruta"><a href="/">Inicio</a> › <a href="/procedimientos">Procedimientos</a>${parentCrumb} › ${esc(p.title)}</nav>
   <h1>${esc(p.title)} en Punta del Este, Uruguay</h1>
   <p>${esc(p.subtitle)} · ${esc(p.category)}</p>
   <p>${esc(p.catchPhrase)}</p>
@@ -107,7 +115,11 @@ function procedimientoBody(p) {
   ${p.objetivo ? `<h2>Objetivo</h2><p>${esc(p.objetivo)}</p>` : ""}
   ${specs}
   ${p.tecnica ? `<h2>Técnica</h2><p>${esc(p.tecnica)}</p>` : ""}
+  ${p.candidatos ? `<h2>¿Para quién es?</h2><p>${esc(p.candidatos)}</p>` : ""}
   ${p.recuperacion ? `<h2>Recuperación</h2><p>${esc(p.recuperacion)}</p>` : ""}
+  ${p.riesgos ? `<h2>Riesgos y cuidados</h2><p>${esc(p.riesgos)}</p>` : ""}
+  ${rel}
+  ${faq}
   ${subs}
   ${comp}
   <h2>Otros procedimientos</h2><ul>${procs
@@ -136,7 +148,7 @@ const BODIES = {
   <p>Resultados de cirugía mamaria, contorno corporal y tratamientos no invasivos realizados por el ${DOCTOR_NAME} en Punta del Este, Uruguay.</p>
   <ul>${procs.map((p) => `<li><a href="${procedimientoPath(p.number)}">${esc(p.title)}</a></li>`).join("")}</ul>`,
   "/contacto": `<h1>Consultas: cirugía estética especializada y resultados naturales</h1>
-  <p>Coordiná tu consulta con el ${DOCTOR_NAME} en Clínica Select, Av. Roosevelt, Punta del Este (Maldonado 20100, Uruguay).</p>
+  <p>Coordiná tu consulta con el ${DOCTOR_NAME} en Clínica Select, Av. Franklin Delano Roosevelt esq. Mónaco, Punta del Este (Maldonado 20100, Uruguay).</p>
   <p>Teléfono y WhatsApp: <a href="https://wa.me/59892566656">+598 92 566 656</a> · Email: <a href="mailto:info@guzmanripoll.com">info@guzmanripoll.com</a></p>`,
   "/politica-privacidad": `<h1>Política de Privacidad</h1>`,
   "/procesamiento-datos": `<h1>Procesamiento de Datos</h1>`,

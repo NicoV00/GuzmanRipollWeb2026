@@ -18,7 +18,7 @@ const procedures = [
   },
   {
     name: "AUMENTO MAMARIO",
-    to: procedimientoPath("01"),
+    to: procedimientoPath("01a"),
     subtitle: "Implantes de gel cohesivo",
     image: "/images/aumento.webp",
     topBlur: true,
@@ -38,7 +38,7 @@ const procedures = [
   },
   {
     name: "MOMMY MAKEOVER",
-    to: procedimientoPath("04"),
+    to: procedimientoPath("04a"),
     subtitle: "Abdomen y mamas en un solo proceso",
     image: "/images/mom.webp",
     col: { xs: "auto", md: "1 / 5" },
