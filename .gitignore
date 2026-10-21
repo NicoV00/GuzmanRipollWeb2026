@@ -36,3 +36,6 @@ coverage/
 *.sln
 *.sw?
 originales-resultados/
+
+.vercel
+.env*
