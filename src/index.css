@@ -15,6 +15,17 @@
   display: none;
 }
 
+/* Nicer line breaks (no orphans); short headings get balanced lines */
+@layer base {
+  body {
+    text-wrap: pretty;
+  }
+
+  h1, h2, h3 {
+    text-wrap: balance;
+  }
+}
+
 /* Hide scrollbar for IE, Edge and Firefox */
 body, html {
   margin: 0;

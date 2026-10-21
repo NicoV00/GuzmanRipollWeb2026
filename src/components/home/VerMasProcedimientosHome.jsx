@@ -2,12 +2,13 @@ import { Box, Typography } from "@mui/material";
 import { Link as RouterLink } from 'react-router-dom';
 import { useRef, useEffect } from "react";
 import gsap from "gsap";
+import { procedimientoPath } from "../../data/procedimientos";
 
 // Dos filas de procedimientos. Nombres y subtítulos variados para no repetir.
 const procedures = [
   {
     name: "CIRUGIA MAMARIA",
-    to: "/procedimiento/01",
+    to: procedimientoPath("01"),
     subtitle: "Aumento, mastopexia y reconstrucción",
     image: "/images/mamaria.webp",
     topBlur: true,
@@ -17,7 +18,7 @@ const procedures = [
   },
   {
     name: "AUMENTO MAMARIO",
-    to: "/procedimiento/01",
+    to: procedimientoPath("01"),
     subtitle: "Implantes de gel cohesivo",
     image: "/images/aumento.webp",
     topBlur: true,
@@ -27,7 +28,7 @@ const procedures = [
   },
   {
     name: "TRATAMIENTOS NO INVASIVOS",
-    to: "/procedimiento/06",
+    to: procedimientoPath("06"),
     subtitle: "INDIBA & DEKA DuoGlide",
     image: "/images/indibaa.webp",
     objectPosition: "center 40%", // protagonismo del cabezal INDIBA sobre la piel
@@ -37,7 +38,7 @@ const procedures = [
   },
   {
     name: "MOMMY MAKEOVER",
-    to: "/procedimiento/04",
+    to: procedimientoPath("04"),
     subtitle: "Abdomen y mamas en un solo proceso",
     image: "/images/mom.webp",
     col: { xs: "auto", md: "1 / 5" },
@@ -46,7 +47,7 @@ const procedures = [
   },
   {
     name: "ABDOMINOPLASTIA",
-    to: "/procedimiento/04",
+    to: procedimientoPath("04"),
     subtitle: "Remodelación del abdomen",
     image: "/images/abdomino.webp",
     objectPosition: "center bottom",
@@ -56,7 +57,7 @@ const procedures = [
   },
   {
     name: "LIPOESCULTURA VASER",
-    to: "/procedimiento/02",
+    to: procedimientoPath("02"),
     subtitle: "Definición corporal de alta precisión",
     image: "/images/lipo2.webp",
     col: { xs: "auto", md: "5 / 9" },

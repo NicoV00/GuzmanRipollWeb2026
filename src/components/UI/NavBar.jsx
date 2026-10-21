@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useLenis } from "lenis/dist/lenis-react"
 import { Box, useMediaQuery } from "@mui/material"
 import { ArrowRight } from "lucide-react"
+import { procedimientoPath } from "../../data/procedimientos";
 
 export default function NavBar() {
   const [timeParts, setTimeParts] = useState({ hour: "00", minute: "00", second: "00", period: "PDE" })
@@ -14,12 +15,12 @@ export default function NavBar() {
   const [isInHero, setIsInHero] = useState(false)
   const [isProcDropdownOpen, setIsProcDropdownOpen] = useState(false)
   const location = useLocation()
-  const isMobile = useMediaQuery('(max-width:900px)')
+  const isMobile = useMediaQuery('(max-width:1199.95px)')
 
   const getActivePage = () => {
     if (location.pathname === "/" || location.pathname === "/inicio") return "Inicio"
     if (location.pathname === "/clinica") return "Clínica"
-    if (location.pathname === "/procedimientos" || location.pathname.startsWith("/procedimiento/")) return "Procedimientos"
+    if (location.pathname === "/procedimientos" || location.pathname.startsWith("/procedimientos/")) return "Procedimientos"
     if (location.pathname === "/resultados") return "Resultados"
     // if (location.pathname === "/research") return "Research" // Research oculto temporalmente
     if (location.pathname === "/contacto") return "Contacto"
@@ -38,10 +39,10 @@ export default function NavBar() {
   ]
 
   const procedureSubLinks = [
-    { name: "Cirugía Mamaria", path: "/procedimiento/01" },
-    { name: "Lipoescultura VASER", path: "/procedimiento/02" },
-    { name: "Abdominoplastia", path: "/procedimiento/04" },
-    { name: "Tratamientos No Invasivos", path: "/procedimiento/06" },
+    { name: "Cirugía Mamaria", path: procedimientoPath("01") },
+    { name: "Lipoescultura VASER", path: procedimientoPath("02") },
+    { name: "Abdominoplastia", path: procedimientoPath("04") },
+    { name: "Tratamientos No Invasivos", path: procedimientoPath("06") },
   ]
 
   useEffect(() => {
@@ -205,7 +206,7 @@ export default function NavBar() {
         }}>
           {/* Logo */}
           <Box sx={{
-            gridColumn: { xs: '1 / 7', md: '1 / 3' },
+            gridColumn: { xs: '1 / 7', lg: '1 / 3' },
             display: 'flex',
             alignItems: 'center'
           }}>
@@ -233,7 +234,7 @@ export default function NavBar() {
           {/* Navegación Principal */}
           <Box sx={{
             gridColumn: '3 / 9',
-            display: { xs: 'none', md: 'flex' },
+            display: { xs: 'none', lg: 'flex' },
             gap: '0px',
             alignItems: 'center',
             position: 'relative',
@@ -290,7 +291,7 @@ export default function NavBar() {
           {/* Hora y Ubicación */}
           <Box sx={{
             gridColumn: '10 / 12',
-            display: { xs: 'none', md: 'flex' },
+            display: { xs: 'none', lg: 'flex' },
             justifyContent: 'flex-start',
             alignItems: 'center',
             gap: '12px',
@@ -312,7 +313,7 @@ export default function NavBar() {
           {/* Contacto */}
           <Box sx={{
             gridColumn: '12 / 13',
-            display: { xs: 'none', md: 'flex' },
+            display: { xs: 'none', lg: 'flex' },
             justifyContent: 'flex-end',
             alignItems: 'center'
           }}>
@@ -344,7 +345,7 @@ export default function NavBar() {
           {/* Menu/Close Button - Mobile */}
           <Box sx={{
             gridColumn: '10 / 13',
-            display: { xs: 'flex', md: 'none' },
+            display: { xs: 'flex', lg: 'none' },
             justifyContent: 'flex-end',
             alignItems: 'center'
           }}>

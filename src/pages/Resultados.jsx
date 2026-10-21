@@ -1,12 +1,10 @@
 import React from "react";
 import { ResultsCarousel } from "../components/resultados/results-carousel";
 import useSEO from "../hooks/useSEO";
+import { PAGE_SEO } from "../seo/seo";
 
 export default function Resultados() {
-  useSEO({
-    title: 'Resultados Antes y Después',
-    description: 'Galería de casos de antes y después en cirugía mamaria, contorno corporal y tratamientos no invasivos realizados por el Dr. Guzmán Ripoll.',
-  });
+  useSEO(PAGE_SEO["/resultados"]);
 
   return (
     <div style={{

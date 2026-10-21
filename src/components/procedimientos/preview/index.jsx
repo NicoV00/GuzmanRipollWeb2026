@@ -7,6 +7,7 @@ import {
   useTheme
 } from '@mui/material';
 import { ArrowUpRight } from 'lucide-react';
+import { procedimientoPath } from '../../../data/procedimientos';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -192,7 +193,7 @@ export default function MedicalProcedures() {
 
         {/* Headline — center */}
         <Box sx={{ gridColumn: { xs: "1 / -1", md: "4 / 11" }, mb: { xs: "24px", md: 0 } }}>
-          <Typography sx={{
+          <Typography component="h1" sx={{
             fontFamily: "Poppins, sans-serif",
             fontSize: { xs: "32px", md: "56px", lg: "64px" },
             fontWeight: 500,
@@ -244,7 +245,7 @@ export default function MedicalProcedures() {
             key={procedure.id}
             className="proc-card"
             component={RouterLink}
-            to={`/procedimiento/${procedure.id}`}
+            to={procedimientoPath(procedure.id)}
             sx={{
               textDecoration: "none",
               color: "inherit",

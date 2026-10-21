@@ -1,16 +1,23 @@
-# Dr. Guzmán Ripoll
+# Dr. Guzmán Ripoll — Cirujano Plástico en Punta del Este, Uruguay
 
-> Cirugía plástica y estética en Punta del Este y Maldonado, Uruguay. Cirugía reconstructiva y procedimientos estéticos con enfoque en resultados naturales.
+> Cirugía plástica, estética y reconstructiva en Punta del Este y Maldonado, Uruguay. El Dr. Guzmán Ripoll es Especialista en Cirugía Plástica, Reparadora y Estética (Universidad de la República) con Maestría en Cirugía Mamaria, Reconstructiva y Estética (Universitat de Barcelona). Es el único especialista en Uruguay que utiliza la lipoaspiración VASER.
 
-## Páginas principales
+- Consultorio: Clínica Select, Av. Roosevelt, Punta del Este, Maldonado 20100, Uruguay
+- Teléfono / WhatsApp: +598 92 566 656
+- Email: info@guzmanripoll.com
+- Sociedades: SCPREU (Sociedad de Cirugía Plástica, Reparadora y Estética del Uruguay), ALAM (Asociación Latinoamericana de Microcirugía)
 
-- [Inicio](https://www.guzmanripoll.com/): Presentación del Dr. Guzmán Ripoll y sus especialidades.
-- [Clínica](https://www.guzmanripoll.com/clinica): Información sobre la clínica y el equipo.
-- [Procedimientos](https://www.guzmanripoll.com/procedimientos): Listado de cirugías estéticas y reconstructivas ofrecidas.
-- [Resultados](https://www.guzmanripoll.com/resultados): Casos y resultados de procedimientos realizados.
-- [Contacto](https://www.guzmanripoll.com/contacto): Formulario de contacto y datos de la clínica.
+## Procedimientos
 
-## Legal
+- [Cirugía mamaria y aumento mamario](https://www.guzmanripoll.com/procedimientos/cirugia-mamaria): aumento con implantes, mastopexia (pexia), reducción mamaria, ginecomastia y reconstrucción mamaria. Simulación 3D Crisalix.
+- [Lipoescultura VASER](https://www.guzmanripoll.com/procedimientos/lipoescultura-vaser): remodelación corporal, grasa localizada y tensado de piel (BodyTite, Morpheus8).
+- [Abdominoplastia y mommy makeover](https://www.guzmanripoll.com/procedimientos/abdominoplastia): exceso de piel y grasa abdominal, diástasis de rectos.
+- [Tratamientos no invasivos](https://www.guzmanripoll.com/procedimientos/tratamientos-no-invasivos): radiofrecuencia INDIBA, Morpheus8 y láser DEKA DuoGlide.
 
-- [Política de Privacidad](https://www.guzmanripoll.com/politica-privacidad)
-- [Procesamiento de Datos](https://www.guzmanripoll.com/procesamiento-datos)
+## Páginas
+
+- [Inicio](https://www.guzmanripoll.com/)
+- [Clínica y el doctor](https://www.guzmanripoll.com/clinica)
+- [Procedimientos](https://www.guzmanripoll.com/procedimientos)
+- [Resultados antes y después](https://www.guzmanripoll.com/resultados)
+- [Contacto y consultas](https://www.guzmanripoll.com/contacto)

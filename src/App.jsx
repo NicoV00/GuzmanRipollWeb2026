@@ -1,5 +1,6 @@
 import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
+import { numberFromParam, procedimientoPath } from "./data/procedimientos";
 import { Box, Typography } from "@mui/material";
 
 import { gsap } from "gsap";
@@ -30,12 +31,20 @@ import { lightTheme, darkTheme } from './utils/theme';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Componentes temporales
-const ProcedimientoCero = () => (
-  <Box sx={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <Typography variant="h4">Cirugía Mamaria - En construcción</Typography>
-  </Box>
-);
+// /procedimientos/:slug acepta solo slugs válidos; /procedimiento/01 (URL vieja) redirige al slug.
+// En producción las URLs viejas ya llegan redirigidas con 301 desde vercel.json.
+const ProcedimientoRoute = () => {
+  const { slug } = useParams();
+  const number = numberFromParam(slug);
+  if (!number) return <Navigate to="/procedimientos" replace />;
+  if (slug === number) return <Navigate to={procedimientoPath(number)} replace />;
+  return <ProcedimientoDetalle />;
+};
+
+const LegacyProcedimientoRedirect = () => {
+  const { slug } = useParams();
+  return <Navigate to={procedimientoPath(numberFromParam(slug))} replace />;
+};
 
 const NavButtons = () => (
   <Box>
@@ -136,15 +145,16 @@ function AppShell({ toggleTheme }) {
         <Suspense fallback={null}>
           <Routes location={displayLocation}>
             <Route path="/" element={<Home toggleTheme={toggleTheme} />} />
-            <Route path="/inicio" element={<Home toggleTheme={toggleTheme} />} />
+            <Route path="/inicio" element={<Navigate to="/" replace />} />
             <Route path="/clinica" element={<Clinica />} />
             <Route path="/procedimientos" element={<Procedimientos toggleTheme={toggleTheme} />} />
-            <Route path="/procedimiento/:id" element={<ProcedimientoDetalle />} />
+            <Route path="/procedimientos/:slug" element={<ProcedimientoRoute />} />
+            <Route path="/procedimiento/:slug" element={<LegacyProcedimientoRedirect />} />
             <Route path="/resultados" element={<Resultados />} />
             {/* Research oculto temporalmente
             <Route path="/research" element={<Research />} /> */}
             <Route path="/contacto" element={<ContactSection />} />
-            <Route path="/cir-mamaria" element={<ProcedimientoCero />} />
+            <Route path="/cir-mamaria" element={<Navigate to={procedimientoPath("01")} replace />} />
             <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
             <Route path="/procesamiento-datos" element={<ProcesamientoDatos />} />
             <Route path="*" element={<NotFound />} />

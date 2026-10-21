@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:cf": "npm run build && npx wrangler pages dev dist --compatibility-date=2026-07-09",
-    "build": "vite build",
+    "build": "vite build && node scripts/prerender.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },

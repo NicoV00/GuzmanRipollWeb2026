@@ -283,6 +283,7 @@ export default function IntroHome() {
         }}
       >
         <Typography
+          component="h1"
           className="intro-animate"
           color="#E9E9E9"
           fontFamily={'Poppins'}
@@ -301,7 +302,7 @@ export default function IntroHome() {
             maxWidth: { xs: '100%', md: '90%' }
           }}
         >
-          Cirugía Plástica Estética y Reconstructiva, especializados en brindar soluciones avanzadas
+          Cirugía Plástica, Estética y Reconstructiva en Punta del Este, Uruguay
         </Typography>
 
         <Box

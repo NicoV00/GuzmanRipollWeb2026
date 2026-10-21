@@ -170,7 +170,7 @@ export function ResultsCarousel() {
         >
           {/* Título a la izquierda - primeras 4 columnas */}
           <div style={{ gridColumn: "span 4", paddingTop: "75px", paddingBottom: "80px" }}>
-            <h1
+            <div
               style={{
                 color: "#000000",
                 lineHeight: "1.2",
@@ -183,8 +183,8 @@ export function ResultsCarousel() {
                 display: "none", // Ocultamos el título anterior
               }}
             >
-            </h1>
-            <p
+            </div>
+            <h1
               style={{
                 color: "#000000",
                 fontSize: "20px",
@@ -197,7 +197,7 @@ export function ResultsCarousel() {
               }}
             >
               CASOS SELECCIONADOS
-            </p>
+            </h1>
           </div>
 
           {/* Centro - '01' - siguientes 4 columnas */}

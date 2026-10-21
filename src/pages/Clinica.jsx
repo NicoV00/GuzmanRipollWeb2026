@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom"
 import { gsap } from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import useSEO from "../hooks/useSEO"
+import { PAGE_SEO } from "../seo/seo";
 
 import { BlurText } from "../components/animations/BlurScrollEffect"
 import "../components/animations/blur-scroll-effect.css"
@@ -23,10 +24,7 @@ export default function Clinica({ id }) {
   const imageRef = useRef(null)
   const headlineRef = useRef(null)
 
-  useSEO({
-    title: 'Nuestra Clínica',
-    description: 'Conocé la clínica del Dr. Guzmán Ripoll en Punta del Este, Uruguay. Un espacio diseñado para rehumanizar la medicina estética combinando calidez humana con tecnología de punta.',
-  });
+  useSEO(PAGE_SEO["/clinica"]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

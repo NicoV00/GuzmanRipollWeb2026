@@ -2,6 +2,7 @@ import React from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { Box, Typography, Link as MuiLink } from "@mui/material";
 import { Instagram, Linkedin, Facebook } from 'lucide-react';
+import { procedimientoPath } from "../../data/procedimientos";
 
 const COLORS = {
   textDark: "#000000",
@@ -17,11 +18,11 @@ const navLinks = [
 ];
 
 const procedimientosLinks = [
-  { to: "/procedimiento/01", text: "Cirugía Mamaria" },
-  { to: "/procedimiento/02", text: "Lipoescultura VASER" },
-  { to: "/procedimiento/04", text: "Abdominoplastia" },
-  { to: "/procedimiento/01", text: "Aumento Mamario" },
-  { to: "/procedimiento/06", text: "Tratamientos No Invasivos" },
+  { to: procedimientoPath("01"), text: "Cirugía Mamaria" },
+  { to: procedimientoPath("02"), text: "Lipoescultura VASER" },
+  { to: procedimientoPath("04"), text: "Abdominoplastia" },
+  { to: procedimientoPath("01"), text: "Aumento Mamario" },
+  { to: procedimientoPath("06"), text: "Tratamientos No Invasivos" },
 ];
 
 const colHeadingStyles = {
@@ -79,12 +80,12 @@ const brandBaseStyles = {
   fontWeight: 400,
   color: COLORS.textDark,
   lineHeight: 1.0,
-  letterSpacing: { xs: "-2px", md: "-4px" },
+  letterSpacing: { xs: "-2px", lg: "-4px" },
   textTransform: "uppercase",
-  fontSize: { xs: "9.7vw", md: "clamp(48px, 6.2vw, 100px)" },
-  textAlign: { xs: "left", md: "right" },
+  fontSize: { xs: "9.7vw", lg: "clamp(48px, 6.2vw, 100px)" },
+  textAlign: { xs: "left", lg: "right" },
   whiteSpace: "nowrap",
-  width: { xs: "100%", md: "auto" },
+  width: { xs: "100%", lg: "auto" },
   m: 0,
 };
 
@@ -156,7 +157,7 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
           <Box>
             <Typography sx={colHeadingStyles}>Contacto</Typography>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <MuiLink href="https://maps.google.com/?q=Punta+del+Este,+Uruguay" target="_blank" rel="noopener noreferrer" underline="none" sx={colLinkStyles}>
+              <MuiLink href="https://www.google.com/maps/search/?api=1&query=Cl%C3%ADnica+Select+Av.+Roosevelt+Punta+del+Este" target="_blank" rel="noopener noreferrer" underline="none" sx={colLinkStyles}>
                 Punta del Este, Uruguay
               </MuiLink>
               <MuiLink href="tel:+59892566656" underline="none" sx={colLinkStyles}>
@@ -232,31 +233,31 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
 
       {/* ─── FUERA DE LA CARD: copyright (col 1) + nombre grande (col 12) ─── */}
       <Box sx={{
-        mt: { xs: "12px", md: "40px" },
+        mt: { xs: "12px", lg: "40px" },
         display: "flex",
         // En mobile: GUZMÁN RIPOLL arriba y el © abajo (column-reverse). Desktop sin cambios.
-        flexDirection: { xs: "column-reverse", md: "row" },
+        flexDirection: { xs: "column-reverse", lg: "row" },
         justifyContent: "space-between",
-        alignItems: { xs: "flex-start", md: "flex-end" },
-        gap: { xs: "2px", md: "20px" },
+        alignItems: { xs: "flex-start", lg: "flex-end" },
+        gap: { xs: "2px", lg: "20px" },
         // En mobile el bloque se sale del padding del wrapper (full-bleed) para que GUZMÁN RIPOLL ocupe todo el ancho
-        width: { xs: "100vw", md: "100%" },
-        position: { xs: "relative", md: "static" },
-        left: { xs: "50%", md: "auto" },
-        transform: { xs: "translateX(-50%)", md: "none" },
-        px: { xs: 0, md: 0 },
+        width: { xs: "100vw", lg: "100%" },
+        position: { xs: "relative", lg: "static" },
+        left: { xs: "50%", lg: "auto" },
+        transform: { xs: "translateX(-50%)", lg: "none" },
+        px: { xs: 0, lg: 0 },
         boxSizing: "border-box",
       }}>
         <Typography sx={{
           fontFamily: "Poppins, sans-serif",
-          fontSize: { xs: "11px", md: "16px" },
+          fontSize: { xs: "11px", lg: "16px" },
           fontWeight: 500,
           color: "#000000",
           textAlign: "left",
-          whiteSpace: { xs: "normal", md: "nowrap" },
-          mb: { xs: 0, md: "10px" },
-          pl: { xs: "16px", md: 0 },
-          pr: { xs: "16px", md: 0 },
+          whiteSpace: { xs: "normal", lg: "nowrap" },
+          mb: { xs: 0, lg: "10px" },
+          pl: { xs: "16px", lg: 0 },
+          pr: { xs: "16px", lg: 0 },
         }}>
           © {currentYear} Dr. Guzmán Ripoll. Todos los derechos reservados.
         </Typography>
@@ -264,13 +265,13 @@ export default function Footer({ backgroundColor = "transparent", cardBackground
         {/* Wordmark grande con glass/refraction sutil contenido dentro de la letra */}
         <Box sx={{
           position: "relative",
-          width: { xs: "100%", md: "auto" },
+          width: { xs: "100%", lg: "auto" },
           overflow: "hidden",
           isolation: "isolate",
           pb: "0.02em",
-          mb: { xs: "-0.2em", md: "-0.14em" },
+          mb: { xs: "-0.2em", lg: "-0.14em" },
           // Margen lateral en mobile (el bloque es full-bleed y quedaba pegado al borde)
-          px: { xs: "16px", md: 0 },
+          px: { xs: "16px", lg: 0 },
           boxSizing: "border-box",
           // Efecto tipo "J A C O": por defecto solo se ven las iniciales (G, R) y el resto
           // queda invisible pero CONSERVANDO su espacio; al hover aparece el nombre completo.

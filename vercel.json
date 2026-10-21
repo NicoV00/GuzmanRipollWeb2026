@@ -1,11 +1,16 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/inicio", "destination": "/", "permanent": true },
+    { "source": "/cir-mamaria", "destination": "/procedimientos/cirugia-mamaria", "permanent": true },
+    { "source": "/procedimiento/01", "destination": "/procedimientos/cirugia-mamaria", "permanent": true },
+    { "source": "/procedimiento/02", "destination": "/procedimientos/lipoescultura-vaser", "permanent": true },
+    { "source": "/procedimiento/04", "destination": "/procedimientos/abdominoplastia", "permanent": true },
+    { "source": "/procedimiento/06", "destination": "/procedimientos/tratamientos-no-invasivos", "permanent": true },
+    { "source": "/procedimiento/:path*", "destination": "/procedimientos", "permanent": true }
   ],
   "headers": [
     {

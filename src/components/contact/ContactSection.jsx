@@ -3,6 +3,8 @@ import gsap from 'gsap';
 import { Send } from 'lucide-react';
 import { TurnstileWidget } from './TurnstileWidget.jsx';
 import useSEO from '../../hooks/useSEO.js';
+import { trackEvent } from '../../lib/analytics.js';
+import { PAGE_SEO } from "../../seo/seo.js";
 import { getTrafficSource } from '../../utils/trafficSource.js';
 
 // Renderizar solo la variante (desktop o mobile) que corresponde al viewport:
@@ -50,10 +52,7 @@ export function ContactSection({ id }) {
   const rootRef = useRef(null);
   const isMobile = useIsMobile();
 
-  useSEO({
-    title: 'Contacto y Consultas',
-    description: 'Ponte en contacto con el Dr. Guzmán Ripoll para coordinar una cita o realizar consultas sobre cirugías estéticas y reconstructivas en Punta del Este, Uruguay.',
-  });
+  useSEO(PAGE_SEO["/contacto"]);
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -99,6 +98,7 @@ export function ContactSection({ id }) {
       }
 
       setStatus('sent');
+      trackEvent('generate_lead', { form: 'contacto', traffic_source: getTrafficSource() });
       setFormData({ firstName: '', email: '', phone: '', message: '' });
     } catch (err) {
       setStatus('error');

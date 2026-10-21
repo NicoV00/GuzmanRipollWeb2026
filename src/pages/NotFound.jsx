@@ -1,8 +1,11 @@
 import { Box, Typography } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import useSEO from "../hooks/useSEO";
+import { NOT_FOUND_SEO } from "../seo/seo";
 
 export default function NotFound() {
+  useSEO(NOT_FOUND_SEO);
   return (
     <Box
       sx={{

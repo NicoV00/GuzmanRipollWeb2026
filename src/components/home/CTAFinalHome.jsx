@@ -119,17 +119,17 @@ export default function CTAFinalHome() {
             rowGap: { xs: "28px", md: 0 },
             // md sin padding lateral: las 12 columnas internas calzan con la grid global
             // (la card ocupa col 1→12), y el titular queda alineado a la columna 3.
-            px: { xs: "22px", md: 0 },
+            px: { xs: "22px", md: "48px", lg: 0 },
             py: { xs: "72px", md: "80px" },
           }}
         >
           {/* Titular */}
           <Typography
             sx={{
-              gridColumn: { xs: "1 / -1", md: "4 / 7" },
+              gridColumn: { xs: "1 / -1", md: "1 / 7", lg: "4 / 7" },
               fontFamily: "Poppins, sans-serif",
               fontWeight: 400,
-              fontSize: { xs: "clamp(27px, 7.8vw, 34px)", md: "42px", xl: "52px" },
+              fontSize: { xs: "clamp(27px, 7.8vw, 34px)", md: "36px", lg: "42px", xl: "52px" },
               lineHeight: { xs: 1.2, md: 1.08 },
               letterSpacing: { xs: "-0.5px", md: "-3px" },
               color: "#F5F7FB",
@@ -146,7 +146,7 @@ export default function CTAFinalHome() {
           </Typography>
 
           {/* Texto + botones */}
-          <Box sx={{ gridColumn: { xs: "1 / -1", md: "7 / 11" }, textAlign: "left" }}>
+          <Box sx={{ gridColumn: { xs: "1 / -1", md: "7 / 13", lg: "7 / 11" }, textAlign: "left" }}>
             <Typography
               sx={{
                 fontFamily: "Poppins, sans-serif",
@@ -167,7 +167,7 @@ export default function CTAFinalHome() {
               sx={{
                 display: "flex",
                 gap: { xs: "10px", md: "14px" },
-                flexWrap: "nowrap",
+                flexWrap: { xs: "nowrap", md: "wrap", lg: "nowrap" },
                 alignItems: "center",
               }}
             >
