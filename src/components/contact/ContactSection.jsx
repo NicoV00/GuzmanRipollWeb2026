@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { Send } from 'lucide-react';
 import { TurnstileWidget } from './TurnstileWidget.jsx';
 import useSEO from '../../hooks/useSEO.js';
-import { trackEvent } from '../../lib/analytics.js';
+import { trackEvent } from '../../lib/ga4.js';
 import { PAGE_SEO } from "../../seo/seo.js";
 import { getTrafficSource } from '../../utils/trafficSource.js';
 

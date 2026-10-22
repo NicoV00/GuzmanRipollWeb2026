@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iso Lab — Guzmán Ripoll</title>
+<style>
+:root{
+  --page:#0c0d0e; --panel:#141516; --body:#141516; --deck:#1a1b1c; --glass:#0e0f10;
+  --line:#5b5e61; --detail:#3a3d40; --live:#f2f2f0; --muted:#8a8d90; --accent:#0081C7;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --page:#e9eaea; --panel:#f6f6f5; --body:#f6f6f5; --deck:#fbfbfa; --glass:#eeeeec;
+    --line:#9a9d9f; --detail:#c9cbcc; --live:#111; --muted:#6b6e70;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--live);font-family:Poppins,system-ui,sans-serif}
+header{max-width:1200px;margin:0 auto;padding:40px 16px 8px}
+header h1{font-weight:500;font-size:28px;letter-spacing:-0.02em;margin:0 0 6px}
+header p{color:var(--muted);margin:0;font-size:14px;max-width:640px;line-height:1.6}
+main{max-width:1200px;margin:0 auto;padding:16px;display:grid;gap:28px}
+.fig{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.fig{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--detail);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.cap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 16px;font:13px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.cap .ro{text-transform:none;color:var(--live)}
+.cap .n{text-transform:none}
+svg{width:100%;height:auto;display:block;outline:none;touch-action:manipulation}
+svg:focus-visible{outline:1px dashed var(--line);outline-offset:4px;border-radius:8px}
+.face{fill:var(--body);stroke:var(--line);stroke-width:1;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.face.top{fill:var(--deck)}
+.face.glass{fill:var(--glass)}
+.fillonly{fill:var(--body);stroke:none}
+.press.on .face.top{fill:var(--glass)}
+.implant{stroke:var(--live)!important}
+.lit .face.top{fill:var(--live)}
+.hl{fill:none;stroke:var(--live);stroke-width:2.4;vector-effect:non-scaling-stroke;stroke-linecap:round}
+svg.drag{cursor:grabbing}
+.detail{fill:none;stroke:var(--detail);stroke-width:1;vector-effect:non-scaling-stroke}
+.lcd{fill:var(--live);font-family:ui-monospace,Menlo,Consolas,monospace}
+.dim{fill:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace}
+.lbl{fill:var(--muted);font-family:ui-monospace,Menlo,Consolas,monospace}
+.trace{fill:none;stroke:var(--live);stroke-width:1.4;vector-effect:non-scaling-stroke;stroke-linecap:round}
+.ghost{fill:none;stroke:var(--muted);stroke-width:1;stroke-dasharray:3 3;vector-effect:non-scaling-stroke}
+.press{cursor:pointer;transition:transform 60ms ease-out}
+.press.down{transform:translateY(4px)}
+.press.down .face,.press.on .face{stroke:var(--live)}
+.press.on .lbl{fill:var(--live)}
+@media (prefers-reduced-motion:reduce){.press{transition:none}.press.down{transform:none}}
+.info{padding:6px 2px}
+.info .k{font:12px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.info h2{font-weight:500;font-size:22px;letter-spacing:-0.02em;margin:6px 0 8px}
+.info p,.info li{color:var(--muted);font-size:14px;line-height:1.6}
+.info ul{padding-left:18px;margin:6px 0 14px}
+.info strong{color:var(--live);font-weight:500}
+.prompt{position:relative;background:var(--panel);border:1px solid var(--detail);border-radius:12px;padding:34px 14px 12px;font:12.5px/1.6 ui-monospace,Menlo,Consolas,monospace;color:var(--live);white-space:pre-wrap}
+.prompt button{position:absolute;top:8px;right:8px;font:11px ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;background:transparent;color:var(--muted);border:1px solid var(--detail);border-radius:6px;padding:3px 8px;cursor:pointer}
+.note{font-size:12px!important;opacity:.8}
+</style>
+</head>
+<body>
+<header>
+  <h1>Iso Lab</h1>
+  <p>Figuras isométricas interactivas para explicar cosas en el sitio del Dr. Guzmán Ripoll. Cada figura funciona: tocá las partes o usá el teclado con la figura enfocada. Al lado de cada una está para qué sirve y el prompt que la genera con el skill <code>iso-figure</code>.</p>
+</header>
+<main id="main"></main>
+
+<script>
+/* ---------- kernel (iso-figure), origin at 0,0; viewBox computed from registered corners ---------- */
+function iso(){
+  const C=Math.cos(Math.PI/6), S=Math.sin(Math.PI/6), pts=[];
+  const P=(x,y,z)=>[(x-y)*C,(x+y)*S-z];
+  const plane=(O,U,V)=>{const o=P(...O),u=P(...U),v=P(...V);return `matrix(${u[0]} ${u[1]} ${v[0]} ${v[1]} ${o[0]} ${o[1]})`;};
+  const TOP=(x,y,z)=>plane([x,y,z],[1,0,0],[0,1,0]);
+  const FRONT=(x,y,z)=>plane([x,y,z],[1,0,0],[0,0,-1]);
+  const SIDE=(x,y,z)=>plane([x,y,z],[0,-1,0],[0,0,-1]);
+  const rect=(t,w,h,r=0,cls='face')=>`<g transform="${t}"><rect class="${cls}" width="${w}" height="${h}" rx="${r}"/></g>`;
+  const box=(x,y,z,w,d,h,r=0)=>{
+    for(const a of [x,x+w])for(const b of [y,y+d])for(const c of [z,z+h])pts.push(P(a,b,c));
+    return rect(SIDE(x+w,y+d,z+h),d,h,Math.min(r,h/4))+rect(FRONT(x,y+d,z+h),w,h,Math.min(r,h/4))+rect(TOP(x,y,z+h),w,d,r,'face top');
+  };
+  const viewBox=(m=.1)=>{const xs=pts.map(p=>p[0]),ys=pts.map(p=>p[1]);
+    const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys),w=x1-x0,h=y1-y0;
+    return `${x0-w*m} ${y0-h*m} ${w*(1+2*m)} ${h*(1+2*m)}`;};
+  return {P,TOP,FRONT,SIDE,box,viewBox,pts};
+}
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const lines=(arr,x,y,lh,size,cls='lcd')=>arr.map((l,i)=>`<text class="${i?cls:'lcd'}" x="${x}" y="${y+i*lh}" font-size="${i?size:size+3}">${esc(l)}</text>`).join('');
+
+/* ---------- figure shell ---------- */
+function mount({n,name,hint,aria,info,prompt,build,extra=''}){
+  const sec=document.createElement('section'); sec.className='fig';
+  sec.innerHTML=`<div class="panel">
+      <div class="cap"><span class="n">Fig ${n}</span><span>${name}</span></div>
+      <svg role="img" tabindex="0" aria-label="${aria}"></svg>
+      <div class="cap"><span>${hint}</span><span class="ro"></span></div>
+    </div>
+    <div class="info">${info}${extra}
+      <div class="k" style="margin:4px 0 8px">Prompt</div>
+      <div class="prompt"><button type="button">Copiar</button><span>${esc(prompt)}</span></div>
+    </div>`;
+  document.getElementById('main').appendChild(sec);
+  const svg=sec.querySelector('svg'), ro=sec.querySelector('.ro');
+  const k=iso(); const api=build(k);
+  svg.setAttribute('viewBox',k.viewBox()); svg.innerHTML=api.svg;
+  const q=s=>svg.querySelector(s);
+  const flash=el=>{el.classList.add('down');setTimeout(()=>el.classList.remove('down'),110);};
+  const ctx={svg,q,ro,flash};
+  api.init(ctx);
+  api.bind&&api.bind(ctx);
+  svg.addEventListener('click',e=>{const p=e.target.closest('.press');if(p){flash(p);api.press(p.dataset.k,ctx);}});
+  svg.addEventListener('keydown',e=>{if(e.metaKey||e.ctrlKey||e.altKey)return;
+    const key=e.key.toLowerCase();
+    if(api.key&&api.key[key]){e.preventDefault();api.key[key](ctx);return;}
+    const el=svg.querySelector(`.press[data-key="${CSS.escape(key)}"]`);
+    if(el){e.preventDefault();flash(el);api.press(el.dataset.k,ctx);}});
+  sec.querySelector('.prompt button').addEventListener('click',ev=>{
+    navigator.clipboard?.writeText(prompt).then(()=>{ev.target.textContent='Copiado';setTimeout(()=>ev.target.textContent='Copiar',1200);});
+  });
+}
+
+/* ================= Fig 1 · Proceso ================= */
+const STEPS=[
+  ['01 Consulta','Primera charla con el Dr.','Escucha qué buscás y','revisa tu historia clínica.'],
+  ['02 Evaluación','Examen y medidas.','Simulación 3D opcional','para ver el resultado.'],
+  ['03 Cirugía','Quirófano habilitado,','anestesia y alta','acompañada.'],
+  ['04 Seguimiento','Controles programados','durante la recuperación','y después.'],
+];
+mount({n:1,name:'Proceso',hint:'tocá 1–4',
+  aria:'Consola isométrica con cuatro teclas. Cada tecla muestra una etapa del proceso quirúrgico en la pantalla. Teclas 1 a 4.',
+  info:`<div class="k">Home · ProcessSteps</div><h2>Las 4 etapas, una tecla cada una</h2>
+    <p>Reemplaza la lista estática de pasos. El paciente <strong>aprieta</strong> cada etapa y la pantalla le cuenta qué pasa ahí.</p>
+    <ul><li>Dónde: sección de proceso del Home o la página de cada procedimiento.</li><li>Datos: los textos de <code>ProcessSteps</code>.</li></ul>`,
+  prompt:`Usá el skill iso-figure. Objeto: una consola de escritorio con una pantalla atrás y 4 teclas grandes adelante, etiquetadas 01–04. Salida: al apretar una tecla, la pantalla muestra el nombre de esa etapa del proceso quirúrgico (Consulta, Evaluación, Cirugía, Seguimiento) y dos líneas de descripción. Readout: "paso N · nombre". Teclado 1–4. Monocromo, Fig 1, nombre PROCESO.`,
+  build(k){
+    let s=k.box(0,0,0,320,220,18,10);
+    s+=k.box(20,14,18,280,34,130,8);
+    s+=`<g transform="${k.FRONT(20,48,148)}"><rect class="face glass" x="14" y="12" width="252" height="106" rx="6"/><g data-scr></g></g>`;
+    s+=`<g transform="${k.TOP(20,14,148)}">${[0,1,2,3,4,5].map(i=>`<line class="detail" x1="${200+i*10}" y1="10" x2="${200+i*10}" y2="24"/>`).join('')}</g>`;
+    for(let i=0;i<4;i++){const x=20+i*72,y=120;
+      s+=`<g class="press" data-k="${i}" data-key="${i+1}">${k.box(x,y,18,60,60,14,6)}
+        <g transform="${k.TOP(x,y,32)}"><text class="lbl" x="30" y="36" text-anchor="middle" font-size="18">0${i+1}</text></g></g>`;}
+    return {svg:s,
+      init(c){this.press(0,c);},
+      press(i,c){i=+i;c.svg.querySelectorAll('.press').forEach(p=>p.classList.toggle('on',+p.dataset.k===i));
+        c.q('[data-scr]').innerHTML=lines(STEPS[i],24,34,19,10.5,'lcd');
+        c.ro.textContent=`paso ${i+1} · ${STEPS[i][0].slice(3).toLowerCase()}`;}};
+  }});
+
+/* ================= Fig 2 · Implantes ================= */
+const IMPL=[
+  {cc:250,base:'11.2',proy:'3.6',R:22,H:10},
+  {cc:300,base:'11.7',proy:'3.9',R:26,H:13},
+  {cc:350,base:'12.2',proy:'4.2',R:30,H:16},
+  {cc:400,base:'12.8',proy:'4.5',R:34,H:19},
+];
+mount({n:2,name:'Implantes',hint:'elegí un tamaño · 1–4',
+  aria:'Bandeja isométrica con cuatro implantes de distinto tamaño. Al elegir uno, la pantalla muestra volumen, base y proyección. Teclas 1 a 4.',
+  info:`<div class="k">Aumento mamario · ProcedimientoDetalle</div><h2>Comparar tamaños sin números abstractos</h2>
+    <p>Una bandeja de <strong>sizers</strong> como la del consultorio. Al elegir uno se ven volumen, ancho de base y proyección, y el domo crece de verdad.</p>
+    <ul><li>Dónde: página de aumento mamario, junto a la explicación de tamaño y perfil.</li><li>Ideal antes del CTA de Crisalix.</li></ul>
+    <p class="note">Valores ilustrativos de perfil moderado; ajustarlos con el Dr. antes de publicar.</p>`,
+  prompt:`Usá el skill iso-figure. Objeto: una bandeja de consultorio con 4 implantes mamarios de prueba (domos de 250, 300, 350 y 400 cc) apoyados en bases, y un visor atrás. Los domos se dibujan como círculos apilados sobre el plano TOP. Salida: al elegir un implante queda marcado y el visor muestra volumen, ancho de base y proyección en cm. Readout: "350 cc · base 12.2 cm". Teclado 1–4. Monocromo, Fig 2, nombre IMPLANTES.`,
+  build(k){
+    let s=k.box(0,0,0,340,200,20,10);
+    s+=k.box(20,12,20,300,26,70,6);
+    s+=`<g transform="${k.FRONT(20,38,90)}"><rect class="face glass" x="12" y="10" width="276" height="50" rx="5"/><g data-scr></g></g>`;
+    IMPL.forEach((m,i)=>{const cx=55+i*78,cy=128;
+      let g=k.box(cx-32,cy-32,20,64,64,6,6);
+      const steps=7; for(let j=0;j<=steps;j++){const t=j/steps,r=m.R*Math.sqrt(1-t*t);if(r<1.5)break;
+        g+=`<g transform="${k.TOP(cx,cy,26+m.H*t)}"><circle class="face top" r="${r}"/></g>`;}
+      k.pts.push(k.P(cx,cy,26+m.H));
+      g+=`<g transform="${k.TOP(cx-32,cy+34,20)}"><text class="lbl" x="32" y="16" text-anchor="middle" font-size="12">${m.cc}</text></g>`;
+      s+=`<g class="press" data-k="${i}" data-key="${i+1}">${g}</g>`;});
+    return {svg:s,
+      init(c){this.press(1,c);},
+      press(i,c){i=+i;const m=IMPL[i];c.svg.querySelectorAll('.press').forEach(p=>p.classList.toggle('on',+p.dataset.k===i));
+        c.q('[data-scr]').innerHTML=`<text class="lcd" x="24" y="40" font-size="22">${m.cc} cc</text>
+          <text class="dim" x="130" y="30" font-size="11">base ${m.base} cm</text>
+          <text class="dim" x="130" y="46" font-size="11">proyección ${m.proy} cm</text>`;
+        c.ro.textContent=`${m.cc} cc · base ${m.base} cm`;}};
+  }});
+
+/* ================= Fig 3 · Recuperación ================= */
+const REC=[
+  ['Semana 1','Reposo relativo.','Sostén 24 h, sin','levantar peso.','Primer control.'],
+  ['Semana 2','Caminatas suaves.','Retiro de puntos','si corresponde.','Trabajo de escritorio.'],
+  ['Semana 3','Menos inflamación.','Manejar con','autorización.',''],
+  ['Semana 4','Actividad diaria','normal. Sin pecho','ni impacto aún.',''],
+  ['Semana 6','Vuelta al gimnasio','de forma gradual.','Sostén deportivo.',''],
+  ['Mes 3','Forma casi final.','Cicatriz en','maduración.','Control de resultado.'],
+];
+mount({n:3,name:'Recuperación',hint:'elegí la semana · 1–6',
+  aria:'Calendario isométrico con seis fichas de semanas y una pantalla. Cada ficha muestra qué se puede hacer en esa etapa de la recuperación. Teclas 1 a 6.',
+  info:`<div class="k">ProcedimientoDetalle · Recuperación</div><h2>Qué puedo hacer en cada semana</h2>
+    <p>La pregunta más repetida en consulta, respondida con fichas: el paciente <strong>toca la semana</strong> y ve qué esperar.</p>
+    <ul><li>Dónde: bloque de recuperación debajo de la imagen del procedimiento.</li><li>Cada procedimiento puede tener su propio set de 6 fichas.</li></ul>
+    <p class="note">Textos orientativos; validarlos con el Dr. por procedimiento.</p>`,
+  prompt:`Usá el skill iso-figure. Objeto: una base de escritorio con una tablet vertical atrás y 6 fichas tipo tecla en grilla 3×2 adelante, etiquetadas S1, S2, S3, S4, S6 y M3. Salida: al apretar una ficha queda activa y la tablet muestra qué puede hacer el paciente en esa etapa de la recuperación (reposo, actividad, controles). Readout: "semana 2 · 2/6". Teclado 1–6. Monocromo, Fig 3, nombre RECUPERACIÓN.`,
+  build(k){
+    let s=k.box(0,0,0,300,250,16,10);
+    s+=k.box(16,12,16,268,28,150,8);
+    s+=`<g transform="${k.FRONT(16,40,166)}"><rect class="face glass" x="12" y="12" width="244" height="126" rx="6"/><g data-scr></g></g>`;
+    const tags=['S1','S2','S3','S4','S6','M3'];
+    for(let r=0;r<2;r++)for(let col=0;col<3;col++){const i=r*3+col,x=24+col*88,y=100+r*70;
+      s+=`<g class="press" data-k="${i}" data-key="${i+1}">${k.box(x,y,16,76,58,12,6)}
+        <g transform="${k.TOP(x,y,28)}"><text class="lbl" x="38" y="35" text-anchor="middle" font-size="16">${tags[i]}</text></g></g>`;}
+    return {svg:s,
+      init(c){this.press(0,c);},
+      press(i,c){i=+i;c.svg.querySelectorAll('.press').forEach(p=>p.classList.toggle('on',+p.dataset.k===i));
+        c.q('[data-scr]').innerHTML=lines(REC[i].filter(Boolean),26,40,21,12,'lcd');
+        c.ro.textContent=`${REC[i][0].toLowerCase()} · ${i+1}/6`;}};
+  }});
+
+/* ================= Fig 4 · Simulación 3D ================= */
+const SIZES={s:0.55,m:0.8,l:1.05}, SZN={s:'S',m:'M',l:'L'};
+function profile(a){ // side torso contour in screen-local units
+  const pts=[];for(let t=0;t<=1.0001;t+=.04){const y=18+t*124;
+    const bump=Math.exp(-((t-.42)**2)/(2*.085**2))*28*a, waist=-Math.exp(-((t-.82)**2)/(2*.1**2))*8;
+    pts.push(`${(118+bump+waist+t*4).toFixed(1)},${y.toFixed(1)}`);}return pts.join(' ');}
+mount({n:4,name:'Simulación 3D',hint:'S · M · L · espacio = antes/después',
+  aria:'Monitor isométrico con un perfil de torso. Tres teclas eligen el tamaño y una cuarta alterna entre antes y después. Teclas S, M, L y espacio.',
+  info:`<div class="k">Home · Crisalix</div><h2>Antes y después, en un perfil</h2>
+    <p>Anticipa lo que hace la consulta con <strong>Crisalix</strong>: elegís un tamaño y alternás antes/después sobre un perfil lineal, sin fotos reales.</p>
+    <ul><li>Dónde: sección de Crisalix, al lado del CTA “Consultar”.</li><li>Lenguaje visual neutro y respetuoso; sin imágenes de pacientes.</li></ul>`,
+  prompt:`Usá el skill iso-figure. Objeto: un monitor sobre una base con 4 teclas adelante: S, M, L y una tecla de alternar. La pantalla dibuja un perfil lateral de torso con una sola línea (polyline). Salida: S/M/L cambian el volumen del contorno; la tecla de alternar pasa de "antes" a "después" y en "después" queda el contorno anterior punteado de fondo. Readout: "después · talla M". Teclado S, M, L, espacio. Sin fotos ni marcas. Monocromo, Fig 4, nombre SIMULACIÓN 3D.`,
+  build(k){
+    let s=k.box(0,0,0,300,210,16,10);
+    s+=k.box(110,30,16,80,20,10,4); // pie
+    s+=k.box(30,20,26,240,24,170,8);
+    s+=`<g transform="${k.FRONT(30,44,196)}"><rect class="face glass" x="12" y="10" width="216" height="150" rx="6"/>
+      <line class="detail" x1="80" y1="18" x2="84" y2="150"/>
+      <polyline class="ghost" data-ghost points=""/><polyline class="trace" data-trace points=""/>
+      <text class="lcd" data-tag x="22" y="32" font-size="13"></text><text class="dim" data-sz x="22" y="150" font-size="11"></text></g>`;
+    const keys=[['s','S'],['m','M'],['l','L'],[' ','⇄']];
+    keys.forEach(([key,l],i)=>{const x=24+i*68,y=120;
+      s+=`<g class="press" data-k="${key}" data-key="${key}">${k.box(x,y,16,56,56,12,6)}
+        <g transform="${k.TOP(x,y,28)}"><text class="lbl" x="28" y="34" text-anchor="middle" font-size="18">${l}</text></g></g>`;});
+    const st={size:'m',after:false};
+    const render=c=>{c.svg.querySelectorAll('.press').forEach(p=>p.classList.toggle('on',p.dataset.k===st.size||(p.dataset.k===' '&&st.after)));
+      c.q('[data-trace]').setAttribute('points',profile(st.after?SIZES[st.size]:.2));
+      c.q('[data-ghost]').setAttribute('points',st.after?profile(.2):'');
+      c.q('[data-tag]').textContent=st.after?'después':'antes';
+      c.q('[data-sz]').textContent=st.after?`talla ${SZN[st.size]}`:'perfil actual';
+      c.ro.textContent=st.after?`después · talla ${SZN[st.size]}`:`antes · talla ${SZN[st.size]} elegida`;};
+    return {svg:s,init:render,
+      press(key,c){if(key===' ')st.after=!st.after;else{st.size=key;st.after=true;}render(c);}};
+  }});
+/* ---------- extra geometry: cylinder (analytic iso ellipse) + extruded flat shape ---------- */
+const cyl=(k,x,y,z,r,h,cls='')=>{const [cx,cb]=k.P(x,y,z),ct=cb-h,a=r*1.2247,b=r*0.7071;
+  k.pts.push([cx-a,ct-b],[cx+a,cb+b]);
+  return `<g class="${cls}"><path class="face" d="M${cx-a},${ct} L${cx-a},${cb} A${a},${b} 0 0 0 ${cx+a},${cb} L${cx+a},${ct} Z"/><ellipse class="face top" cx="${cx}" cy="${ct}" rx="${a}" ry="${b}"/></g>`;};
+const extrude=(k,d,z,h,cls='')=>{let s=`<g transform="${k.TOP(0,0,z)}"><path class="face" d="${d}"/></g>`;
+  for(let i=1;i<h;i++)s+=`<g transform="${k.TOP(0,0,z+i)}"><path class="fillonly" d="${d}"/></g>`;
+  return `<g class="${cls}">${s}<g transform="${k.TOP(0,0,z+h)}"><path class="face top" d="${d}"/></g></g>`;};
+
+/* ================= Fig 5 · Isologo ================= */
+const LS=.26, LOGO=[ // px,py,r from GR_9_Isologo.png (1080 grid)
+  [222,278,107],[507,153,108],[800,271,121],[942,561,125],[795,845,128],[513,968,66],[222,844,81],[105,561,93]];
+const LC=[513,561,98], FIXED=4;
+const bone=(A,B,ra,rb)=>{const dx=B[0]-A[0],dy=B[1]-A[1],L=Math.hypot(dx,dy),nx=-dy/L,ny=dx/L,
+  mx=(A[0]+B[0])/2,my=(A[1]+B[1])/2,w=Math.min(ra,rb)*.38,f=v=>v.toFixed(1);
+  return `M${f(A[0]+nx*ra)},${f(A[1]+ny*ra)} Q${f(mx+nx*w)},${f(my+ny*w)} ${f(B[0]+nx*rb)},${f(B[1]+ny*rb)} L${f(B[0]-nx*rb)},${f(B[1]-ny*rb)} Q${f(mx-nx*w)},${f(my-ny*w)} ${f(A[0]-nx*ra)},${f(A[1]-ny*ra)} Z`;};
+mount({n:5,name:'Isologo GR',hint:'tocá un círculo · 1–8 · 0 reinicia',
+  aria:'Isologo de Guzmán Ripoll en isométrico: ocho círculos extruidos alrededor de un centro. Tocar un círculo lo conecta al centro con un puente, como en el logo. Teclas 1 a 8, 0 reinicia.',
+  info:`<div class="k">Marca · LoadingScreen / Footer</div><h2>“Conexión humana”, literal</h2>
+    <p>El isologo hecho volumen. Cada círculo es un cilindro; al tocarlo <strong>se conecta al centro</strong> con el mismo puente del logo y crece. El puente original (abajo a la derecha) está siempre.</p>
+    <ul><li>Dónde: pantalla de carga, cierre del Footer o 404, como objeto para jugar.</li><li>Conectar los 8 completa la red: es el easter egg.</li></ul>`,
+  prompt:`Usá el skill iso-figure. Objeto: el isologo de Guzmán Ripoll (8 círculos de distinto tamaño en anillo + un círculo central unido al de abajo a la derecha por un puente cóncavo) apoyado sobre una base, con cada círculo extruido como cilindro (elipse iso analítica, no polígonos). Salida: tocar un círculo lo conecta al centro con un puente del mismo estilo y lo eleva; volver a tocarlo lo desconecta. Readout: "conexiones 3/8". Teclas 1–8, 0 reinicia. Monocromo, Fig 5, nombre ISOLOGO GR.`,
+  build(k){
+    const st=new Set([FIXED]);
+    const R2=Math.SQRT1_2,M=(u,v)=>[((u-540)+(v-560))*R2*LS+150,((v-560)-(u-540))*R2*LS+150],W=v=>v*LS,
+      base=k.box(-20,-20,-14,340,340,14,22);
+    const draw=()=>{let s=base;const C=M(LC[0],LC[1]);
+      for(const i of st){const d=LOGO[i];s+=extrude(k,bone(C,M(d[0],d[1]),W(LC[2])*.98,W(d[2])*.98),0,14,'bridge');}
+      const items=LOGO.map((d,i)=>({i,x:M(d[0],d[1])[0],y:M(d[0],d[1])[1],r:W(d[2])})).concat([{i:-1,x:C[0],y:C[1],r:W(LC[2])}])
+        .sort((a,b)=>(a.x+a.y)-(b.x+b.y));
+      for(const it of items){const on=it.i<0||st.has(it.i),h=it.i<0?26:on?20:8;
+        s+=it.i<0?cyl(k,it.x,it.y,0,it.r,h):`<g class="press${on?' on':''}" data-k="${it.i}" data-key="${it.i+1}">${cyl(k,it.x,it.y,0,it.r,h)}</g>`;}
+      return s;};
+    LOGO.forEach((_,i)=>st.add(i)); draw(); st.clear(); st.add(FIXED); // register tallest state for viewBox
+    const render=c=>{c.svg.innerHTML=draw();c.ro.textContent=st.size===8?'red completa · 8/8':`conexiones ${st.size}/8`;};
+    return {svg:draw(),init:render,
+      press(i,c){i=+i;if(i!==FIXED)st.has(i)?st.delete(i):st.add(i);render(c);},
+      key:{'0':c=>{st.clear();st.add(FIXED);render(c);}}};
+  }});
+
+/* ================= Fig 6 · Capas ================= */
+const LAY=[ // top -> bottom
+  {n:'Piel',t:6,i:'Capa externa. Ahí queda la cicatriz, en el surco o la areola.'},
+  {n:'Grasa',t:14,i:'Tejido subcutáneo: define qué tan natural se ve el borde.'},
+  {n:'Glándula',t:16,i:'Tejido mamario. Plano subglandular: el implante va justo debajo.'},
+  {n:'Músculo pectoral',t:10,i:'Plano submuscular / dual plane: el implante va debajo del músculo.'},
+  {n:'Tórax',t:18,i:'Pared torácica, la base sobre la que apoya todo.'},
+];
+const PLANES=[{n:'subglandular',under:3},{n:'submuscular',under:4}];
+mount({n:6,name:'Planos',hint:'tocá una capa · p cambia plano · e abre/cierra',
+  aria:'Vista explotada de las capas del tejido mamario con un implante entre ellas. Tocar una capa la describe; la tecla P mueve el implante entre plano subglandular y submuscular; E abre o cierra la vista.',
+  info:`<div class="k">Aumento mamario · Técnica</div><h2>Dónde va el implante</h2>
+    <p>Vista <strong>explotada</strong> del tejido: el implante se mueve entre plano subglandular y submuscular, y cada capa se explica al tocarla. Cerrada, se ve cómo queda todo junto.</p>
+    <ul><li>Dónde: FAQ “¿el implante va sobre o debajo del músculo?” o página del procedimiento.</li><li>Geometría: losas apiladas + lente, sin pantalla.</li></ul>
+    <p class="note">Esquema didáctico, no a escala.</p>`,
+  prompt:`Usá el skill iso-figure. Objeto: una vista explotada de 5 losas apiladas que representan las capas (piel, grasa, glándula, músculo pectoral, tórax) con etiquetas en la cara lateral, y un implante con forma de lente (círculos apilados) entre dos capas. Salida: tocar una capa la resalta y el readout muestra su nombre; la tecla P mueve el implante entre plano subglandular y submuscular; E cierra/abre la vista explotada. Readout: "submuscular · músculo pectoral". Sin pantallas. Monocromo, Fig 6, nombre PLANOS.`,
+  build(k){
+    const st={sel:3,plane:1,open:true},W=250,Dp=170,G=22;
+    const draw=()=>{let s='',z=0;const gap=st.open?G:0;
+      for(let li=LAY.length-1;li>=0;li--){const L=LAY[li],oy=st.open&&li<PLANES[st.plane].under?-Dp*.95:0;
+        s+=`<g class="press${st.sel===li?' on':''}" data-k="${li}">${k.box(0,oy,z,W,Dp,L.t,6)}
+          <g transform="${k.SIDE(W,oy+Dp,z+L.t)}"><text class="lbl" x="${Dp-8}" y="${Math.min(L.t-1.5,9)}" text-anchor="end" font-size="${Math.min(L.t-2,9)}">${L.n.toUpperCase()}</text></g></g>`;
+        z+=L.t;
+        if(st.open&&li===PLANES[st.plane].under){ // implant sits on top of this layer
+          for(let j=0;j<=8;j++){const t=j/8,r=60*Math.sqrt(1-t*t);if(r<3)break;
+            s+=`<g transform="${k.TOP(W/2,Dp/2,z+2+t*18)}"><circle class="face top implant" r="${r}"/></g>`;}}
+        z+=gap;}
+      return s;};
+    st.plane=0;draw();st.plane=1;draw(); // register both layouts
+    const render=c=>{c.svg.innerHTML=draw();
+      c.ro.textContent=`${st.open?PLANES[st.plane].n:'vista cerrada'} · ${LAY[st.sel].n.toLowerCase()}`;
+      c.svg.closest('.fig').querySelector('[data-layer]').textContent=`${LAY[st.sel].n}: ${LAY[st.sel].i}`;};
+    return {svg:draw(),init:render,
+      press(i,c){st.sel=+i;render(c);},
+      key:{p:c=>{st.plane=1-st.plane;st.open=true;st.sel=PLANES[st.plane].under-1;render(c);},e:c=>{st.open=!st.open;render(c);}}};
+  },
+  extra:`<p data-layer style="color:var(--live);font-size:14px;line-height:1.6;margin:0 0 14px"></p>`});
+
+/* ================= Fig 7 · Clínica ================= */
+const FLOORS=[
+  {n:'Planta baja',a:'Recepción',w:'Te reciben, completás la ficha y esperás tu consulta.'},
+  {n:'Piso 1',a:'Consultorios',w:'Consulta con el Dr., examen y simulación 3D.'},
+  {n:'Piso 2',a:'Block quirúrgico',w:'Quirófano habilitado y sala de recuperación anestésica.'},
+  {n:'Piso 3',a:'Internación',w:'Habitación para la noche posterior, si corresponde.'},
+];
+mount({n:7,name:'Clínica',hint:'tocá un piso · 1–4',
+  aria:'Edificio isométrico de cuatro pisos. Tocar un piso lo saca hacia adelante como un cajón y muestra qué hay ahí. Teclas 1 a 4.',
+  info:`<div class="k">Página Clínica</div><h2>El recorrido, piso por piso</h2>
+    <p>Un edificio donde cada piso <strong>sale como un cajón</strong>: el paciente ve dónde pasa cada cosa el día de la consulta y el de la cirugía.</p>
+    <ul><li>Dónde: página Clínica, antes de la galería de fotos.</li><li>Lógica: desplazamiento de un volumen, no cambio de pantalla.</li></ul>
+    <p class="note">Distribución de ejemplo; ajustarla a la clínica real.</p>`,
+  prompt:`Usá el skill iso-figure. Objeto: un edificio de 4 pisos (cajas apiladas) con ventanas dibujadas en la cara frontal, nombre del piso en la cara lateral y una terraza con detalle de rejillas. Salida: tocar un piso lo desliza hacia adelante como un cajón, revela su nombre en la tapa y el readout muestra qué funciona ahí (recepción, consultorios, quirófano, internación). Readout: "piso 2 · block quirúrgico". Teclado 1–4. Monocromo, Fig 7, nombre CLÍNICA.`,
+  build(k){
+    const st={sel:1},W=200,Dp=150,H=42,OUT=46;
+    const draw=()=>{let s=k.box(-30,-30,-10,W+60,Dp+60+OUT,10,14);
+      FLOORS.forEach((f,i)=>{const z=i*H,dy=st.sel===i?OUT:0;
+        let g=k.box(0,dy,z,W,Dp,H-2,4);
+        g+=`<g transform="${k.FRONT(0,dy+Dp,z+H-2)}">${[0,1,2,3,4].map(w=>`<rect class="detail" x="${14+w*37}" y="9" width="24" height="${H-20}" rx="2"/>`).join('')}</g>`;
+        g+=`<g transform="${k.SIDE(W,dy+Dp,z+H-2)}"><text class="lbl" x="12" y="${H/2+3}" font-size="11">${i===0?'PB':'P'+i} · ${f.a.toUpperCase()}</text></g>`;
+        if(dy)g+=`<g transform="${k.TOP(0,dy+Dp-OUT,z+H-2)}"><text class="lbl" x="${W/2}" y="${OUT/2+5}" text-anchor="middle" font-size="14">${f.n.toUpperCase()}</text></g>`;
+        s+=`<g class="press${st.sel===i?' on':''}" data-k="${i}" data-key="${i+1}">${g}</g>`;});
+      const zt=FLOORS.length*H-2;
+      s+=`<g transform="${k.TOP(0,0,zt)}">${[...Array(8)].map((_,j)=>`<line class="detail" x1="20" y1="${20+j*14}" x2="${W-20}" y2="${20+j*14}"/>`).join('')}</g>`;
+      s+=k.box(W-60,20,zt,40,40,18,4);
+      return s;};
+    draw();
+    const render=c=>{c.svg.innerHTML=draw();const f=FLOORS[st.sel];
+      c.ro.textContent=`${f.n.toLowerCase()} · ${f.a.toLowerCase()}`;
+      c.svg.closest('.fig').querySelector('[data-floor]').textContent=`${f.n} — ${f.a}: ${f.w}`;};
+    return {svg:draw(),init:render,press(i,c){st.sel=+i;render(c);}};
+  },
+  extra:`<p data-floor style="color:var(--live);font-size:14px;line-height:1.6;margin:0 0 14px"></p>`});
+/* ================= Fig 8 · Incisiones (perilla) ================= */
+const INC=[
+  {n:'Surco submamario',i:'En el pliegue inferior. Queda oculta por la propia mama y es la vía más usada.'},
+  {n:'Periareolar',i:'En el borde inferior de la areola. La cicatriz se confunde con el cambio de color.'},
+  {n:'Axilar',i:'En un pliegue de la axila. Sin cicatriz en la mama; se usa en casos seleccionados.'},
+];
+mount({n:8,name:'Incisiones',hint:'girá la perilla · 1–3',
+  aria:'Domo isométrico que representa la mama, con una perilla giratoria. Cada posición de la perilla marca una vía de incisión distinta sobre el domo. Teclas 1 a 3.',
+  info:`<div class="k">Aumento mamario · Cicatriz</div><h2>Por dónde entra el implante</h2>
+    <p>Una <strong>perilla</strong> con 3 posiciones. Al girarla, la línea de la incisión se dibuja sobre el volumen: surco, areola o axila.</p>
+    <ul><li>Dónde: página del procedimiento, bloque “¿Dónde queda la cicatriz?”.</li><li>Control nuevo: rotación, no pulsar.</li></ul>`,
+  extra:`<p data-inc style="color:var(--live);font-size:14px;line-height:1.6;margin:0 0 14px"></p>`,
+  prompt:`Usá el skill iso-figure. Objeto: una base con un domo suave (círculos apilados en el plano TOP, con areola y pezón como cilindro mínimo) y una perilla cilíndrica con indicador y 3 marcas grabadas en la base. Salida: girar la perilla (clic = siguiente posición) dibuja en trazo vivo la incisión elegida sobre el domo: arco en el surco submamario, medio arco periareolar o una línea en la axila. Readout: "periareolar · 2/3". Teclas 1–3. Monocromo, Fig 8, nombre INCISIONES.`,
+  build(k){
+    const st={i:0},cx=140,cy=110,R=72,H=46,Z=14,rAt=t=>R*Math.sqrt(1-t*t);
+    const arc=(z,r,a0,a1,big=0)=>{const f=a=>[r*Math.cos(a*Math.PI/180),r*Math.sin(a*Math.PI/180)],[x0,y0]=f(a0),[x1,y1]=f(a1);
+      return `<g transform="${k.TOP(cx,cy,z)}"><path class="hl" d="M${x0},${y0} A${r},${r} 0 ${big} 1 ${x1},${y1}"/></g>`;};
+    const DIAL=[{x:262,y:190}], ANG=[120,180,240];
+    const draw=()=>{let s=k.box(0,0,0,310,240,Z,10);
+      s+=`<g transform="${k.TOP(cx,cy,Z)}"><circle class="detail" r="${R+8}"/></g>`;
+      if(st.i===2)s+=`<g transform="${k.TOP(cx,cy,Z)}"><path class="hl" d="M${(R+14)*Math.cos(-.55)},${(R+14)*Math.sin(-.55)} L${(R+40)*Math.cos(-.75)},${(R+40)*Math.sin(-.75)}"/></g>`;
+      for(let j=0;j<=12;j++){const t=j/12,r=rAt(t*.97);s+=`<g transform="${k.TOP(cx,cy,Z+H*t*.97)}"><circle class="face top" r="${r}"/></g>`;
+        if(st.i===0&&j===1)s+=arc(Z+H/12*.97,r,10,80);
+        if(j===10){s+=`<g transform="${k.TOP(cx,cy,Z+H*t*.97)}"><circle class="detail" r="${r*.62}"/></g>`;
+          if(st.i===1)s+=arc(Z+H*t*.97,r*.62,0,90);}}
+      s+=cyl(k,cx,cy,Z+H*.97,4,4);
+      const {x,y}=DIAL[0];
+      s+=`<g transform="${k.TOP(x,y,Z)}">${ANG.map((a,j)=>{const r=a*Math.PI/180;return `<line class="detail" x1="${30*Math.cos(r)}" y1="${30*Math.sin(r)}" x2="${40*Math.cos(r)}" y2="${40*Math.sin(r)}"/><text class="lbl" x="${56*Math.cos(r)}" y="${56*Math.sin(r)+4}" text-anchor="middle" font-size="10">${j+1}</text>`;}).join('')}</g>`;
+      const a=ANG[st.i]*Math.PI/180;
+      s+=`<g class="press on" data-k="dial">${cyl(k,x,y,Z,24,16)}<g transform="${k.TOP(x,y,Z+16)}"><line class="hl" x1="${6*Math.cos(a)}" y1="${6*Math.sin(a)}" x2="${20*Math.cos(a)}" y2="${20*Math.sin(a)}"/></g></g>`;
+      return s;};
+    draw();
+    const render=c=>{c.svg.innerHTML=draw();const n=INC[st.i];c.ro.textContent=`${n.n.toLowerCase()} · ${st.i+1}/3`;
+      c.svg.closest('.fig').querySelector('[data-inc]').textContent=`${n.n}: ${n.i}`;};
+    const set=i=>c=>{st.i=i;render(c);};
+    return {svg:draw(),init:render,press(_,c){st.i=(st.i+1)%3;render(c);},key:{'1':set(0),'2':set(1),'3':set(2)}};
+  }});
+
+/* ================= Fig 9 · Evolución (slider) ================= */
+const MET=[
+  {n:'Inflamación',f:d=>100*Math.exp(-d/16)},
+  {n:'Actividad',f:d=>Math.min(100,d/42*100)},
+  {n:'Forma final',f:d=>100*(1-Math.exp(-d/28))},
+];
+mount({n:9,name:'Evolución',hint:'arrastrá el cursor · ← →',
+  aria:'Base isométrica con tres columnas y un cursor deslizable de día 0 a día 90. Al arrastrar, las columnas de inflamación, actividad y forma final cambian de altura. Flechas izquierda y derecha.',
+  info:`<div class="k">Recuperación · Expectativas</div><h2>Los primeros 90 días, en una barra</h2>
+    <p>Un <strong>slider</strong> que se arrastra del día 0 al 90 y tres columnas que suben y bajan: la inflamación cae, la actividad vuelve y la forma se asienta.</p>
+    <ul><li>Dónde: debajo de la Fig 3 o en el bloque de recuperación del procedimiento.</li><li>Control nuevo: arrastre continuo, ideal en mobile.</li></ul>
+    <p class="note">Curvas ilustrativas para explicar tendencias, no datos clínicos.</p>`,
+  prompt:`Usá el skill iso-figure. Objeto: una base con 3 columnas (cajas) detrás y una ranura con un cursor deslizable delante, marcada día 0, 30, 60 y 90. Salida: arrastrar el cursor (pointer capture, proyectando el puntero sobre la ranura) cambia el día y la altura de las columnas: inflamación (decrece), actividad (crece) y forma final (se asienta). Readout: "día 21 · inflamación 27% · actividad 50%". Flechas ← → (shift = 7 días). Monocromo, Fig 9, nombre EVOLUCIÓN.`,
+  build(k){
+    const st={d:14},X0=40,X1=330,TY=170,Z=14;
+    const draw=()=>{let s=k.box(0,0,0,370,220,Z,10);
+      s+=`<g transform="${k.TOP(X0-8,TY-6,Z)}"><rect class="face glass" width="${X1-X0+16}" height="12" rx="6"/>
+        ${[0,30,60,90].map(d=>`<line class="detail" x1="${8+d/90*(X1-X0)}" y1="16" x2="${8+d/90*(X1-X0)}" y2="22"/><text class="lbl" x="${8+d/90*(X1-X0)}" y="34" text-anchor="middle" font-size="10">${d}</text>`).join('')}</g>`;
+      MET.forEach((m,i)=>{const x=50+i*100,h=Math.max(2,m.f(st.d)*1.3);
+        s+=k.box(x,40,Z,60,60,h,4);
+        s+=`<g transform="${k.FRONT(x,100,Z+h)}"><text class="lcd" x="30" y="${Math.min(h-4,18)}" text-anchor="middle" font-size="12">${Math.round(m.f(st.d))}%</text></g>`;
+        s+=`<g transform="${k.TOP(x,104,Z)}"><text class="lbl" x="30" y="12" text-anchor="middle" font-size="10">${m.n.toUpperCase()}</text></g>`;});
+      const xk=X0+st.d/90*(X1-X0);
+      s+=`<g class="press on" data-k="knob">${k.box(xk-10,TY-12,Z,20,24,14,4)}</g>`;
+      return s;};
+    st.d=60;draw();st.d=2;draw();st.d=14; // register tall states
+    const render=c=>{c.svg.innerHTML=draw();
+      c.ro.textContent=`día ${st.d} · inflamación ${Math.round(MET[0].f(st.d))}% · actividad ${Math.round(MET[1].f(st.d))}%`;};
+    const step=n=>c=>{st.d=Math.max(0,Math.min(90,st.d+n));render(c);};
+    return {svg:draw(),init:render,press(){},
+      key:{arrowleft:step(-1),arrowright:step(1),arrowdown:step(-7),arrowup:step(7)},
+      bind(c){const svg=c.svg,[ax,ay]=k.P(X0,TY,Z),[bx,by]=k.P(X1,TY,Z);
+        const toDay=e=>{const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const q=pt.matrixTransform(svg.getScreenCTM().inverse());
+          const t=((q.x-ax)*(bx-ax)+(q.y-ay)*(by-ay))/((bx-ax)**2+(by-ay)**2);st.d=Math.round(Math.max(0,Math.min(1,t))*90);render(c);};
+        svg.style.touchAction='none';
+        svg.addEventListener('pointerdown',e=>{svg.setPointerCapture(e.pointerId);svg.classList.add('drag');toDay(e);});
+        svg.addEventListener('pointermove',e=>{if(svg.hasPointerCapture(e.pointerId))toDay(e);});
+        svg.addEventListener('pointerup',e=>{svg.releasePointerCapture(e.pointerId);svg.classList.remove('drag');});}};
+  }});
+
+/* ================= Fig 10 · Checklist (interruptores + lámpara) ================= */
+const PRE=['Estudios','Ayuno 8 h','Sin aspirina','Acompañante','Ropa cómoda','Sostén post-op'];
+mount({n:10,name:'Antes de la cirugía',hint:'activá cada ítem · 1–6',
+  aria:'Panel isométrico con seis interruptores deslizantes y una lámpara. Cada interruptor marca un ítem de la preparación prequirúrgica; con los seis activos la lámpara se enciende. Teclas 1 a 6.',
+  info:`<div class="k">Preoperatorio · Paciente</div><h2>Checklist que se enciende</h2>
+    <p>Seis <strong>interruptores</strong>, uno por cada preparación. Cuando están todos activos, la <strong>lámpara</strong> se prende: estás listo para el día de la cirugía.</p>
+    <ul><li>Dónde: página de preparación o email previo a la cirugía (link a la figura).</li><li>Lógica nueva: estado acumulado, la salida depende de todos los controles.</li></ul>
+    <p class="note">Ítems de ejemplo; usar la lista real que entrega la clínica.</p>`,
+  prompt:`Usá el skill iso-figure. Objeto: un panel con 6 interruptores deslizantes (placa + perilla que se mueve de un extremo al otro) en grilla 2×3, cada uno con su rótulo grabado, y una lámpara cilíndrica al fondo. Salida: cada interruptor marca un ítem de la preparación prequirúrgica; con los 6 activos la tapa de la lámpara se ilumina. Readout: "4/6 listos" → "listo para cirugía". Teclas 1–6. Monocromo, Fig 10, nombre ANTES DE LA CIRUGÍA.`,
+  build(k){
+    const st=new Set([0,1]),Z=14;
+    const draw=()=>{let s=k.box(0,-70,0,300,330,Z,10);
+      const all=st.size===PRE.length;
+      s+=`<g class="${all?'lit':''}">${cyl(k,150,-30,Z,26,34)}</g>`;
+      s+=`<g transform="${k.TOP(150,-30,Z+34)}">${all?'':'<circle class="detail" r="12"/>'}</g>`;
+      for(let r=0;r<3;r++)for(let c=0;c<2;c++){const i=r*2+c,x=20+c*140,y=30+r*72,on=st.has(i);
+        let g=k.box(x,y,Z,120,52,4,6)+`<g transform="${k.TOP(x,y,Z+4)}"><rect class="detail" x="10" y="10" width="62" height="16" rx="8"/>
+          <text class="lbl" x="10" y="44" font-size="11">${PRE[i].toUpperCase()}</text></g>`;
+        g+=k.box(x+(on?44:12),y+6,Z+4,26,24,10,5);
+        s+=`<g class="press${on?' on':''}" data-k="${i}" data-key="${i+1}">${g}</g>`;}
+      return s;};
+    draw();
+    const render=c=>{c.svg.innerHTML=draw();c.ro.textContent=st.size===PRE.length?'listo para cirugía':`${st.size}/6 listos`;};
+    return {svg:draw(),init:render,press(i,c){i=+i;st.has(i)?st.delete(i):st.add(i);render(c);}};
+  }});
+</script>
+</body>
+</html>

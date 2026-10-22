@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { SITE_URL, DEFAULT_OG_IMAGE } from '../seo/seo.js';
-import { trackPageView } from '../lib/analytics.js';
+import { trackPageView } from '../lib/ga4.js';
 
 const DEFAULT_TITLE = 'Cirujano Plástico en Punta del Este, Uruguay | Dr. Guzmán Ripoll';
 

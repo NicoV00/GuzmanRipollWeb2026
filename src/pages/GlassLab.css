@@ -1,0 +1,311 @@
+body.gl-lab-active .mobile-glass-nav,
+body.gl-lab-active .mobile-glass-halo,
+body.gl-lab-active nav[aria-label="Navegacion rapida"] {
+  display: none !important;
+}
+
+.gl-lab {
+  min-height: 100vh;
+  padding: 96px 24px 64px;
+  text-align: left;
+  background: #1b1d22;
+  color: #e8eaee;
+  font-family: "Poppins", sans-serif;
+}
+
+.gl-head h1 { margin: 0 0 6px; font-size: 22px; }
+.gl-head p { margin: 0 0 14px; font-size: 13px; opacity: 0.65; }
+.gl-ctrl { display: flex; gap: 8px; margin-bottom: 28px; }
+.gl-ctrl button {
+  font: inherit; font-size: 13px; padding: 8px 14px; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); color: inherit; cursor: pointer;
+}
+
+.gl-grid { display: flex; flex-wrap: wrap; gap: 28px; align-items: flex-start; }
+.gl-figure { margin: 0; }
+.gl-figure figcaption { font-size: 13px; margin-bottom: 8px; opacity: 0.8; }
+
+/* "Teléfono": 390 x 640, con contenido que da algo que refractar */
+.gl-stage {
+  position: relative;
+  width: 390px;
+  height: 640px;
+  overflow: hidden;
+  border-radius: 38px;
+  background: #fff;
+  color: #0b0b0d;
+  box-shadow: 0 0 0 6px #0c0d10, 0 30px 60px rgba(0, 0, 0, 0.5);
+  --bb: 64px;
+  text-align: left;
+}
+
+.gl-content { padding: 20px 20px 0; }
+.gl-content h3 { margin: 14px 0 2px; font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+.gl-content p { margin: 0 0 10px; font-size: 15px; color: #6b6f76; }
+.gl-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.gl-card { aspect-ratio: 1 / 1; border-radius: 14px; }
+.gl-card-marble {
+  background:
+    radial-gradient(circle at 30% 40%, #fff 0 8%, transparent 9%),
+    radial-gradient(circle at 70% 30%, #111 0 14%, transparent 15%),
+    radial-gradient(circle at 55% 70%, #333 0 18%, transparent 19%),
+    repeating-radial-gradient(circle at 40% 55%, #ddd 0 6px, #777 7px 12px);
+}
+.gl-card-photo { background: url("/images/abdomino.webp") center / cover, #6b4b33; }
+.gl-card-navy { background: linear-gradient(160deg, #02006b, #0a1a8a); }
+.gl-card-warm { background: linear-gradient(120deg, #2b1a10, #d9863b 55%, #f2c48d); }
+
+.gl-content .gl-big { margin: 18px 0 0; font-size: 34px; line-height: 1.12; font-weight: 600; letter-spacing: -0.02em; color: #0b0b0d; }
+.gl-defs { position: absolute; width: 0; height: 0; pointer-events: none; }
+
+/* ---- Barra -------------------------------------------------------------- */
+.gl-bar,
+.gl-halo {
+  --w: 350px;
+  --h: 64px;
+  --r: 32px;
+  --spring: linear(0, 0.2 4%, 0.55 10%, 0.82 18%, 0.97 28%, 1.025 38%, 1.03 46%, 1.012 60%, 1.002 78%, 1);
+  --ease: cubic-bezier(0.32, 0.72, 0, 1);
+}
+.gl-bar[data-open="true"],
+.gl-halo[data-open="true"] {
+  --w: 362px;
+  --h: 266px;
+}
+
+.gl-bar {
+  /* tokens por defecto = variante lechosa */
+  --t1: rgba(255, 255, 255, 0.58);
+  --t2: rgba(255, 255, 255, 0.44);
+  --ink: #0e1624;
+  --blur: 16px;
+  --sat: 185%;
+  --bri: 1.1;
+  --edge: 14, 24, 44;
+  --edge-a: 0.2;
+  --spec-a: 1;
+  --p1: rgba(255, 255, 255, 0.52);
+  --p2: rgba(255, 255, 255, 0.3);
+  --lg-c: 32px;
+
+  position: absolute;
+  left: 50%;
+  bottom: var(--bb, 22px);
+  width: var(--w);
+  height: var(--h);
+  padding: 7px;
+  border-radius: var(--r);
+  isolation: isolate;
+  color: var(--ink);
+  background:
+    radial-gradient(90% 80% at 50% 108%, rgba(255, 255, 255, 0.28), transparent 100%),
+    linear-gradient(180deg, var(--t1), var(--t2));
+  box-shadow:
+    0 18px 40px rgba(8, 18, 36, 0.2),
+    0 4px 12px rgba(8, 18, 36, 0.12),
+    0 0 0 0.5px rgba(10, 20, 40, 0.1),
+    inset 0 1.5px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1.5px 2px rgba(255, 255, 255, 0.5),
+    inset 0 0 22px rgba(255, 255, 255, 0.28);
+  backdrop-filter: var(--f) blur(var(--blur)) saturate(var(--sat)) brightness(var(--bri));
+  -webkit-backdrop-filter: var(--f) blur(var(--blur)) saturate(var(--sat)) brightness(var(--bri));
+  transform: translate(calc(-50% + var(--dx, 0px)), var(--dy, 0px));
+  cursor: grab;
+  transition:
+    width 520ms var(--spring),
+    height 520ms var(--spring),
+    padding 520ms var(--ease);
+  -webkit-font-smoothing: antialiased;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.gl-bar[data-open="true"] { padding: 10px; }
+
+.gl-bar[data-variant="lens"] { --t1: rgba(255,255,255,.26); --t2: rgba(255,255,255,.14); --blur: 2px; --sat: 170%; --bri: 1.06; --p1: rgba(255,255,255,.4); --p2: rgba(255,255,255,.18); }
+.gl-bar[data-variant="frost"],
+.gl-bar[data-variant="halo"] { --t1: rgba(255,255,255,.5); --t2: rgba(255,255,255,.36); --blur: 7px; --sat: 190%; --bri: 1.08; }
+.gl-bar[data-variant="dark"] {
+  --t1: rgba(24,32,48,.38); --t2: rgba(10,16,28,.3); --ink: #fff; --blur: 8px; --sat: 190%; --bri: 0.95;
+  --edge: 0, 0, 0; --edge-a: 0.4; --p1: rgba(255,255,255,.16); --p2: rgba(255,255,255,.05);
+}
+.gl-bar[data-variant="ios"] { --t1: rgba(255,255,255,.34); --t2: rgba(255,255,255,.2); --blur: 4px; --sat: 210%; --bri: 1.08; --p1: rgba(255,255,255,.46); --p2: rgba(255,255,255,.22); }
+
+/* Halo: capa hermana (un hijo no vería el fondo por el backdrop root del nav) */
+.gl-halo {
+  --halo: 20px;
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--bb, 22px) - var(--halo));
+  width: calc(var(--w) + var(--halo) * 2);
+  height: calc(var(--h) + var(--halo) * 2);
+  border-radius: calc(var(--r) + var(--halo));
+  pointer-events: none;
+  transform: translate(calc(-50% + var(--dx, 0px)), var(--dy, 0px));
+  backdrop-filter: var(--hf);
+  -webkit-backdrop-filter: var(--hf);
+  transition:
+    width 520ms var(--spring),
+    height 520ms var(--spring);
+}
+
+/* aros border-only */
+.gl-bar::before,
+.gl-bar::after,
+.gl-pill::before,
+.gl-pill::after {
+  content: "";
+  position: absolute;
+  border-radius: inherit;
+  pointer-events: none;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.gl-bar::before,
+.gl-pill::before {
+  z-index: 1;
+  inset: 0;
+  padding: 1px;
+  background: linear-gradient(90deg, rgba(var(--edge), var(--edge-a)) 0, rgba(var(--edge), 0) var(--lg-c), rgba(var(--edge), 0) calc(100% - var(--lg-c)), rgba(var(--edge), var(--edge-a)) 100%);
+}
+.gl-bar::after,
+.gl-pill::after {
+  z-index: 2;
+  inset: 1px;
+  padding: 1.5px;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,var(--spec-a)) 0,
+    rgba(255,255,255,var(--spec-a)) calc(var(--lg-c) * 0.1),
+    rgba(255,255,255,calc(var(--spec-a) * 0.6)) calc(var(--lg-c) * 0.35),
+    rgba(255,255,255,calc(var(--spec-a) * 0.24)) calc(var(--lg-c) * 0.5),
+    rgba(255,255,255,0) calc(var(--lg-c) * 0.72),
+    rgba(255,255,255,0) calc(100% - var(--lg-c) * 0.72),
+    rgba(255,255,255,calc(var(--spec-a) * 0.24)) calc(100% - var(--lg-c) * 0.5),
+    rgba(255,255,255,calc(var(--spec-a) * 0.6)) calc(100% - var(--lg-c) * 0.35),
+    rgba(255,255,255,var(--spec-a)) calc(100% - var(--lg-c) * 0.1),
+    rgba(255,255,255,var(--spec-a)) 100%
+  );
+}
+
+.gl-rim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.34), transparent 24%, transparent 72%, rgba(255,255,255,.18)),
+    linear-gradient(90deg, rgba(var(--edge), .1), transparent 10%, transparent 90%, rgba(var(--edge), .1));
+}
+
+.gl-compact,
+.gl-expanded { position: absolute; inset: 7px; z-index: 3; }
+
+.gl-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 1;
+  transition: opacity 160ms ease-out, transform 360ms var(--ease);
+}
+.gl-bar[data-open="true"] .gl-compact {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px) scale(0.96);
+  transition-duration: 110ms, 260ms;
+}
+
+/* ---- píldoras: más grandes ------------------------------------------------ */
+.gl-pill {
+  --lg-c: 25px;
+  --edge-a: 0.16;
+  position: relative;
+  isolation: isolate;
+  height: 50px;
+  border: 0;
+  border-radius: 999px;
+  color: var(--ink);
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  background:
+    radial-gradient(92% 76% at 50% 108%, rgba(255,255,255,.3), transparent 100%),
+    linear-gradient(180deg, var(--p1), var(--p2));
+  box-shadow:
+    0 4px 12px rgba(8, 18, 36, 0.14),
+    0 0 0 0.5px rgba(10, 20, 40, 0.1),
+    inset 0 1.5px 1px rgba(255,255,255,.9),
+    inset 0 -1.5px 2px rgba(255,255,255,.45);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 220ms var(--ease), box-shadow 220ms ease-out;
+}
+.gl-bar[data-variant="dark"] .gl-pill {
+  box-shadow: 0 4px 12px rgba(0,0,0,.25), 0 0 0 0.5px rgba(255,255,255,.12), inset 0 1.5px 1px rgba(255,255,255,.35), inset 0 -1.5px 2px rgba(255,255,255,.12);
+}
+.gl-pill:active { transform: scale(0.95); }
+.gl-pill > * { position: relative; z-index: 3; }
+
+.gl-primary { flex: 1; font-size: 16px; letter-spacing: -0.01em; white-space: nowrap; }
+.gl-icon { flex: 0 0 50px; width: 50px; padding: 0; font: inherit; appearance: none; }
+
+/* ---- panel abierto: compacto, sin hueco bajo el último ítem --------------- */
+.gl-expanded {
+  inset: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px) scale(0.97);
+  transform-origin: 50% 100%;
+  transition: opacity 120ms ease-out, transform 260ms var(--ease);
+}
+.gl-bar[data-open="true"] .gl-expanded {
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+  transition: opacity 200ms ease-out 80ms, transform 420ms var(--ease) 60ms;
+}
+
+.gl-list { display: grid; gap: 2px; }
+.gl-row {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  border-radius: 23px;
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 100ms ease-out, transform 160ms ease-out, background 160ms ease-out;
+}
+/* el escalonado solo al ABRIR: al cerrar (o reabrir de golpe) no queda nada colgado */
+.gl-bar[data-open="true"] .gl-row {
+  opacity: 1;
+  transform: none;
+  transition: opacity 220ms ease-out calc(90ms + var(--i) * 36ms), transform 380ms var(--ease) calc(90ms + var(--i) * 36ms), background 160ms ease-out;
+}
+.gl-row-main { background: rgba(255,255,255,.5); box-shadow: 0 0 0 .5px rgba(10,20,40,.08), inset 0 1px 1px rgba(255,255,255,.9); }
+.gl-bar[data-variant="dark"] .gl-row-main { background: rgba(255,255,255,.14); box-shadow: inset 0 1px 1px rgba(255,255,255,.3); }
+.gl-row:active { background: rgba(255,255,255,.4); }
+
+.gl-actions { display: flex; gap: 8px; margin-top: auto; }
+.gl-wa { flex: 1; font-size: 16px; }
+
+.gl-pill:focus-visible,
+.gl-row:focus-visible { outline: 2px solid #0a84ff; outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gl-bar, .gl-halo, .gl-compact, .gl-expanded, .gl-row, .gl-pill { transition-duration: 1ms !important; transition-delay: 0ms !important; }
+}

@@ -12,6 +12,8 @@ const Clinica = lazy(() => import("./pages/Clinica"));
 const Resultados = lazy(() => import("./pages/Resultados"));
 const ProcedimientoDetalle = lazy(() => import("./pages/ProcedimientoDetalle"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const GlassLab = lazy(() => import("./pages/GlassLab"));
+const GlassTune = lazy(() => import("./pages/GlassTune"));
 const PoliticaPrivacidad = lazy(() => import("./pages/PoliticaPrivacidad"));
 const ProcesamientoDatos = lazy(() => import("./pages/ProcesamientoDatos"));
 const Procedimientos = lazy(() => import("./pages/Procedimientos"));
@@ -139,7 +141,7 @@ function AppShell({ toggleTheme }) {
 
       <Box id="scroll-container" sx={{ textAlign: "center", overflowX: "clip", position: "relative", width: "100%", maxWidth: "100vw" }}>
         <NavBar toggleTheme={toggleTheme} />
-        <ContactFloatingBar />
+        {!location.pathname.startsWith("/glass-lab") && <ContactFloatingBar />}
 
         {/* Carga la vista retrasada (la que decide el temporizador) */}
         <Suspense fallback={null}>
@@ -153,6 +155,8 @@ function AppShell({ toggleTheme }) {
             <Route path="/resultados" element={<Resultados />} />
             {/* Research oculto temporalmente
             <Route path="/research" element={<Research />} /> */}
+            <Route path="/glass-lab" element={<GlassLab />} />
+            <Route path="/glass-lab/tune" element={<GlassTune />} />
             <Route path="/contacto" element={<ContactSection />} />
             <Route path="/cir-mamaria" element={<Navigate to={procedimientoPath("01")} replace />} />
             <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
