@@ -76,8 +76,9 @@
     inset var(--lx) var(--ly) 9px -4px rgba(255, 255, 255, calc(0.6 * var(--spec-a))),
     inset calc(var(--lx) * -1) calc(var(--ly) * -1) 9px -4px rgba(255, 255, 255, calc(0.45 * var(--bounce))),
     inset 0 0 22px rgba(255, 255, 255, var(--glow-a));
-  backdrop-filter: var(--glass-f, none) blur(var(--blur)) saturate(var(--sat)) brightness(var(--bri));
-  -webkit-backdrop-filter: var(--glass-f, none) blur(var(--blur)) saturate(var(--sat)) brightness(var(--bri));
+  /* Base: vidrio con blur (funciona en todos los navegadores) */
+  backdrop-filter: blur(var(--blur)) saturate(var(--sat)) brightness(var(--bri));
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--sat)) brightness(var(--bri));
 
   opacity: 0;
   pointer-events: none;
@@ -105,6 +106,13 @@
   padding: 10px;
 }
 
+/* Con soporte de SVG en backdrop-filter (Chromium): primero blur, luego el lente,
+   así el blur no borronea la refracción del canto. */
+.mobile-glass-nav[data-refract="true"] {
+  backdrop-filter: blur(var(--blur)) saturate(var(--sat)) brightness(var(--bri)) var(--glass-f);
+  -webkit-backdrop-filter: blur(var(--blur)) saturate(var(--sat)) brightness(var(--bri)) var(--glass-f);
+}
+
 /* Halo: capa hermana (un hijo con backdrop-filter dentro del nav no vería el
    fondo, el nav es un backdrop root). Hereda medidas y transiciones. */
 .mobile-glass-halo {
@@ -118,8 +126,8 @@
   border-radius: calc(var(--r) + var(--halo));
   display: none;
   pointer-events: none;
-  backdrop-filter: var(--halo-f, none);
-  -webkit-backdrop-filter: var(--halo-f, none);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   opacity: 0;
   transform: translate3d(-50%, calc(100% + 24px), 0) scale(0.94);
   transform-origin: 50% 120%;
@@ -354,6 +362,11 @@
 .mobile-glass-row:focus-visible {
   outline: 2px solid #0a84ff;
   outline-offset: 2px;
+}
+
+.mobile-glass-halo[data-refract="true"] {
+  backdrop-filter: var(--halo-f);
+  -webkit-backdrop-filter: var(--halo-f);
 }
 
 @media (max-width: 1199px) {

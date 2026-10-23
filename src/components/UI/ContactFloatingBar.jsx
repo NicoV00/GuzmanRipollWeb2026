@@ -77,6 +77,17 @@ export default function ContactFloatingBar({ embedded = false, preset = null }) 
   const [isVisible, setIsVisible] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [maps, setMaps] = useState(null);
+  /* backdrop-filter:url(#svg) solo existe en Chromium. Si no hay soporte, la regla
+     entera sería inválida y se perdería también el blur: por eso se detecta. */
+  const [canRefract, setCanRefract] = useState(false);
+  useEffect(() => {
+    setCanRefract(
+      typeof CSS !== 'undefined' &&
+        (CSS.supports('backdrop-filter', 'url(#a) blur(2px)') || CSS.supports('-webkit-backdrop-filter', 'url(#a) blur(2px)')) &&
+        /Chrome|Chromium|Edg|Brave/.test(navigator.userAgent) &&
+        !/iPhone|iPad|iPod/.test(navigator.userAgent),
+    );
+  }, []);
   const dial = useDialKit('Glass bar', embedded ? DIAL_OPEN : DIAL_COLLAPSED, {
     id: 'glass-bar-v6',
     persist: true,
@@ -168,14 +179,15 @@ export default function ContactFloatingBar({ embedded = false, preset = null }) 
   };
 
   const state = isPanelOpen ? 'open' : 'closed';
+  const refractOn = Boolean(maps) && canRefract;
   const glassStyle = {
     ...lightVars,
-    ...(maps ? { '--glass-f': `url(#cfb-lens-${uid}-${state})`, '--halo-f': `url(#cfb-halo-${uid}-${state})` } : null),
+    ...(refractOn ? { '--glass-f': `url(#cfb-lens-${uid}-${state})`, '--halo-f': `url(#cfb-halo-${uid}-${state})` } : null),
   };
 
   return (
     <>
-      {maps && (
+      {refractOn && (
         <svg className="mobile-glass-filter" aria-hidden="true" focusable="false">
           <defs>
             {['closed', 'open'].map((s) => (
@@ -194,6 +206,7 @@ export default function ContactFloatingBar({ embedded = false, preset = null }) 
         data-open={isPanelOpen ? 'true' : 'false'}
         data-visible={isVisible ? 'true' : 'false'}
         data-embedded={embedded ? 'true' : undefined}
+        data-refract={refractOn ? 'true' : 'false'}
         style={glassStyle}
       />
 
@@ -204,6 +217,7 @@ export default function ContactFloatingBar({ embedded = false, preset = null }) 
         data-visible={isVisible ? 'true' : 'false'}
         className="mobile-glass-nav"
         data-embedded={embedded ? 'true' : undefined}
+        data-refract={refractOn ? 'true' : 'false'}
         style={glassStyle}
       >
         <div className="mobile-glass-rim" aria-hidden="true" />
