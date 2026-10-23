@@ -25,27 +25,27 @@ const SIZES = {
 const buildDial = (collapsed) => ({
   luz: {
     angulo: [135, 0, 360, 1],
-    intensidad: [1.05, 0, 1.5, 0.01],
-    grosor: [1, 0.4, 3, 0.05],
-    grosorGris: [0.75, 0.25, 2, 0.05],
-    alcance: [1.2, 0.4, 1.6, 0.05],
-    rebote: [1.15, 0, 1.5, 0.01],
-    bordeOscuro: [0.38, 0, 0.7, 0.01],
-    brilloInterior: [0.3, 0, 0.8, 0.01],
+    intensidad: [1.25, 0, 1.5, 0.01],
+    grosor: [0.8, 0.4, 3, 0.05],
+    grosorGris: [0.5, 0.25, 2, 0.05],
+    alcance: [1.45, 0.4, 1.6, 0.05],
+    rebote: [1.3, 0, 1.5, 0.01],
+    bordeOscuro: [0.3, 0, 0.7, 0.01],
+    brilloInterior: [0.28, 0, 0.8, 0.01],
   },
   vidrio: {
     _collapsed: collapsed,
-    velo: [0.58, 0, 1, 0.01],
+    velo: [0.46, 0, 1, 0.01],
     blur: [8, 0, 30, 0.5],
-    saturacion: [190, 100, 300, 5],
-    brillo: [1.1, 0.8, 1.4, 0.01],
-    relleno: [0.36, 0, 0.9, 0.01],
-    volumen: [1, 0, 1.6, 0.01],
+    saturacion: [165, 100, 300, 5],
+    brillo: [1.08, 0.8, 1.4, 0.01],
+    relleno: [0.22, 0, 0.9, 0.01],
+    volumen: [0.6, 0, 1.6, 0.01],
     tinta: '#0e1624',
   },
   refraccion: {
     _collapsed: collapsed,
-    lente: [42, 0, 100, 1],
+    lente: [50, 0, 100, 1],
     biselLente: [32, 6, 48, 1],
     aberracion: [0.05, 0, 0.4, 0.01],
     halo: [12, 0, 40, 0.5],
@@ -55,19 +55,37 @@ const buildDial = (collapsed) => ({
 const DIAL_COLLAPSED = buildDial(true);
 const DIAL_OPEN = buildDial(false);
 
-/* embedded: se usa dentro de /glass-lab/tune (siempre visible, sin lógica de scroll) */
-export default function ContactFloatingBar({ embedded = false }) {
+/* Valores por defecto del panel (los arrays [valor, mín, máx, paso] -> valor) */
+const dialDefaults = (cfg) =>
+  Object.fromEntries(
+    Object.entries(cfg).map(([section, controls]) => [
+      section,
+      Object.fromEntries(
+        Object.entries(controls)
+          .filter(([key]) => key !== '_collapsed')
+          .map(([key, v]) => [key, Array.isArray(v) ? v[0] : v]),
+      ),
+    ]),
+  );
+const DIAL_DEFAULTS = dialDefaults(DIAL_OPEN);
+
+/* embedded: dentro de /glass-lab (siempre visible, sin lógica de scroll).
+   preset: valores fijos por sección que sustituyen al panel (para comparar variantes). */
+export default function ContactFloatingBar({ embedded = false, preset = null }) {
   const location = useLocation();
   const uid = useId().replace(/:/g, '');
   const [isVisible, setIsVisible] = useState(false);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [maps, setMaps] = useState(null);
   const dial = useDialKit('Glass bar', embedded ? DIAL_OPEN : DIAL_COLLAPSED, {
-    id: 'glass-bar-v3',
+    id: 'glass-bar-v6',
     persist: true,
     defaultCollapsed: !embedded,
   });
-  const { luz, vidrio, refraccion } = dial;
+  const merged = preset
+    ? Object.fromEntries(Object.keys(DIAL_DEFAULTS).map((k) => [k, { ...DIAL_DEFAULTS[k], ...(preset[k] || {}) }]))
+    : dial;
+  const { luz, vidrio, refraccion } = merged;
 
   const isContacto = location.pathname === '/contacto';
   const primaryLabel = isContacto ? 'Ver procedimientos' : 'Agendar consulta';
@@ -260,7 +278,7 @@ export default function ContactFloatingBar({ embedded = false }) {
       </Box>
 
       {/* Panel de ajuste en vivo; en producción solo con ?dial en la URL */}
-      <DialRoot productionEnabled={import.meta.env.DEV || (typeof window !== 'undefined' && window.location.search.includes('dial'))} />
+      {!preset && <DialRoot productionEnabled={import.meta.env.DEV || (typeof window !== 'undefined' && window.location.search.includes('dial'))} />}
     </>
   );
 }

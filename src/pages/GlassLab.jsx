@@ -1,124 +1,84 @@
-import React, { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { MessageCircle, Sparkles, X } from 'lucide-react';
-import { GlassFilter, HALO, makeHaloMap, makeLensMap } from '../components/UI/glassMaps.jsx';
+import React, { useEffect, useRef, useState } from 'react';
+import ContactFloatingBar from '../components/UI/ContactFloatingBar.jsx';
+import './GlassTune.css';
 import './GlassLab.css';
 
-/* Laboratorio de Liquid Glass (/glass-lab). No enlazado ni indexado.
-   Cada variante = tokens CSS (data-variant) + parámetros del filtro SVG.
-   Los mapas se generan UNA vez por estado (cerrado/abierto) y se cambian al
-   alternar; nada se recalcula durante el morph, así se puede pulsar sin parar. */
+/* /glass-lab: la barra REAL con distintos presets, una al lado de otra.
+   Cada preset pisa solo lo que cambia; el resto son los valores por defecto. */
 
-const SIZES = {
-  closed: { w: 350, h: 64, r: 32 },
-  open: { w: 362, h: 266, r: 32 },
-};
-
-const VARIANTS = [
-  { id: 'milky', name: 'A · Lechoso', lens: { scale: 12, bezel: 14, n: 1.5, ca: 0.08 } },
-  { id: 'lens', name: 'B · Lente claro', lens: { scale: 72, bezel: 30, n: 1.5, ca: 0.14 } },
-  { id: 'frost', name: 'C · Lente + escarcha', lens: { scale: 60, bezel: 28, n: 1.5, ca: 0.12 } },
-  { id: 'halo', name: 'D · Lente + ripple fuera', lens: { scale: 60, bezel: 28, n: 1.5, ca: 0.12 }, halo: { scale: 22 } },
-  { id: 'dark', name: 'E · Oscuro', lens: { scale: 46, bezel: 24, n: 1.5, ca: 0.12 } },
-  { id: 'ios', name: 'F · iOS 26 brillante', lens: { scale: 50, bezel: 28, n: 1.6, ca: 0.1 }, halo: { scale: 18 } },
+const PRESETS = [
+  {
+    id: 'prod',
+    name: 'A · Lo que está subido',
+    note: 'Lechoso 58%, blur 8, sat 190',
+    preset: {
+      luz: { grosor: 1, bordeOscuro: 0.38 },
+      vidrio: { velo: 0.58, blur: 8, saturacion: 190, brillo: 1.1, relleno: 0.36, volumen: 1 },
+      refraccion: { lente: 42, biselLente: 32, halo: 12 },
+    },
+  },
+  {
+    id: 'apple',
+    name: 'B · Apple claro (anterior)',
+    note: 'Velo 26%, blur 5, sat 150, borde 1px',
+    preset: {
+      luz: { grosor: 1, grosorGris: 0.75, intensidad: 1.05, alcance: 1.2, rebote: 1.15, bordeOscuro: 0.38 },
+      vidrio: { velo: 0.26, blur: 5, relleno: 0.14, volumen: 0.6 },
+    },
+  },
+  {
+    id: 'clear',
+    name: 'C · Casi transparente',
+    note: 'Como el toolbar de Mail',
+    preset: {
+      vidrio: { velo: 0.14, blur: 3, saturacion: 140, brillo: 1.04, relleno: 0.06, volumen: 0.4 },
+      refraccion: { lente: 58, biselLente: 34, halo: 14 },
+    },
+  },
+  {
+    id: 'frost',
+    name: 'D · Escarcha Apple',
+    note: 'Más legible, algo de cuerpo',
+    preset: {
+      vidrio: { velo: 0.36, blur: 11, saturacion: 165, brillo: 1.08, relleno: 0.2, volumen: 0.8 },
+      refraccion: { lente: 44, biselLente: 30, halo: 10 },
+    },
+  },
+  {
+    id: 'liquid',
+    name: 'E · Líquido (más tensión)',
+    note: 'Lente 72, halo 18',
+    preset: {
+      vidrio: { velo: 0.22, blur: 4, saturacion: 150, brillo: 1.06, relleno: 0.12, volumen: 0.6 },
+      refraccion: { lente: 72, biselLente: 40, aberracion: 0.08, halo: 18, anchoHalo: 18 },
+    },
+  },
+  {
+    id: 'rim',
+    name: 'F · Borde Apple fino (ELEGIDA)',
+    note: 'La del sitio: vidrio blanco glassy (velo 46%), hilo 0.8px',
+    preset: {},
+  },
 ];
 
-function GlassBar({ variant, open, onToggle }) {
-  const uid = useId().replace(/:/g, '');
-  const maps = useMemo(() => {
-    if (typeof document === 'undefined') return null;
-    const out = {};
-    ['closed', 'open'].forEach((state) => {
-      out[state] = {
-        lens: makeLensMap(SIZES[state], variant.lens),
-        halo: variant.halo ? makeHaloMap(SIZES[state], HALO) : '',
-      };
-    });
-    return out;
-  }, [variant]);
+const BACKGROUNDS = [
+  { id: 'light', label: 'Claro' },
+  { id: 'dark', label: 'Oscuro (hero)' },
+  { id: 'photo', label: 'Foto' },
+];
 
-  const state = open ? 'open' : 'closed';
-  const style = {
-    '--f': `url(#gl-lens-${uid}-${state})`,
-    '--hf': `url(#gl-halo-${uid}-${state})`,
-  };
+function Stage({ item, bg }) {
+  const ref = useRef(null);
 
-  return (
-    <>
-      {maps && (
-        <svg className="gl-defs" aria-hidden="true" focusable="false">
-          <defs>
-            {['closed', 'open'].map((s) => (
-              <React.Fragment key={s}>
-                <GlassFilter id={`gl-lens-${uid}-${s}`} href={maps[s].lens} scale={variant.lens.scale} ca={variant.lens.ca} />
-                {variant.halo && (
-                  <GlassFilter id={`gl-halo-${uid}-${s}`} href={maps[s].halo} scale={variant.halo.scale} ca={0.04} />
-                )}
-              </React.Fragment>
-            ))}
-          </defs>
-        </svg>
-      )}
-
-      {variant.halo && <div className="gl-halo" data-open={open} style={style} aria-hidden="true" />}
-
-      <nav className="gl-bar" data-open={open} data-variant={variant.id} style={style}>
-        <div className="gl-rim" aria-hidden="true" />
-
-        <div className="gl-compact" aria-hidden={open}>
-          <a className="gl-pill gl-primary" href="#" onClick={(e) => e.preventDefault()} tabIndex={open ? -1 : 0}>
-            Agendar consulta
-          </a>
-          <a className="gl-pill gl-icon" href="#" onClick={(e) => e.preventDefault()} aria-label="WhatsApp" tabIndex={open ? -1 : 0}>
-            <MessageCircle size={22} strokeWidth={2} />
-          </a>
-          <button className="gl-pill gl-icon" type="button" aria-label="Abrir" onClick={onToggle} tabIndex={open ? -1 : 0}>
-            <Sparkles size={21} strokeWidth={2} />
-          </button>
-        </div>
-
-        <div className="gl-expanded" aria-hidden={!open}>
-          <div className="gl-list">
-            {['Ver procedimientos', 'Clínica', 'Procedimientos', 'Resultados'].map((label, i) => (
-              <a
-                key={label}
-                className={`gl-row${i === 0 ? ' gl-row-main' : ''}`}
-                style={{ '--i': i }}
-                href="#"
-                onClick={(e) => e.preventDefault()}
-                tabIndex={open ? 0 : -1}
-              >
-                {label}
-              </a>
-            ))}
-          </div>
-          <div className="gl-actions">
-            <a className="gl-pill gl-wa" href="#" onClick={(e) => e.preventDefault()} tabIndex={open ? 0 : -1}>
-              WhatsApp
-            </a>
-            <button className="gl-pill gl-icon" type="button" aria-label="Cerrar" onClick={onToggle} tabIndex={open ? 0 : -1}>
-              <X size={20} strokeWidth={2.2} />
-            </button>
-          </div>
-        </div>
-      </nav>
-    </>
-  );
-}
-
-function Stage({ variant, forceOpen }) {
-  const [open, setOpen] = useState(false);
-  const stageRef = useRef(null);
-
-  /* Arrastrar la barra (desde cualquier parte) para ver cómo interactúa con el contenido */
+  /* Arrastrar la barra por el contenido; doble clic la devuelve */
   useEffect(() => {
-    const stage = stageRef.current;
+    const stage = ref.current;
     if (!stage) return undefined;
     let start = null;
     let moved = false;
     let pos = { x: 0, y: 0 };
-
     const down = (e) => {
-      if (!e.target.closest('.gl-bar')) return;
+      if (!e.target.closest('.mobile-glass-nav')) return;
       start = { x: e.clientX - pos.x, y: e.clientY - pos.y };
       moved = false;
     };
@@ -134,16 +94,13 @@ function Stage({ variant, forceOpen }) {
       stage.style.setProperty('--dy', `${ny}px`);
     };
     const up = () => { start = null; };
-    const click = (e) => {
-      if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
-    };
+    const click = (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } };
     const reset = (e) => {
-      if (!e.target.closest('.gl-bar')) return;
+      if (!e.target.closest('.mobile-glass-nav')) return;
       pos = { x: 0, y: 0 };
       stage.style.setProperty('--dx', '0px');
       stage.style.setProperty('--dy', '0px');
     };
-
     stage.addEventListener('pointerdown', down);
     stage.addEventListener('pointermove', move);
     stage.addEventListener('pointerup', up);
@@ -160,63 +117,65 @@ function Stage({ variant, forceOpen }) {
     };
   }, []);
 
-  useEffect(() => {
-    if (forceOpen !== null) setOpen(forceOpen);
-  }, [forceOpen]);
-
   return (
     <figure className="gl-figure">
-      <figcaption>{variant.name}</figcaption>
-      <div className="gl-stage" ref={stageRef}>
-        <div className="gl-content">
+      <figcaption>
+        <strong>{item.name}</strong>
+        <span>{item.note}</span>
+      </figcaption>
+      <div className="gt-phone gl-phone" ref={ref} data-bg={bg}>
+        <div className="gt-scroll" data-lenis-prevent>
           <h3>Cirugía mamaria</h3>
           <p>Aumento, mastopexia y reconstrucción</p>
           <div className="gl-cards">
             <div className="gl-card gl-card-marble" />
             <div className="gl-card gl-card-photo" />
           </div>
+          <p className="gl-big">Conexión humana, innovación tecnológica en cirugía.</p>
           <h3>Lipoescultura VASER</h3>
           <p>Abdominoplastia · Dr. Guzmán Ripoll</p>
           <div className="gl-cards">
             <div className="gl-card gl-card-navy" />
             <div className="gl-card gl-card-warm" />
           </div>
-          <p className="gl-big">Conexión humana, innovación tecnológica en cirugía.</p>
+          <p className="gl-big">Cirugía plástica, estética y reconstructiva en Punta del Este.</p>
         </div>
-        <GlassBar variant={variant} open={open} onToggle={() => setOpen((v) => !v)} />
+        <ContactFloatingBar embedded preset={item.preset} />
       </div>
     </figure>
   );
 }
 
 export default function GlassLab() {
-  const [forceOpen, setForceOpen] = useState(null);
+  const [bg, setBg] = useState('light');
 
   useEffect(() => {
-    document.body.classList.add('gl-lab-active');
     const meta = document.createElement('meta');
     meta.name = 'robots';
     meta.content = 'noindex, nofollow';
     document.head.appendChild(meta);
-    return () => {
-      document.body.classList.remove('gl-lab-active');
-      meta.remove();
-    };
+    return () => meta.remove();
   }, []);
 
   return (
     <main className="gl-lab">
       <header className="gl-head">
         <h1>Glass lab</h1>
-        <p>Arrastrá cada barra por el contenido (doble clic la devuelve). Pulsá ✨ para abrir, también varias veces seguidas. Solo Chromium muestra la refracción SVG.</p>
+        <p>
+          Seis versiones de la barra real, lado a lado. Arrastrá cada barra sobre el contenido, abrí con ✨ y cambiá el fondo.
+          Para ajustar a mano una de ellas: <a href="/glass-lab/tune">/glass-lab/tune</a>.
+        </p>
         <div className="gl-ctrl">
-          <button type="button" onClick={() => setForceOpen(true)}>Abrir todas</button>
-          <button type="button" onClick={() => setForceOpen(false)}>Cerrar todas</button>
+          {BACKGROUNDS.map((b) => (
+            <button key={b.id} type="button" data-on={bg === b.id} onClick={() => setBg(b.id)}>
+              {b.label}
+            </button>
+          ))}
         </div>
       </header>
       <div className="gl-grid">
-        {VARIANTS.map((v) => (
-          <Stage key={v.id} variant={v} forceOpen={forceOpen} />
+        {PRESETS.map((p) => (
+          <Stage key={p.id} item={p} bg={bg} />
         ))}
       </div>
     </main>
