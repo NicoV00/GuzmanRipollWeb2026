@@ -25,11 +25,12 @@ const SIZES = {
 const buildDial = (collapsed) => ({
   luz: {
     angulo: [135, 0, 360, 1],
-    intensidad: [1.1, 0, 1.5, 0.01],
-    grosor: [2, 0.5, 4, 0.1],
+    intensidad: [1.05, 0, 1.5, 0.01],
+    grosor: [1, 0.4, 3, 0.05],
+    grosorGris: [0.75, 0.25, 2, 0.05],
     alcance: [1.2, 0.4, 1.6, 0.05],
-    rebote: [1.3, 0, 1.5, 0.01],
-    bordeOscuro: [0.34, 0, 0.6, 0.01],
+    rebote: [1.15, 0, 1.5, 0.01],
+    bordeOscuro: [0.38, 0, 0.7, 0.01],
     brilloInterior: [0.3, 0, 0.8, 0.01],
   },
   vidrio: {
@@ -62,7 +63,7 @@ export default function ContactFloatingBar({ embedded = false }) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [maps, setMaps] = useState(null);
   const dial = useDialKit('Glass bar', embedded ? DIAL_OPEN : DIAL_COLLAPSED, {
-    id: 'glass-bar-v2',
+    id: 'glass-bar-v3',
     persist: true,
     defaultCollapsed: !embedded,
   });
@@ -132,6 +133,7 @@ export default function ContactFloatingBar({ embedded = false }) {
     '--ly': `${(-Math.cos(rad) * 2.1).toFixed(2)}px`,
     '--spec-a': luz.intensidad,
     '--spec-w': `${luz.grosor}px`,
+    '--grey-w': `${luz.grosorGris}px`,
     '--reach': luz.alcance,
     '--bounce': luz.rebote,
     '--edge-a': luz.bordeOscuro,
